@@ -19,4 +19,5 @@ module.exports.policies = {
 
   '*': true,
 
+  'view-pages/index': ['debugNavigations'],
 };
