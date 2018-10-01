@@ -12,6 +12,8 @@
  * them on a project-wide or per-model basis, see:
  * https://sailsjs.com/docs/concepts/models-and-orm/model-settings
  */
+// Data Local
+const l = require('./local');
 
 module.exports.models = {
 
@@ -35,7 +37,7 @@ module.exports.models = {
   *                                                                          *
   ***************************************************************************/
 
-  // schema: true,
+  schema: true,
 
 
   /***************************************************************************
@@ -69,9 +71,10 @@ module.exports.models = {
   ***************************************************************************/
 
   attributes: {
-    createdAt: { type: 'number', autoCreatedAt: true, },
-    updatedAt: { type: 'number', autoUpdatedAt: true, },
-    id: { type: 'number', autoIncrement: true, },
+    createdAt: { type: 'string', autoCreatedAt: true, columnType: 'datetime', },
+    updatedAt: { type: 'string', autoCreatedAt: true, columnType: 'datetime', },
+    id: l.db.production.type,
+    // id: { type: 'number', autoIncrement: true, },
     //--------------------------------------------------------------------------
     //  /\   Using MongoDB?
     //  ||   Replace `id` above with this instead:
@@ -101,7 +104,7 @@ module.exports.models = {
   ******************************************************************************/
 
   dataEncryptionKeys: {
-    default: 'pe0g7Sd9srQK+FD4dqlyZEMFR1yf6xnhDlFXOePh68c='
+    default: l.dataEncryptionKeys.default,
   },
 
 
