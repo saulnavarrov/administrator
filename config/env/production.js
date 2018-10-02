@@ -190,7 +190,8 @@ module.exports = {
     ***************************************************************************/
     adapter: l.connect.production.connect,
     url: `mongodb://${l.connect.production.user}:${l.connect.production.pass}@${l.connect.production.url}:${l.connect.production.port}/${l.connect.production.db}`,
-    
+
+    //--
     // adapter: '@sailshq/connect-redis',
     // url: 'redis://user:password@localhost:6379/databasenumber',
     //--------------------------------------------------------------------------

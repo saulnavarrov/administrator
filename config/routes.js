@@ -30,22 +30,22 @@ module.exports.routes = {
   '/':                  {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
   'wellcome':           {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
   'dashboard':          {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
- 
+  //---
   'faq':                {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
   'legal':              {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
   'legal/terminos':     {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
   'legal/privacidad':   {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
   'term':               {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
- 
+  //---
   'singup':             {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
   'email/confirm':      {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
   'email/confirmed':    {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
- 
+  //---
   'login':              {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
   'logout':             {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
   'password/forgot':    {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
   'password/new':       {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
- 
+  //---
   'acount':             {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
   'acount/password':    {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
   'acount/profile':     {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
@@ -66,16 +66,12 @@ module.exports.routes = {
   //  ╔═╗╔═╗╦  ╔═╗╔╗╔╔╦╗╔═╗╔═╗╦╔╗╔╔╦╗╔═╗
   //  ╠═╣╠═╝║  ║╣ ║║║ ║║╠═╝║ ║║║║║ ║ ╚═╗
   //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
-  
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗
   //  ╚╩╝╚═╝╚═╝╩ ╩╚═╝╚═╝╩ ╩╚═╝
 
-
   //  ╔╦╗╦╔═╗╔═╗
   //  ║║║║╚═╗║
   //  ╩ ╩╩╚═╝╚═╝
-
-
 };
