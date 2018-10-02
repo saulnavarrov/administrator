@@ -17,14 +17,17 @@
     "sails-hook-grunt": "^3.0.2",
     "sails-hook-orm": "^2.0.0-16",
     "sails-hook-sockets": "^1.4.0",
+    "sails-hook-apianalytics": "^2.0.0",
+    "sails-hook-organics": "^0.13.0",
     "sails-mongo": "^1.0.1"
   },
   "devDependencies": {
-    "@sailshq/eslint": "^4.19.3"
+    "@sailshq/eslint": "^4.19.3",
+    "eslint": "^5.6.1"
   },
   "scripts": {
     "start": "NODE_ENV=production nodemon app.js --port=80",
-    "test": "npm run lint && npm run custom-tests && echo 'Done.'",
+    "test": "sails run rebuild-cloud-sdk && npm run lint && npm run custom-tests && echo 'Done.'",
     "lint": "eslint . --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look good.'",
     "custom-tests": "echo \"(No other custom tests yet.)\" && echo"
   },
