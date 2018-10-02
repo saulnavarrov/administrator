@@ -1,16 +1,16 @@
-module.exports = {
+/**
+ * view-pages/index
+ * @module Controller
+ * @author SaulNavarrov <Sinavarrov@gmail.com>
+ */
 
+module.exports = {
 
   friendlyName: 'Index',
 
+  description: 'Pagina de Inicio del Sitio Web.',
 
-  description: 'Index view pages.',
-
-
-  inputs: {
-
-  },
-
+  inputs: {},
 
   exits: {
     success: {
@@ -20,14 +20,7 @@ module.exports = {
     },
   },
 
-
   fn: async function (inputs, exits) {
-
-    sails.log(this.req.session);
-
     return exits.success();
-
   }
-
-
 };
