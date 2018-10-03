@@ -26,30 +26,27 @@ module.exports.routes = {
 
   'GET /':              {action:'view-pages/index', locals: {layout:'layouts/layout'}},
 
-  /*
-  '/':                  {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
-  'wellcome':           {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
-  'dashboard':          {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
-  //---
-  'faq':                {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
-  'legal':              {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
-  'legal/terminos':     {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
-  'legal/privacidad':   {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
-  'term':               {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
-  //---
-  'singup':             {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
-  'email/confirm':      {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
-  'email/confirmed':    {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
-  //---
-  'login':              {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
-  'logout':             {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
-  'password/forgot':    {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
-  'password/new':       {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
-  //---
-  'acount':             {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
-  'acount/password':    {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
-  'acount/profile':     {controller: 'ViewPagesController', action: '', locals:{layout:'layouts/a'}},
-  */
+  // '/wellcome':           {action: '', locals:{layout:'layouts/a'}},
+  '/dashboard':         {action: 'view-pages/dashboard', locals:{layout:'layouts/dashboard'}},
+  // //---
+  // '/faq':                {action: '', locals:{layout:'layouts/a'}},
+  // '/legal':              {action: '', locals:{layout:'layouts/a'}},
+  // '/legal/terminos':     {action: '', locals:{layout:'layouts/a'}},
+  // '/legal/privacidad':   {action: '', locals:{layout:'layouts/a'}},
+  // '/term':               {action: '', locals:{layout:'layouts/a'}},
+  // //---
+  'GET /singup':             {action: 'view-pages/register', locals:{layout:'layouts/login'}},
+  // '/email/confirm':      {action: '', locals:{layout:'layouts/a'}},
+  // '/email/confirmed':    {action: '', locals:{layout:'layouts/a'}},
+  // //---
+  'GET /login':              {action: 'view-pages/login', locals:{layout:'layouts/login'}},
+  'GET /password/forgot':    {action: 'view-pages/forgot-password', locals:{layout:'layouts/login'}},
+  'GET /password/new':       {action: 'view-pages/reset-password', locals:{layout:'layouts/login'}},
+  // '/logout':             {action: '', locals:{layout:'layouts/a'}},
+  // //---
+  // '/acount':             {action: '', locals:{layout:'layouts/a'}},
+  // '/acount/password':    {action: '', locals:{layout:'layouts/a'}},
+  // '/acount/profile':     {action: '', locals:{layout:'layouts/a'}},
 
   /***************************************************************************
   *                                                                          *
@@ -66,6 +63,7 @@ module.exports.routes = {
   //  ╔═╗╔═╗╦  ╔═╗╔╗╔╔╦╗╔═╗╔═╗╦╔╗╔╔╦╗╔═╗
   //  ╠═╣╠═╝║  ║╣ ║║║ ║║╠═╝║ ║║║║║ ║ ╚═╗
   //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
+  'POST /api/v1/login':              {action: 'auth/login'},
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗

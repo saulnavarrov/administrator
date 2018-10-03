@@ -1,0 +1,40 @@
+<div id="reset" v-cloak>
+
+  <section class="h-100">
+		<div class="container h-100">
+			<div class="row justify-content-md-center align-items-center h-100">
+				<div class="card-wrapper">
+					<div class="brand">
+						<img src="/images/favicons/apple-icon-114x114.png">
+					</div>
+					<div class="card fat">
+						<div class="card-body">
+							<h4 class="card-title"><%= typeof(i18n('Reset.title')) === 'undefinded' ? 'Reset password' : i18n('Reset.title') %></h4>
+							<form method="POST">
+
+								<div class="form-group">
+									<label for="new-password"><%= typeof(i18n('Reset  .form New Password')) === 'undefinded' ? 'Reset Password' : i18n('Reset.form New Password') %></label>
+									<input id="new-password" type="password" class="form-control" name="password" required autofocus data-eye>
+									<div class="form-text text-muted">
+									<%= typeof(i18n('Reset.form Text')) === 'undefinded' ? 'Reset Password' : i18n('Forgot.form Text') %>
+									</div>
+								</div>
+
+								<div class="form-group no-margin">
+									<button type="submit" class="btn btn-primary btn-block">
+										<%= typeof(i18n('Reset.form Btn Reset')) === 'undefinded' ? 'Text	Make sure your password is strong and easy to remember' : i18n('Reset.form Btn Reset') %>
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="footer">
+						<%= typeof(i18n('Copyright')) === 'undefinded' ? 'Copyright © 2018 Saúl Navarrov' : i18n('Copyright') %>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>

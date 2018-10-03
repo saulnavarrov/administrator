@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>New Sails App</title>
+    <title><%= typeof(i18n('Name App')) === 'undefinied' ? 'Administrator App' : i18n('Name App')  %></title>
 
     <!-- Viewport mobile tag for sensible mobile support -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -29,11 +29,14 @@
     -->
 
     <!--STYLES-->
-    <link rel="stylesheet" href="/min/production.min.css">
+    <link rel="stylesheet" href="/dependencies/bootstrap-4/bootstrap-4.css">
+    <link rel="stylesheet" href="/styles/importer.css">
     <!--STYLES END-->
   </head>
 
   <body>
+
+
     <%- body %>
 
 
@@ -104,7 +107,21 @@
     -->
 
     <!--SCRIPTS-->
-    <script src="/min/production.min.js"></script>
+    <script src="/dependencies/sails.io.js"></script>
+    <script src="/dependencies/bootstrap-4/bootstrap-4.bundle.js"></script>
+    <script src="/dependencies/bowser.js"></script>
+    <script src="/dependencies/cloud.js"></script>
+    <script src="/dependencies/jquery.min.js"></script>
+    <script src="/dependencies/lodash.js"></script>
+    <script src="/dependencies/parasails.js"></script>
+    <script src="/dependencies/sweetalert.min.js"></script>
+    <script src="/dependencies/vue.js"></script>
+    <script src="/js/cloud.setup.js"></script>
+    <script src="/js/pages/dashboard.page.js"></script>
+    <script src="/js/pages/forgot.page.js"></script>
+    <script src="/js/pages/login.page.js"></script>
+    <script src="/js/pages/register.page.js"></script>
+    <script src="/js/pages/reset.page.js"></script>
     <!--SCRIPTS END-->
   </body>
 </html>

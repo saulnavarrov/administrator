@@ -12,7 +12,7 @@
 /* eslint-disable */
 Cloud.setup({
 
-  methods: {"index":{"verb":"GET","url":"/","args":[]}}
+  methods: {"index":{"verb":"GET","url":"/","args":[]},"login":{"verb":"GET","url":"/login","args":[]}}
 
 });
 /* eslint-enable */

@@ -21,6 +21,10 @@ module.exports = {
   },
 
   fn: async function (inputs, exits) {
+    // let req = this.req;
+    // let res = this.res;
+
+    // Retorno de la pagina de inicio
     return exits.success();
   }
 };

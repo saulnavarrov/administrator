@@ -1,0 +1,58 @@
+<div id="login" v-cloak>
+
+  <section class="h-100">
+		<div class="container h-100">
+			<div class="row justify-content-md-center h-100">
+				<div class="card-wrapper">
+					<div class="brand">
+						<img src="/images/favicons/apple-icon-114x114.png">
+					</div>
+					<div class="card fat">
+						<div class="card-body">
+							<h4 class="card-title"><%= typeof(i18n('Login.title')) === 'undefinded' ? 'Login' : i18n('Login.title') %></h4>
+							<form method="POST">
+
+								<div class="form-group">
+									<label for="email"><%= typeof(i18n('Login.email')) === 'undefinded' ? 'Email:' : i18n('Login.email') %></label>
+
+									<input id="email" type="email" class="form-control" name="email" value="" required autofocus>
+								</div>
+
+								<div class="form-group">
+									<label for="password"><%= typeof(i18n('Login.password')) === 'undefinded' ? 'Password' : i18n('Login.password') %>
+										<a href="/password/forgot" class="float-right">
+											<%= typeof(i18n('Login.forgot')) === 'undefinded' ? 'Forgot password?' : i18n('Login.forgot') %>
+										</a>
+									</label>
+									<input id="password" type="password" class="form-control" name="password" required data-eye>
+								</div>
+
+								<div class="form-group">
+									<label>
+										<input type="checkbox" name="remember"> <%= typeof(i18n('Login.remember')) === 'undefinded' ? 'Remember Me' : i18n('Login.remember') %>
+									</label>
+								</div>
+
+								<div class="form-group no-margin">
+									<button type="submit" class="btn btn-primary btn-block">
+										<%= typeof(i18n('Login.title')) === 'undefinded' ? 'Login' : i18n('Login.title') %>
+									</button>
+								</div>
+								<div class="margin-top20 text-center">
+									<%= typeof(i18n('Login.no acount')) === 'undefinded' ? 'Don\'t have an account?' : i18n('Login.no acount') %> <a href="/singup"><%= typeof(i18n('Login.acount create')) === 'undefinded' ? 'Create One' : i18n('Login.acount create') %></a>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="footer">
+						<%= typeof(i18n('Copyright')) === 'undefinded' ? 'Copyright &copy; Saúl Navarrov 2018' : i18n('Copyright') %>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>
+
+
