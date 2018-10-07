@@ -10,12 +10,12 @@
 					<div class="card fat">
 						<div class="card-body">
 							<h4 class="card-title"><%= typeof(i18n('Login.title')) === 'undefinded' ? 'Login' : i18n('Login.title') %></h4>
-							<form method="POST">
 
-								<div class="form-group">
+
+                <div class="form-group">
 									<label for="email"><%= typeof(i18n('Login.email')) === 'undefinded' ? 'Email:' : i18n('Login.email') %></label>
-
-									<input id="email" type="email" class="form-control" name="email" value="" required autofocus>
+                  <input id="email" type="email" class="form-control" name="email" value="" required :class="[formErrors.emailAddress ? 'is-invalid' : '']" v-model="formData.emailAddress" @change="validateEmail()" focus-first>
+                  <div class="invalid-feedback" v-if="formErrors.emailAddress"><%= i18n('Login.email Error') %></div>
 								</div>
 
 								<div class="form-group">
@@ -24,29 +24,29 @@
 											<%= typeof(i18n('Login.forgot')) === 'undefinded' ? 'Forgot password?' : i18n('Login.forgot') %>
 										</a>
 									</label>
-									<input id="password" type="password" class="form-control" name="password" required data-eye>
+                  <input id="password" type="password" class="form-control" name="password" required data-eye :class="[formErrors.password ? 'is-invalid' : '']" v-model="formData.password" @change="validatePassword()">
+                  <div class="invalid-feedback" v-if="formErrors.password"></div>
 								</div>
 
 								<div class="form-group">
 									<label>
-										<input type="checkbox" name="remember"> <%= typeof(i18n('Login.remember')) === 'undefinded' ? 'Remember Me' : i18n('Login.remember') %>
+										<input type="checkbox" name="remember" v-model="formData.rememberMe"> <%= typeof(i18n('Login.remember')) === 'undefinded' ? 'Remember Me' : i18n('Login.remember') %>
 									</label>
 								</div>
 
 								<div class="form-group no-margin">
-									<button type="submit" class="btn btn-primary btn-block">
+									<button type="button" class="btn btn-primary btn-block" @click="submittedLogin()">
 										<%= typeof(i18n('Login.title')) === 'undefinded' ? 'Login' : i18n('Login.title') %>
 									</button>
 								</div>
 								<div class="margin-top20 text-center">
 									<%= typeof(i18n('Login.no acount')) === 'undefinded' ? 'Don\'t have an account?' : i18n('Login.no acount') %> <a href="/singup"><%= typeof(i18n('Login.acount create')) === 'undefinded' ? 'Create One' : i18n('Login.acount create') %></a>
 								</div>
-							</form>
 						</div>
 					</div>
 					<div class="footer">
 						<%= typeof(i18n('Copyright')) === 'undefinded' ? 'Copyright &copy; Saúl Navarrov 2018' : i18n('Copyright') %>
-					</div>
+          </div>
 				</div>
 			</div>
 		</div>

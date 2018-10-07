@@ -7,6 +7,7 @@
  * For more information on custom configuration, visit:
  * https://sailsjs.com/config/custom
  */
+const l = require('./local');
 
 module.exports.custom = {
 
@@ -15,9 +16,14 @@ module.exports.custom = {
   * Any other custom config this Sails app should use during development.    *
   *                                                                          *
   ***************************************************************************/
-  // mailgunDomain: 'transactional-mail.example.com',
-  // mailgunSecret: 'key-testkeyb183848139913858e8abd9a3',
-  // stripeSecret: 'sk_test_Zzd814nldl91104qor5911gjald',
-  // …
+
+  // Pasarela de pagos
+  stripeSecret: l.stripeSecret,
+
+  // Email Send To MailGun
+  mailgunSecret: l.mailgunSecret,
+  mailgunDomain: l.mailgunDomain,
+  fromEmailAddress: l.fromEmailAddress,
+  fromName: l.fromName,
 
 };

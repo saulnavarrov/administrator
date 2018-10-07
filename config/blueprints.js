@@ -30,7 +30,7 @@ module.exports.blueprints = {
 
   prefix: '',
 
-  restPrefix: '/api/v0',
+  restPrefix: '',
 
 
   /***************************************************************************

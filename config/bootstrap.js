@@ -25,6 +25,16 @@ module.exports.bootstrap = async function(done) {
   //   { emailAddress: 'rachael@example.com', fullName: 'Rachael Shaw', },
   //   // etc.
   // ]);
+  // By convention, this is a good place to set up fake data during development.
+  if (await User.count() === 0) {
+    await User.createEach([{
+      emailAddress: 'sinavarrov@gmail.com',
+      name: 'Saul',
+      lastName: 'Navarrov',
+      isSuperAdmin: true,
+      password: await sails.helpers.passwords.hashPassword('abc123')
+    }, ]);
+  }
   // ```
 
   // Don't forget to trigger `done()` when this bootstrap function's logic is finished.

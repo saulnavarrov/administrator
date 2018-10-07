@@ -12,7 +12,7 @@
 /* eslint-disable */
 Cloud.setup({
 
-  methods: {"index":{"verb":"GET","url":"/","args":[]},"login":{"verb":"GET","url":"/login","args":[]}}
+  methods: {"index":{"verb":"GET","url":"/","args":[]},"dashboard":{"verb":"GET","url":"/dashboard","args":[]},"register":{"verb":"GET","url":"/singup","args":[]},"login":{"verb":"POST","url":"/api/v1/login","args":[]},"forgotPassword":{"verb":"GET","url":"/password/forgot","args":[]},"resetPassword":{"verb":"GET","url":"/password/new","args":[]}}
 
 });
 /* eslint-enable */

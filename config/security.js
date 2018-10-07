@@ -29,8 +29,8 @@ module.exports.security = {
   ***************************************************************************/
 
   cors: {
-    allRoutes: false,
-    allowOrigins: '*',
+    allRoutes: true,
+    // allowOrigins: 'http://administrador.io',
     allowCredentials: false,
   },
 
@@ -49,6 +49,6 @@ module.exports.security = {
   *                                                                           *
   ****************************************************************************/
 
-  csrf: true
+  // csrf: true
 
 };

@@ -35,6 +35,7 @@ async function registerNavegations(opt) {
     'xrequeststart': req.headers['x-request-start'] || '',
     'host': req.headers['host'],
     'url': req.url || l.baseUrl,
+    'isSocket': req.isSocket || '',
     'method': req.method,
     'complete': req.complete,
     'opController': req.options['controller'],
@@ -52,6 +53,8 @@ async function registerNavegations(opt) {
     'ifNoneMatch': req.headers['if-none-match'],
     'user': user === undefined ? 'Guest' : user.auth.id,
   };
+
+
 
   datosReg.ipsl = '';
   await saveDataLogsNavigations(datosReg);

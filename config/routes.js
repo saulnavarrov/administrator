@@ -43,6 +43,7 @@ module.exports.routes = {
   'GET /password/forgot':    {action: 'view-pages/forgot-password', locals:{layout:'layouts/login'}},
   'GET /password/new':       {action: 'view-pages/reset-password', locals:{layout:'layouts/login'}},
   // '/logout':             {action: '', locals:{layout:'layouts/a'}},
+  'GET /logout':             {action: 'auth/logout'},
   // //---
   // '/acount':             {action: '', locals:{layout:'layouts/a'}},
   // '/acount/password':    {action: '', locals:{layout:'layouts/a'}},
@@ -68,6 +69,7 @@ module.exports.routes = {
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗
   //  ╚╩╝╚═╝╚═╝╩ ╩╚═╝╚═╝╩ ╩╚═╝
+  // 'GET /csrfToken': { action: 'security/grant-csrf-token' },
 
   //  ╔╦╗╦╔═╗╔═╗
   //  ║║║║╚═╗║

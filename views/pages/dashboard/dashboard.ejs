@@ -1,7 +1,25 @@
-<div id="dashboard" class="container" v-cloak>
+<div id="dashboard" v-cloak>
+  <%- partial('../../partials/navbar.ejs') %>
+  <%- partial('../../partials/mainSidebar.ejs') %>
 
-  <h1>TODO: Implement this page.</h1>
-  <p>(See also <em>assets/styles/pages/dashboard.less</em>, <em>assets/js/pages/dashboard.page.js</em>, and <em>api/controllers/view-dashboard.js</em>.)</p>
+  <div class="main-content">
+    <section class="section">
 
+      <h1 class="section-header">
+        <div>Dashboard</div>
+      </h1>
+
+      <h1>TODO: Implement this page.</h1>
+      <p>(See also <em>assets/styles/pages/dashboard.less</em>, <em>assets/js/pages/dashboard.page.js</em>, and <em>api/controllers/view-dashboard.js</em>.)</p>
+
+      <br>
+      <a href="/">index</a>
+      <br><p>{{ me }}</p><br>
+      <a href="/logout">logout</a>
+
+    </section>
+  </div>
+
+  <%- partial('../../partials/footer.ejs') %>
 </div>
 <%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>
