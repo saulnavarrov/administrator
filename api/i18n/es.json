@@ -1,7 +1,8 @@
 {
 	"Name App": "Administrador",
 	"Welcome": "Bienvenido",
-	"A brand new app.": "Una nueva aplicación.",
+  "A brand new app.": "Una nueva aplicación.",
+  "hello": "Hola, ",
 	"Login": "Iniciar sesión",
 	"Login.title": "Iniciar sesión",
   "Login.email": "Correo Electronico",
