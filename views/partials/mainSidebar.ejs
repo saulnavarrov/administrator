@@ -4,9 +4,6 @@
  *
  */%>
 
-<p>SidebarLeft</p>
-
-<!--
 <div class="main-sidebar">
   <aside id="sidebar-wrapper">
     <div class="sidebar-brand">
@@ -14,12 +11,12 @@
     </div>
     <div class="sidebar-user">
       <div class="sidebar-user-picture">
-        <img alt="image" src="../dist/img/avatar/avatar-1.jpeg">
+        <img alt="image" src="<%= me.avatar %>"  />
       </div>
       <div class="sidebar-user-details">
-        <div class="user-name">Ujang Maman</div>
+        <div class="user-name">{{ me.name }}</div>
         <div class="user-role">
-          Administrator
+          {{ me.roleName }}
         </div>
       </div>
     </div>
@@ -101,4 +98,3 @@
     </div>
   </aside>
 </div>
--->

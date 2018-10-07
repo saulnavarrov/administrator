@@ -49,7 +49,33 @@ module.exports = {
     phone:{
       type: 'string',
       description: `Numero telefonico de la persona, tanto como datos, como para
-      recuperar la contraseña en caso de haberla perdido`
+      recuperar la contraseña en caso de haberla perdido`,
+      maxLength: 15
+    },
+
+    role:{
+      type: 'number',
+      isIn: [0,1,2,3,4,5,6,7,8,9],
+      defaultsTo: 9,
+      description: `Rol de la persona en la compañia
+      0 = 'admin',
+      1 = 'supervisor',
+      2 = 'vendedor',
+      3 = 'secretaria',
+      9 = 'user'`
+    },
+
+    roleName: {
+      type: 'string',
+      isIn: ['Admin', 'Supervisor', 'Vendedor', 'Secretaria', '', '', '', '', '', 'User'],
+      defaultsTo: 'User'
+    },
+
+    avatar: {
+      type: 'string',
+      description: `Imagen de perfil de la persona`,
+      defaultsTo: '/images/avatar/avatar-1.png'
+
     },
 
     isSuperAdmin: {
