@@ -99,7 +99,7 @@ parasails.registerPage('login', {
         }
 
         if (jwres.statusCode === 200) {
-          location.href = '/dashboard';
+          location.href = '/';
         }
       });
     },
