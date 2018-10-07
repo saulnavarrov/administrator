@@ -3,12 +3,11 @@
  * views/partials/footer.ejs
  *
  */%>
-<p>Footer</p>
-<!--
+
 <footer class="main-footer">
   <div class="footer-left">
-    Copyright &copy; 2018 <div class="bullet"></div> Design By <a href="https://multinity.com/">Multinity</a>
+    <%= typeof(i18n('Copyright Corto')) === 'undefinded' ? 'Copyright © 2018' : i18n('Copyright Corto') %>
+    <div class="bullet"></div> <%= typeof(i18n('power by Dev')) === 'undefinded' ? 'Power Dev by ' : i18n('power by Dev') %> <a href="https://facebook.com/navarrovsaul" target="_blank"><%= typeof(i18n('Copyright Name')) === 'undefinded' ? 'Saúl Navarrov' : i18n('Copyright Name') %></a>
   </div>
   <div class="footer-right"></div>
 </footer>
--->

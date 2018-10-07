@@ -32,7 +32,9 @@
 	"Reset.form New Password": "Contraseña Nueva",
 	"Reset.form Text": "Asegúrese de que su contraseña sea fuerte y fácil de recordar",
 	"Reset.form Btn Reset": "Cambiar Contraseña",
-	"Dashboad": "Dashboard",
+  "Dashboard": "Dashboard",
 	"Copyright": "Copyright © 2018 Saúl Navarrov",
-	"Dashboard": "Dashboard"
+  "Copyright Corto": "Copyright © 2018 ",
+  "Copyright Name": "Saúl Navarrov",
+  "power by Dev": "Dev by "
 }

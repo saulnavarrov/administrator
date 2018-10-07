@@ -32,6 +32,9 @@
   "Reset.form New Password": "New Password",
   "Reset.form Text": "Make sure your password is strong and easy to remember",
   "Reset.form Btn Reset": "Reset Password",
-  "Dashboad": "Dashboard",
-  "Copyright": "Copyright © 2018 Saúl Navarrov"
+  "Dashboard": "Dashboard",
+  "Copyright": "Copyright © 2018 Saúl Navarrov",
+  "Copyright Corto": "Copyright © 2018 ",
+  "Copyright Name": "Saúl Navarrov",
+  "power by Dev": "Dev by "
 }
