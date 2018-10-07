@@ -26,7 +26,7 @@ module.exports = {
     let TitlePage = sails.i18n('Login.title');
 
     if (rq.session.userId) {
-      throw {redirect:'/dashboard'};
+      throw {redirect:'/'};
     }
 
     // Respond with view.

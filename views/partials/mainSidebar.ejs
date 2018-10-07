@@ -7,14 +7,14 @@
 <div class="main-sidebar">
   <aside id="sidebar-wrapper">
     <div class="sidebar-brand">
-      <a href="index.html">Stisla Lite</a>
+      <a href="index.html">Administrador</a>
     </div>
     <div class="sidebar-user">
       <div class="sidebar-user-picture">
         <img alt="image" src="<%= me.avatar %>"  />
       </div>
       <div class="sidebar-user-details">
-        <div class="user-name">{{ me.name }}</div>
+        <div class="user-name">{{ me.name }} {{ me.lastName }}</div>
         <div class="user-role">
           {{ me.roleName }}
         </div>
@@ -23,10 +23,11 @@
     <ul class="sidebar-menu">
       <li class="menu-header">Dashboard</li>
       <li class="active">
-        <a href="index.html"><i class="ion ion-speedometer"></i><span>Dashboard</span></a>
+        <a href="/"><i class="ion ion-speedometer"></i><span>Dashboard</span></a>
       </li>
 
       <li class="menu-header">Components</li>
+<%/*
       <li>
         <a href="#" class="has-dropdown"><i class="ion ion-ios-albums-outline"></i><span>Components</span></a>
         <ul class="menu-dropdown">
@@ -96,5 +97,7 @@
         <i class="ion ion-help-buoy"></i> <div>Go PRO!</div>
       </a>
     </div>
+
+    */ %>
   </aside>
 </div>

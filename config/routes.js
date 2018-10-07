@@ -24,10 +24,10 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  'GET /':              {action:'view-pages/index', locals: {layout:'layouts/layout'}},
+  // 'GET /':              {action:'view-pages/index', locals: {layout:'layouts/layout'}},
 
   // '/wellcome':           {action: '', locals:{layout:'layouts/a'}},
-  '/dashboard':         {action: 'view-pages/dashboard', locals:{layout:'layouts/dashboard'}},
+  'GET /':         {action: 'view-pages/dashboard', locals:{layout:'layouts/dashboard'}},
   // //---
   // '/faq':                {action: '', locals:{layout:'layouts/a'}},
   // '/legal':              {action: '', locals:{layout:'layouts/a'}},
