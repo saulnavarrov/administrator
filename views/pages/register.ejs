@@ -12,35 +12,43 @@
 							<h4 class="card-title"><%= typeof(i18n('Register.title')) === 'undefinded' ? 'Register' : i18n('Register.title') %></h4>
 							<form method="POST">
 
-								<div class="form-group">
-									<label for="name"><%= typeof(i18n('Register.form Name')) === 'undefinded' ? 'Name' : i18n('Register.form Name') %></label>
-									<input id="name" type="text" class="form-control" name="name" required autofocus>
-								</div>
+                <% if (!active) { %>
+                  <div class="margin-top20 text-center">
+                    <%= typeof(i18n('Register.enabled View')) === 'undefinded' ? 'Disabled Register ' : i18n('Register.enabled View') %><br><br>
+                    <%= typeof(i18n('Register.enabled View 2')) === 'undefinded' ? 'click to ' : i18n('Register.enabled View 2') %> <a href="/login"><%= typeof(i18n('Login.title')) === 'undefinded' ? 'Login' : i18n('Login.title') %></a>
+                  </div>
+                <% } else { %>
+                  <div class="form-group">
+                    <label for="name"><%= typeof(i18n('Register.form Name')) === 'undefinded' ? 'Name' : i18n('Register.form Name') %></label>
+                    <input id="name" type="text" class="form-control" name="name" required autofocus>
+                  </div>
 
-								<div class="form-group">
-									<label for="email"><%= typeof(i18n('Register.form Email')) === 'undefinded' ? 'E-Mail Address' : i18n('Register.form Email') %></label>
-									<input id="email" type="email" class="form-control" name="email" required>
-								</div>
+                  <div class="form-group">
+                    <label for="email"><%= typeof(i18n('Register.form Email')) === 'undefinded' ? 'E-Mail Address' : i18n('Register.form Email') %></label>
+                    <input id="email" type="email" class="form-control" name="email" required>
+                  </div>
 
-								<div class="form-group">
-									<label for="password"><%= typeof(i18n('Register.form Password')) === 'undefinded' ? 'Password' : i18n('Register.form Password') %></label>
-									<input id="password" type="password" class="form-control" name="password" required data-eye>
-								</div>
+                  <div class="form-group">
+                    <label for="password"><%= typeof(i18n('Register.form Password')) === 'undefinded' ? 'Password' : i18n('Register.form Password') %></label>
+                    <input id="password" type="password" class="form-control" name="password" required data-eye>
+                  </div>
 
-								<div class="form-group">
-									<label>
-										<input type="checkbox" name="aggree" value="1"><%= typeof(i18n('Register.form Conditions')) === 'undefinded' ? 'I agree to the Terms and Conditions' : i18n('Register.form Conditions') %>
-									</label>
-								</div>
+                  <div class="form-group">
+                    <label>
+                      <input type="checkbox" name="aggree" value="1"><%= typeof(i18n('Register.form Conditions')) === 'undefinded' ? 'I agree to the Terms and Conditions' : i18n('Register.form Conditions') %>
+                    </label>
+                  </div>
 
-								<div class="form-group no-margin">
-									<button type="submit" class="btn btn-primary btn-block">
-										<%= typeof(i18n('Register.form Btn Register')) === 'undefinded' ? 'Register' : i18n('Register.form Btn Register') %>
-									</button>
-								</div>
-								<div class="margin-top20 text-center">
-									<%= typeof(i18n('Register.have Account')) === 'undefinded' ? 'Already have an account?' : i18n('Register.have Account') %> <a href="/login"><%= typeof(i18n('Login.title')) === 'undefinded' ? 'Login' : i18n('Login.title') %></a>
-								</div>
+                  <div class="form-group no-margin">
+                    <button type="submit" class="btn btn-primary btn-block">
+                      <%= typeof(i18n('Register.form Btn Register')) === 'undefinded' ? 'Register' : i18n('Register.form Btn Register') %>
+                    </button>
+                  </div>
+                  <div class="margin-top20 text-center">
+                    <%= typeof(i18n('Register.have Account')) === 'undefinded' ? 'Already have an account?' : i18n('Register.have Account') %> <a href="/login"><%= typeof(i18n('Login.title')) === 'undefinded' ? 'Login' : i18n('Login.title') %></a>
+                  </div>
+                <% } %>
+
 							</form>
 						</div>
 					</div>

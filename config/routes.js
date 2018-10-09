@@ -42,12 +42,14 @@ module.exports.routes = {
   'GET /login':              {action: 'view-pages/login', locals:{layout:'layouts/login'}},
   'GET /password/forgot':    {action: 'view-pages/forgot-password', locals:{layout:'layouts/login'}},
   'GET /password/new':       {action: 'view-pages/reset-password', locals:{layout:'layouts/login'}},
-  // '/logout':             {action: '', locals:{layout:'layouts/a'}},
   'GET /logout':             {action: 'auth/logout'},
   // //---
   // '/acount':             {action: '', locals:{layout:'layouts/a'}},
   // '/acount/password':    {action: '', locals:{layout:'layouts/a'}},
   // '/acount/profile':     {action: '', locals:{layout:'layouts/a'}},
+
+  'GET /users':             {action: 'users/view-list', locals:{layout:'layouts/dashboard'}},
+  'GET /users/new':         {action: 'users/view-register', locals:{layout:'layouts/dashboard'}},
 
   /***************************************************************************
   *                                                                          *
@@ -64,7 +66,9 @@ module.exports.routes = {
   //  ╔═╗╔═╗╦  ╔═╗╔╗╔╔╦╗╔═╗╔═╗╦╔╗╔╔╦╗╔═╗
   //  ╠═╣╠═╝║  ║╣ ║║║ ║║╠═╝║ ║║║║║ ║ ╚═╗
   //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
-  'POST /api/v1/login':              {action: 'auth/login'},
+  'POST /api/v1/login':               {action: 'auth/login'},
+  'POST /api/v1/users':               {action: 'users/list'},
+  'POST /api/v1/users/create':        {action: 'users/create-user'}
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗

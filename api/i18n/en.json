@@ -14,6 +14,8 @@
   "Login.no acount": "Don't have an account?",
   "Login.acount create": "Create One",
   "Register": "Register",
+  "Register.enabled View": "Registration by this page is not enabled, Contact the Administrator to provide a Username and password.",
+  "Register.enabled View 2": "If you already have a username and password, click here to ",
   "Register.title": "Register",
   "Register.form Name": "Name ",
   "Register.form Email": "E-Mail Address",
@@ -36,5 +38,7 @@
   "Copyright": "Copyright © 2018 Saúl Navarrov",
   "Copyright Corto": "Copyright © 2018 ",
   "Copyright Name": "Saúl Navarrov",
-  "power by Dev": "Dev by "
+  "power by Dev": "Dev by ",
+  "Users": "Users",
+  "Users.new": "Register New User"
 }

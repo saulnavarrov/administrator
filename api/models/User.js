@@ -58,17 +58,22 @@ module.exports = {
       isIn: [0,1,2,3,4,5,6,7,8,9],
       defaultsTo: 9,
       description: `Rol de la persona en la compañia
-      0 = 'admin',
-      1 = 'supervisor',
-      2 = 'vendedor',
-      3 = 'secretaria',
-      9 = 'user'`
+      0 = 'Super Administrador',
+      1 = 'Administrador',
+      2 = 'Supervisor',
+      3 = 'Secretaria',
+      4 = 'Vendedor',
+      5 = '',
+      6 = '',
+      7 = 'Usuario',
+      8 = 'Cliente',
+      9 = 'Guest'`
     },
 
     roleName: {
       type: 'string',
-      isIn: ['Admin', 'Supervisor', 'Vendedor', 'Secretaria', '', '', '', '', '', 'User'],
-      defaultsTo: 'User'
+      isIn: ['Super Administrador', 'Administrador', 'Supervisor', 'Secretaria', 'Vendedor', '', '', 'Usuario', 'Cliente', 'Guest'],
+      defaultsTo: 'Guest'
     },
 
     avatar: {

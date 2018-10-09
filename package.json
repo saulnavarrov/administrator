@@ -14,12 +14,13 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
     "sails": "^1.0.2",
+    "sails-hook-apianalytics": "^2.0.0",
     "sails-hook-grunt": "^3.0.2",
+    "sails-hook-organics": "^0.13.0",
     "sails-hook-orm": "^2.0.0-16",
     "sails-hook-sockets": "^1.4.0",
-    "sails-hook-apianalytics": "^2.0.0",
-    "sails-hook-organics": "^0.13.0",
-    "sails-mongo": "^1.0.1"
+    "sails-mongo": "^1.0.1",
+    "sinch-sms": "0.0.8"
   },
   "devDependencies": {
     "@sailshq/eslint": "^4.19.3",

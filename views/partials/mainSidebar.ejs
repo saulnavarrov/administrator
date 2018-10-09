@@ -22,12 +22,25 @@
     </div>
     <ul class="sidebar-menu">
       <li class="menu-header">Dashboard</li>
-      <li class="active">
+      <li class="<%= menu.l1 === 'dashboard' ? 'active' : '' %>">
         <a href="/"><i class="ion ion-speedometer"></i><span>Dashboard</span></a>
       </li>
 
       <li class="menu-header">Components</li>
-<%/*
+
+      <% if(me.role <= 3) { %>
+        <li class="<%= menu.l1 === 'usuarios' ? 'active' : '' %>">
+          <a href="#" class="has-dropdown"><i class="ion ion-ios-copy-outline"></i><span>Usuarios</span></a>
+          <ul class="menu-dropdown">
+            <li class="<%= menu.l2 === 'users' ? 'active' : '' %>"><a href="/users"><i class="ion ion-ios-circle-outline"></i> Users</a></li>
+            <% if(me.role <= 2) { %><li class="<%= menu.l2 === 'new' ? 'active' : '' %>"><a href="/users/new"><i class="ion ion-ios-circle-outline"></i> New Users</a></li><% } %>
+          </ul>
+        </li>
+      <% } %>
+
+
+      <%/*
+
       <li>
         <a href="#" class="has-dropdown"><i class="ion ion-ios-albums-outline"></i><span>Components</span></a>
         <ul class="menu-dropdown">

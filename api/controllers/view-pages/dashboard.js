@@ -24,6 +24,23 @@ module.exports = {
   fn: async function (inputs, exits) {
     let rq = this.req; // Request Cliente Page
     let TitlePage = sails.i18n('Dashboard');
+    let menu = {
+      'l1': 'dashboard',
+      'l2': null,
+      'l3': null
+    };
+
+    // Send "confirm account" email
+    // await sails.helpers.sendTemplateEmail.with({
+    //   to: 'sinavarrov@gmail.com',
+    //   subject: 'Verificacion de E-mail Nuevo',
+    //   template: 'email-verify-account',
+    //   templateData: {
+    //     fullName: 'Saul Navarro Villadiego',
+    //     token: 'token de la pagina entrega para nuevos datos'
+    //   }
+    // });
+
 
     if (!rq.session.userId) {
       throw {redirect:'/login'};
@@ -31,7 +48,8 @@ module.exports = {
 
     // Respond with view.
     return exits.success({
-      'titlePage': TitlePage
+      'titlePage': TitlePage,
+      'menu': menu
     });
 
   }

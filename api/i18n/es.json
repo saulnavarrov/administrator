@@ -13,7 +13,9 @@
 	"Login.remember": "Recordarme",
 	"Login.no acount": "¿No estas registrado?",
 	"Login.acount create": "Registrate",
-	"Register": "Registarse",
+  "Register": "Registarse",
+  "Register.enabled View": "El Registro por esta página no es habilitado, Póngase en contacto con el Administrador para proporcionarle un Usuario y contraseña.",
+  "Register.enabled View 2": "Si ya cuenta con un usuario y contraseña, has clic aqui para ",
 	"Register.title": "Registarse",
 	"Register.form Name": "Nombre",
 	"Register.form Email": "Correo Electronico",
@@ -36,5 +38,7 @@
 	"Copyright": "Copyright © 2018 Saúl Navarrov",
   "Copyright Corto": "Copyright © 2018 ",
   "Copyright Name": "Saúl Navarrov",
-  "power by Dev": "Dev by "
+  "power by Dev": "Dev by ",
+  "Users": "Usuarios",
+  "Users.new": "Registrar Nuevo Usuario"
 }
