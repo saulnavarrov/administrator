@@ -10,19 +10,160 @@
         <div><%= i18n('Users') %></div>
       </h1>
 
-      <section class="section-body">
-        <div class="jumbotron">
-          <h3>Contenido Usuario</h3>
-          <br><p>{{ me }}</p><br>
-          <br>
-        </div>
-      </section>
-
-      <div class="row">
+      <div class="row mt-5">
         <div class="col-12">
           <div class="card">
-            <div class="card-header">Titulo Card</div>
-            <div class="card-body">Contenidos</div>
+            <div class="card-header">
+              <div class="float-right">
+                <form>
+                  <div class="input-group" v-show="search" >
+                    <input type="text" class="form-control" placeholder="Search" >
+                    <div class="input-group-btn">
+                      <button class="btn btn-secondary"><i class="ion ion-search"></i></button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <h4>Lista de Usuarios</h4>
+            </div>
+            <div class="card-body">
+
+              <%/* Progresive bar */%>
+              <div class="progress" v-show="progressBar">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+                <br>
+              </div>
+
+              <%/* Alertas */%>
+              <div class="row" v-show="alert.active">
+                <div class="col-12">
+                  <div class="alert alert-has-icon alert-dismissible show fade " :class="[alert.type]" >
+                    <div class="alert-icon">
+                      <i class="ion" :class="[alert.icon]"></i>
+                    </div>
+                    <div class="alert-body">
+                      <button class="close" data-dismiss="alert">
+                        <span>×</span>
+                      </button>
+                      <div class="alert-title">{{ alert.title }}</div>
+                      {{ alert.message }}
+                    </div>
+                  </div>
+                </div>
+                <br>
+              </div>
+
+              <%/* CONTENIDO DE LA TABLA */%>
+              <div class="row" v-show="tableData">
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <tbody>
+                      <tr>
+                        <th class="text-right" width="50">#</th>
+                        <th class="text-center">
+                          <div class="custom-checkbox custom-control">
+                            <input type="checkbox" data-checkboxes="mygroup" data-checkbox-role="dad" class="custom-control-input" id="checkbox-all">
+                            <label for="checkbox-all" class="custom-control-label"></label>
+                          </div>
+                        </th>
+                        <th>Nombre Completo</th>
+                        <th>Email</th>
+                        <th>Rol Name</th>
+                        <th>Estado</th>
+                        <th class="text-center" width="130">Action</th>
+                      </tr>
+                      <tr v-for="(list, i) of listData">
+                        <th class="text-right" width="50">{{ i + 1 }}</th>
+                        <td width="40">
+                          <div class="custom-checkbox custom-control">
+                            <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input" v-bind:id="'id-'+list.id">
+                            <label v-bind:for="'id-'+list.id" class="custom-control-label"></label>
+                          </div>
+                        </td>
+                        <td>{{ list.name }} {{ list.lastName }}</td>
+                        <td>{{ list.emailAddress }}</td>
+                        <td>{{ list.role }} - {{ list.roleName }}</td>
+                        <td>{{ list.emailStatus }}</td>
+                        <td width="130">
+                          <div class="btn-group dropleft float-right">
+                            <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Detalles
+                            </button>
+                            <div class="dropdown-menu" x-placement="left-start" style="position: absolute; transform: translate3d(-202px, 0px, 0px); top: 0px; left: 0px; will-change: transform;">
+                              <a class="dropdown-item" href="#">Ver Completo</a>
+                              <a class="dropdown-item" href="#">Editar</a>
+                              <a class="dropdown-item" href="#">Desbloquear</a>
+                              <% if( me.role === 0 ) { %>
+                              <div class="dropdown-divider"></div>
+                              <a class="dropdown-item" href="#">Eliminar</a>
+                              <% } %>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <%/* FIN DEL CONTENIDO DE LA TABLA */%>
+            </div>
+
+            <div class="card-footer">
+              <div class="row" v-show="footerTable">
+
+                <div class="col col-lg-4" style="line-height: 33px;" v-show="countData">
+                  <p>Resultados: {{ listCount }} de {{ listCountComplete }}</p>
+                </div>
+
+                <%/* NAVEGACION DE LAS PAGINAS */%>
+                <div class="col col-lg-5" v-show="navegationsData">
+                  <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                      <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                          <span aria-hidden="true">«</span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" href="#">...</a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" href="#">20</a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" href="#">21</a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" href="#">22</a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" href="#">...</a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                          <span aria-hidden="true">»</span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+                <%/* FIN NAVEGACION DE LAS PAGINAS */%>
+
+                <%/* CANTIDAD DE RESULTADOS */%>
+                <div class="col-12 col-lg-3 row" v-show="numResult">
+                  <label for="resultados" class="col-7 text-right" style="line-height: 33px;"># Resultados: </label>
+                  <select class="col-5 custom-select custom-select-sm" style="height: fit-content;">
+                    <option value="10" selected>10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="250">250</option>
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
