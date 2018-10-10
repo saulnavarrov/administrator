@@ -260,10 +260,7 @@ module.exports = {
     * > Be sure to use the right protocol!  ("http://" vs. "https://")         *
     *                                                                          *
     ***************************************************************************/
-    onlyAllowOrigins: [
-      l.baseUrl,
-      l.baseUrl2,
-    ],
+    onlyAllowOrigins: l.baseUrl,
 
 
     /***************************************************************************
