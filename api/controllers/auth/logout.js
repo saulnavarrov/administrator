@@ -26,17 +26,31 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    if (!this.req.session.userId) {
-      // Clear the `userId` property from this session.
+    // Clear the `userId` property from this session.
+    delete this.req.session.userId;
+
+    // Then finish up, sending an appropriate response.
+    // > Under the covers, this persists the now-logged-out session back
+    // > to the underlying session store.
+    if (!this.req.wantsJSON) {
       throw {
         redirect: '/login'
       };
-    }else{
-      delete this.req.session.userId;
-      throw {
-        redirect: '/login'
-      };
+    } else {
+      return exits.success();
     }
+
+    // if (!this.req.session.userId) {
+    //   // Clear the `userId` property from this session.
+    //   throw {
+    //     redirect: '/login'
+    //   };
+    // }else{
+    //   delete this.req.session.userId;
+    //   throw {
+    //     redirect: '/login'
+    //   };
+    // }
 
 
 

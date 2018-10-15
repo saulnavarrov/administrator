@@ -1,4 +1,4 @@
-<div id="list" v-cloak>
+<div id="listUsers" v-cloak>
 
   <%- partial('../../partials/navbar.ejs') %>
   <%- partial('../../partials/mainSidebar.ejs') %>
@@ -15,14 +15,14 @@
           <div class="card">
             <div class="card-header">
               <div class="float-right">
-                <form>
+
                   <div class="input-group" v-show="search" >
-                    <input type="text" class="form-control" placeholder="Search" >
+                    <input type="text" class="form-control" placeholder="Search" v-model="searchs" v-on:keyup.enter="findOneSearch()">
                     <div class="input-group-btn">
-                      <button class="btn btn-secondary"><i class="ion ion-search"></i></button>
+                      <button class="btn btn-secondary" v-on:click="findEndSearch()"><i class="ion ion-close"></i></button>
                     </div>
                   </div>
-                </form>
+
               </div>
               <h4>Lista de Usuarios</h4>
             </div>
@@ -31,7 +31,7 @@
               <%/* Progresive bar */%>
               <div class="progress" v-show="progressBar">
                 <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-                <br>
+                <br><br>
               </div>
 
               <%/* Alertas */%>
@@ -57,13 +57,14 @@
               <div class="row" v-show="tableData">
                 <div class="table-responsive">
                   <table class="table table-striped">
-                    <tbody>
+                    <thead>
                       <tr>
                         <th class="text-right" width="50">#</th>
                         <th class="text-center">
                           <div class="custom-checkbox custom-control">
-                            <input type="checkbox" data-checkboxes="mygroup" data-checkbox-role="dad" class="custom-control-input" id="checkbox-all">
-                            <label for="checkbox-all" class="custom-control-label"></label>
+                            <input type="checkbox" data-checkboxes="mygroup" data-checkbox-role="dad" class="custom-control-input" id="allSelect"
+                              v-model="allSelect" v-on:click="selectAll()">
+                            <label for="allSelect" class="custom-control-label"></label>
                           </div>
                         </th>
                         <th>Nombre Completo</th>
@@ -72,12 +73,15 @@
                         <th>Estado</th>
                         <th class="text-center" width="130">Action</th>
                       </tr>
-                      <tr v-for="(list, i) of listData">
-                        <th class="text-right" width="50">{{ i + 1 }}</th>
+                    </thead>
+
+                    <tbody>
+                      <tr v-for="(list, i) of listData" v-bind:id="'id-'+list.id">
+                        <td class="text-right" width="50">{{ ((skip * limit) + i) + 1 }}</td>
                         <td width="40">
                           <div class="custom-checkbox custom-control">
-                            <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input" v-bind:id="'id-'+list.id">
-                            <label v-bind:for="'id-'+list.id" class="custom-control-label"></label>
+                            <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input" v-bind:id="'ch-'+list.id" v-model="list.check">
+                            <label v-bind:for="'ch-'+list.id" class="custom-control-label"></label>
                           </div>
                         </td>
                         <td>{{ list.name }} {{ list.lastName }}</td>
@@ -90,12 +94,12 @@
                             Detalles
                             </button>
                             <div class="dropdown-menu" x-placement="left-start" style="position: absolute; transform: translate3d(-202px, 0px, 0px); top: 0px; left: 0px; will-change: transform;">
-                              <a class="dropdown-item" href="#">Ver Completo</a>
-                              <a class="dropdown-item" href="#">Editar</a>
-                              <a class="dropdown-item" href="#">Desbloquear</a>
+                              <a class="dropdown-item" v-on:click="findOneUser(list.id)">Ver Completo</a>
+                              <a class="dropdown-item" v-on:click="findOneUserEdith(list.id)">Editar</a>
+                              <a class="dropdown-item" v-on:click="toUnlockUser(list.id)">Desbloquear</a>
                               <% if( me.role === 0 ) { %>
                               <div class="dropdown-divider"></div>
-                              <a class="dropdown-item" href="#">Eliminar</a>
+                              <a class="dropdown-item" v-on:click="deleteUser(list.id)">Eliminar</a>
                               <% } %>
                             </div>
                           </div>
@@ -109,42 +113,44 @@
             </div>
 
             <div class="card-footer">
+
+              <%/* init footer */%>
               <div class="row" v-show="footerTable">
 
-                <div class="col col-lg-4" style="line-height: 33px;" v-show="countData">
-                  <p>Resultados: {{ listCount }} de {{ listCountComplete }}</p>
+                <div class="col-md-12 col-lg-3 text-center" style="line-height: 33px;" v-show="countData">
+                  <p>Resultados: {{ (limit * skip) + 1 }} - {{ listCount + (skip * limit) }} de {{ listFullCount }}</p>
                 </div>
 
                 <%/* NAVEGACION DE LAS PAGINAS */%>
-                <div class="col col-lg-5" v-show="navegationsData">
-                  <nav aria-label="Page navigation">
+                <div class="col-md-12 col-lg-5" >
+                  <nav aria-label="Page navigation" style="justify-content: center;display: flex;" v-show="navegationsData">
                     <ul class="pagination">
-                      <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
+                      <li class="page-item" :class="[pagination.prev]">
+                        <p class="page-link" aria-label="Previous" v-on:click="paginationClick(pagination.a - 1)">
                           <span aria-hidden="true">«</span>
                           <span class="sr-only">Previous</span>
-                        </a>
+                        </p>
                       </li>
-                      <li class="page-item">
-                        <a class="page-link" href="#">...</a>
+
+                      <%/* CONTINUACION PREV DE DATOS */%>
+                      <li class="page-item disabled" v-show="pagination.pre">
+                        <p class="page-link">...</p>
                       </li>
-                      <li class="page-item">
-                        <a class="page-link" href="#">20</a>
+
+                      <li class="page-item"  v-for="(pin, i) of pagination.list" :class="[pin.aa]" v-show="pin.ss">
+                        <p class="page-link" v-on:click="paginationClick(i)">{{ pin.nn }}</p>
                       </li>
-                      <li class="page-item">
-                        <a class="page-link" href="#">21</a>
+
+                      <%/* CONTINUACION NEXT DE DATOS */%>
+                      <li class="page-item disabled" v-show="pagination.nex">
+                        <p class="page-link">...</p>
                       </li>
-                      <li class="page-item">
-                        <a class="page-link" href="#">22</a>
-                      </li>
-                      <li class="page-item">
-                        <a class="page-link" href="#">...</a>
-                      </li>
-                      <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
+
+                      <li class="page-item" :class="[pagination.next]">
+                        <p class="page-link" aria-label="Next" v-on:click="paginationClick(pagination.a + 1)">
                           <span aria-hidden="true">»</span>
                           <span class="sr-only">Next</span>
-                        </a>
+                        </p>
                       </li>
                     </ul>
                   </nav>
@@ -152,9 +158,9 @@
                 <%/* FIN NAVEGACION DE LAS PAGINAS */%>
 
                 <%/* CANTIDAD DE RESULTADOS */%>
-                <div class="col-12 col-lg-3 row" v-show="numResult">
-                  <label for="resultados" class="col-7 text-right" style="line-height: 33px;"># Resultados: </label>
-                  <select class="col-5 custom-select custom-select-sm" style="height: fit-content;">
+                <div class="col-12 col-lg-4 row" v-show="numResult" style="display: flex;justify-content: center;">
+                  <label for="resultados" class="col-7t" style="line-height: 33px;"># Resultados: </label>
+                  <select class="col-5 custom-select custom-select-sm" style="height: fit-content;max-width: 100px;margin-left: 10px;" v-model="limit" v-on:change="skipData()" width="100">
                     <option value="10" selected>10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>

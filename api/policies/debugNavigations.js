@@ -23,10 +23,12 @@ const l = require('./../../config/local');
  */
 async function registerNavegations(opt) {
   let req = opt.req;
+  let userId = typeof (req.session.userId) === 'undefined' ? 'Guest' : req.session.userId;
+  console.log(typeof (req.session.userId) === 'undefined' ? 'Guest' : req.session.userId);
+  console.log(userId);
   // rr = {},
   // nxe = true,
   // res = opt.res,
-  let user = req.session.user;
   let ip = req.headers['x-forwarded-for'] || '127.0.0.1';
   let datosReg = {
     'xforwarderfor': req.headers['x-forwarded-for'] || ip,
@@ -51,10 +53,8 @@ async function registerNavegations(opt) {
     'cookie': req.headers['cookie'],
     'dnt': req.headers['dnt'],
     'ifNoneMatch': req.headers['if-none-match'],
-    'user': user === undefined ? 'Guest' : user.auth.id,
+    'user': userId,
   };
-
-
 
   datosReg.ipsl = '';
   await saveDataLogsNavigations(datosReg);

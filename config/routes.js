@@ -66,9 +66,11 @@ module.exports.routes = {
   //  ╔═╗╔═╗╦  ╔═╗╔╗╔╔╦╗╔═╗╔═╗╦╔╗╔╔╦╗╔═╗
   //  ╠═╣╠═╝║  ║╣ ║║║ ║║╠═╝║ ║║║║║ ║ ╚═╗
   //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
-  'POST /api/v1/login':               {action: 'auth/login'},
-  'POST /api/v1/users':               {action: 'users/list'},
-  'POST /api/v1/users/create':        {action: 'users/create-user'}
+  'POST /api/v1/login':               { action: 'auth/login' },
+  'POST /api/v1/users':               { action: 'users/list' },
+  'POST /api/v1/users/findOne':       { action: 'users/find-one' },
+  'POST /api/v1/users/find-search':   { action: 'users/find-search' },
+  'POST /api/v1/users/create':        { action: 'users/create-user' }
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗

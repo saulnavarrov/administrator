@@ -24,7 +24,7 @@
 											<%= typeof(i18n('Login.forgot')) === 'undefinded' ? 'Forgot password?' : i18n('Login.forgot') %>
 										</a>
 									</label>
-                  <input id="password" type="password" class="form-control" name="password" required data-eye :class="[formErrors.password ? 'is-invalid' : '']" v-model="formData.password" @change="validatePassword()">
+                  <input id="password" type="password" class="form-control" name="password" required data-eye :class="[formErrors.password ? 'is-invalid' : '']" v-model="formData.password" @change="validatePassword()" @keyup.enter="submittedLogin()">
                   <div class="invalid-feedback" v-if="formErrors.password"></div>
 								</div>
 

@@ -12,7 +12,7 @@
 /* eslint-disable */
 Cloud.setup({
 
-  methods: {"index":{"verb":"GET","url":"/","args":[]},"dashboard":{"verb":"GET","url":"/dashboard","args":[]},"register":{"verb":"GET","url":"/singup","args":[]},"login":{"verb":"POST","url":"/api/v1/login","args":[]},"forgotPassword":{"verb":"GET","url":"/password/forgot","args":[]},"resetPassword":{"verb":"GET","url":"/password/new","args":[]}}
+  methods: {"dashboard":{"verb":"GET","url":"/","args":[]},"register":{"verb":"GET","url":"/singup","args":[]},"login":{"verb":"POST","url":"/api/v1/login","args":["emailAddress","password","rememberMe"]},"forgotPassword":{"verb":"GET","url":"/password/forgot","args":[]},"resetPassword":{"verb":"GET","url":"/password/new","args":[]},"logout":{"verb":"GET","url":"/logout","args":[]},"list":{"verb":"POST","url":"/api/v1/users","args":["count","lim","sk"]},"createUser":{"verb":"POST","url":"/api/v1/users/create","args":["emailAddress","password","name","lastName","phone","role","roleName","isSuperAdmin","emailStatus"]}}
 
 });
 /* eslint-enable */

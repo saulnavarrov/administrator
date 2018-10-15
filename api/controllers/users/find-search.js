@@ -1,14 +1,13 @@
 module.exports = {
-  friendlyName: 'users/list',
 
-  description: 'funcion find: entrega todos los datos encontrados de los usuarios',
 
-  extendedDescription: `Esta funcion recopila los datos de todos los usuarios en la DB
-  los depocita al usuario autorizado para verlos, cuenta con:
-  count: numero de resultados completo
-  limit: limita la cantidad de datos a entregar
-  skip: funciona para omisor de datos junto con el limit
-  find: no funciona en esta accion`,
+  friendlyName: 'Find one',
+
+
+  description: `Busca un usuario especifico en la base de datos y lo devuelve
+  haciendolo funcionar con el buscador si contontine tal dato, en 3 columnas
+  el Nombre, Apellido, E-mail`,
+
 
   inputs: {
     count: {
@@ -31,7 +30,7 @@ module.exports = {
       en cantidades por limites, usado para paginar la cantidad de resultados
       que se entregan en la vista`
     },
-    find: {
+    finds: {
       type: 'string',
       defaultsTo: '',
       description: `Se usaria para hacer busqueda en la tabla de usuarios, actualmente
@@ -57,49 +56,54 @@ module.exports = {
     }
   },
 
-  fn: async function (inputs, exits) {
 
+  // funcion final de entraga de datos
+  fn: async function (inputs, exits) {
+    let _ = require('lodash');
     let rq = this.req;
     let users = []; // array de usuario nuevo
     let userId = rq.session.userId;
     let isSocket = rq.isSocket;
     let count = 0;
 
+    // formateando datos para busquedas exactas ya que sin camelcase
+    let searchEmail = _.lowerCase(String(inputs.finds));
+    let searchName = _.startCase(_.lowerCase(String(inputs.finds)));
+    let searchLastName = _.startCase(_.lowerCase(String(inputs.finds)));
+
     // Verificacion de usuario
-    if(!userId && !isSocket){
+    if (!userId && !isSocket) {
       return exits.unauthorized({
         error: true,
         message: 'Unauthorized'
       });
     }
 
-    // Enviando Numero complto de registros que hay en la base de datos
-    if(inputs.count){
-      return exits.success({
-        model: 'users',
-        count: await User.count()
-      });
-    }
+    // funcion de buscador, donde buscara de los 3 la funcion
+    let findUsers = await User.find()
+      .where({
+        'or': [
+          { 'emailAddress': { 'contains': searchEmail } },
+          { 'name':         { 'contains': searchName } },
+          { 'lastName':     { 'contains': searchLastName } }
+        ]
+      })
+      .limit(inputs.lim)
+      .skip(inputs.lim * inputs.sk);
 
-    // Ejecucion luego entregar el contador y saber que esta autorizado
-    // para visualizar estos datos
-    let usersArray = await User.find()
-                            .limit(inputs.lim)
-                            .skip(inputs.lim * inputs.sk); // Todos los usuarios
-
-    // Devuelve la cantidad de datos almacenados
-    count = await User.count();
+    // Cuenta el numero de resultados
+    count = findUsers.length;
 
     // Protegiendo el Password para no visualizarlo en Json
-    for (user of usersArray) {
+    for (user of findUsers) {
       delete user.password;
-      if(user.role > 1){
+      if (user.role > 1) {
         delete user.isSuperAdmin;
       }
       users.push(user);
     }
 
-    // Retorno de datos
+    // Retorna todos los datos si es correcto
     return exits.success({
       model: 'users',
       count: count,

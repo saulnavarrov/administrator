@@ -112,6 +112,11 @@
 
     -->
 
+    <% /* Delete the global `self` to help avoid client-side bugs.
+    (see https://developer.mozilla.org/en-US/docs/Web/API/Window/self) */ %>
+    <script>delete window.self;</script>
+
+    <% /* Auto-injected «script» tags: */ %>
     <!--SCRIPTS-->
     <script src="/dependencies/sails.io.js"></script>
     <script src="/dependencies/lodash.js"></script>

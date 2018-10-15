@@ -4,7 +4,7 @@ module.exports = {
   friendlyName: 'View list',
 
 
-  description: 'Display "List" page.',
+  description: 'Display "List" Users page.',
 
 
   exits: {
