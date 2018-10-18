@@ -1,0 +1,209 @@
+<%
+/**
+ * views/page/users/pm-edit-user.ejs
+ * Partial Modal
+ * Para ver los datos completos del usuario.
+ */%>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="pm-user-view" data-backdrop="static" data-keyboard="false" aria-labelledby="pm-user-view" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <%/* HEADER MODAL */%>
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">{{ titleModal }} {{ userData.name +' '+ userData.lastName }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" v-on:click="closeModalView('pm-user-view')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <%/* BODY MODAL */%>
+      <div class="modal-body">
+        <div class="container-fluit">
+
+          <section class="row">
+            <div class="col-sm-8">
+               <div class="form-group row">
+                 <div class="col-sm-1">Id:</div>
+                 <div class="col-sm-11">
+                  <input type="text" class="form-control form-control-sm" v-model="userData.id" disabled>
+                 </div>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group row">
+                <div class="col-sm-2">Rol:</div>
+                <div class="col-sm-10">
+                  <select class="form-control form-control-sm" style="font-size: x-small;height: auto;" v-bind:disabled="editTrueData" v-model="userData.role">
+                  <% if(me.role < 1) { %>
+                    <option value="0">00 - Super Admin</option>
+                  <% } %>
+                    <option value="1">01 - Administrador</option>
+                    <option value="2">02 - Supervisor</option>
+                    <option value="3">03 - Secretario</option>
+                    <option value="4">04 - Vendedores</option>
+                    <option value="5">05 - </option>
+                    <option value="6">06 - </option>
+                    <option value="7">07 - Usuario</option>
+                    <option value="8">08 - Client</option>
+                    <option value="9">09 - Guest</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <hr>
+          <section class="row">
+            <div class="col-sm-12 col-lg-4">
+               <div class="form-group">
+                 <label>Nombres</label>
+                 <input type="text" class="form-control form-control-sm" v-model="userData.name" v-bind:disabled="editTrueData">
+              </div>
+            </div>
+            <div class="col-sm-12 col-lg-4">
+               <div class="form-group">
+                 <label>Apellidos </label>
+                 <input type="text" class="form-control form-control-sm" v-model="userData.lastName" v-bind:disabled="editTrueData">
+              </div>
+            </div>
+            <div class="col-sm-12 col-lg-4"><br>
+              <% if(me.isSuperAdmin) { %>
+              <div class="form-group row">
+                 <div class="col-sm-7">Super Admin</div>
+                 <div class="col-sm-5">
+                   <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gridCheck1" v-model="userData.isSuperAdmin" v-bind:disabled="editTrueData">
+                    <label class="form-check-label" for="gridCheck1"></label>
+                 </div>
+                </div>
+              </div>
+              <% } %>
+            </div>
+          </section>
+          <section class="row">
+            <div class="col-sm-12 col-lg-4">
+               <div class="form-group">
+                 <label>E-mail Status</label>
+                 <input type="text" class="form-control form-control-sm" v-model="userData.emailStatus" v-bind:disabled="editTrueData">
+              </div>
+            </div>
+            <div class="col-sm-12 col-lg-4">
+               <div class="form-group">
+                 <label>Telefono</label>
+                 <input type="text" class="form-control form-control-sm" v-model="userData.phone" v-bind:disabled="editTrueData">
+              </div>
+            </div>
+            <div class="col-sm-12 col-lg-4">
+               <div class="form-group">
+                 <label>E-mail</label>
+                 <input type="text" class="form-control form-control-sm" v-model="userData.emailAddress" v-bind:disabled="editTrueData">
+              </div>
+            </div>
+          </section>
+          <section class="row">
+            <div class="col-sm-12 col-lg-4">
+              <div class="form-group">
+                <label for="">Ultima login:</label>
+                <input type="text" class="form-control form-control-sm" v-model="userData.lastSeenAt" disabled>
+              </div>
+            </div>
+            <div class="col-sm-12 col-lg-4">
+              <div class="form-group">
+                <label for="">Ultima Edicion</label>
+                <input type="text" class="form-control form-control-sm" v-model="userData.updatedAt" disabled>
+              </div>
+            </div>
+            <div class="col-sm-12 col-lg-4">
+              <div class="form-group">
+                <label for="">Creado desde:</label>
+                <input type="text" class="form-control form-control-sm" v-model="userData.createdAt" disabled>
+              </div>
+            </div>
+          </section>
+
+          <hr>
+          <section class="row">
+            <div class="col-sm-12 col-lg-4">
+              <h5>Miselanea</h5>
+            </div>
+          </section>
+
+          <section class="row">
+            <div class="col-sm-12 col-lg-4">
+              <div class="form-group">
+                <label for="">Ultima Ip:</label>
+                <input type="text" class="form-control form-control-sm" v-model="userData.tosAcceptedByIp" disabled>
+              </div>
+            </div>
+            <div class="col-sm-12 col-lg-4">
+              <div class="form-group">
+                <label for="">Password Rest Token</label>
+                <input type="text" class="form-control form-control-sm" v-model="userData.passwordResetToken" disabled>
+              </div>
+            </div>
+            <div class="col-sm-12 col-lg-4">
+              <div class="form-group">
+                <label for="">Password Reset Token Exp</label>
+                <input type="text" class="form-control form-control-sm" v-model="userData.passwordResetTokenExpiresAt" disabled>
+              </div>
+            </div>
+          </section>
+          <section class="row">
+            <div class="col-sm-12 col-lg-4">
+              <div class="form-group">
+                <label for="">Email Proof Token</label>
+                <input type="text" class="form-control form-control-sm" v-model="userData.emailProofToken" disabled>
+              </div>
+            </div>
+            <div class="col-sm-12 col-lg-4">
+              <div class="form-group">
+                <label for="">Email Proof Token Exp</label>
+                <input type="text" class="form-control form-control-sm" v-model="userData.emailProofTokenExpiresAt" disabled>
+              </div>
+            </div>
+            <div class="col-sm-12 col-lg-4">
+              <div class="form-group">
+                <label for="">Email Change Candidate</label>
+                <input type="text" class="form-control form-control-sm" v-model="userData.emailChangeCandidate" disabled>
+              </div>
+            </div>
+          </section>
+
+          <hr>
+          <section class="row">
+            <div class="col-sm-12 col-lg-6">
+              <h5>Imagen de Perfil</h5>
+            </div>
+          </section>
+          <section class="row">
+             <div class="col-sm-12 col-lg-4 text-center">
+              <img v-bind:src="userData.avatar" alt="" class="responsive image rounded-circle border border-dark" style="max-width: 150px;background-color: black;">
+            </div>
+            <div class="col-sm-12 col-lg-8 row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label>Cambiar Imagen</label>
+                    <input type="file" class="form-control" v-bind:disabled="editTrueData">
+                  </div>
+              </div>
+              <div class="col-sm-12">
+                <button class="btn btn-primary btn-sm" v-bind:disabled="editTrueData">Cambiar Imagen</button>
+                <button class="btn btn-danger btn-sm" v-bind:disabled="editTrueData">Eliminar Imagen</button>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+
+      <%/* FOOTER MODAL */%>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-sm" v-on:click="findOneUserEdit(userData.id)" v-show="editTrueData">Editar</button>
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"  v-on:click="closeModalView('pm-user-view')">{{ btnCerrar }}</button>
+        <button type="button" class="btn btn-primary btn-sm" v-show="!editTrueData" v-on:click="updateUser(userData.id)">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+

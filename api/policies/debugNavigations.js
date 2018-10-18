@@ -24,11 +24,10 @@ const l = require('./../../config/local');
 async function registerNavegations(opt) {
   let req = opt.req;
   let userId = typeof (req.session.userId) === 'undefined' ? 'Guest' : req.session.userId;
-  console.log(typeof (req.session.userId) === 'undefined' ? 'Guest' : req.session.userId);
-  console.log(userId);
-  // rr = {},
+  // rr = {}, // Usarse para otra funcion e idientificar los paises de origen de Ip
   // nxe = true,
   // res = opt.res,
+
   let ip = req.headers['x-forwarded-for'] || '127.0.0.1';
   let datosReg = {
     'xforwarderfor': req.headers['x-forwarded-for'] || ip,
@@ -73,7 +72,7 @@ async function saveDataLogsNavigations(dat) {
 
 // MODULE
 module.exports = async function (req, res, proceed) {
-
+  // Reenvio los datos para ejecutar en las funciones
   var options = {
     req: req,
     res: res

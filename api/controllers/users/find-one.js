@@ -38,12 +38,17 @@ module.exports = {
   // funcion final de entraga de datos
   fn: async function (inputs, exits) {
     let _ = require('lodash');
+    let moment = require('moment');
     let rq = this.req;
     let users = []; // array de usuario nuevo
     let userId = rq.session.userId;
     let isSocket = rq.isSocket;
     let count = 0;
 
+    // Configurando Moment
+    moment.locale(sails.config.custom.localeMoment);
+
+    // Verificando que esta pidiendo datos de un usuario y no venga vacio
     if(inputs.id.length === 0){
       return exits.notFound({
         model: 'users',
@@ -75,6 +80,9 @@ module.exports = {
     if (findOneUser.role > 1) {
       delete findOneUser.isSuperAdmin;
     }
+
+    // Change Data Time
+    findOneUser.lastSeenAt = moment(findOneUser.lastSeenAt).fromNow();
 
     // Retorna todos los datos si es correcto
     return exits.success({

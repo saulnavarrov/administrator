@@ -94,7 +94,7 @@ parasails.registerPage('login', {
         }
       },(resData, jwres) => {
         if (jwres.error) {
-          // console.log(jwres); // => e.g. 403
+          console.log(jwres); // => e.g. 403
           return;
         }
 

@@ -11,6 +11,9 @@ const l = require('./local');
 
 module.exports.custom = {
 
+  // config locale moments
+  localeMoment: l.localeMoment,
+
   /**************************************************************************
    *                                                                         *
    * The TTL (time-to-live) for various sorts of tokens before they expire.  *

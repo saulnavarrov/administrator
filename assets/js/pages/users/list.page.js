@@ -5,16 +5,22 @@ parasails.registerPage('listUsers', {
   data: {
     //…
     c: 1,
-    listData: {},
-    listCount: 0,
-    listFullCount: 0,
+    listData: {}, // Listado de Usuarios
+    userData: {}, // Usuarios individuales
+    listCount: 0, // cantidad de resultados en pantalla
+    listFullCount: 0, // Total de resultados
+    activeModal: false, // Si el modal de Edicion o edicion esta activo
+    titleModal: 'Datos de: ', // Titulo del modal que se abrira
+    editTrueData: true, // Habilitar las casillas para editar el usuario
+    btnCerrar: 'Cerrar', // Nombre del Btn de cerrar o descartar cambios
 
-    limit: 10,
-    skip: 0,
-    allSelect: false,
-    searchs: '',
-    searching: false,
+    limit: 10, // Limite por reques
+    skip: 0, // Omision de datos * limit
+    allSelect: false, // selecionar todos
+    searchs: '', // Palabras de busquedas
+    searching: false, // Buscando o visualizando todos los datos
 
+    // control de paginación
     pagination: {
       a: 0,
       c: 0,
@@ -26,6 +32,7 @@ parasails.registerPage('listUsers', {
       next: 'disabled'
     },
 
+    // Config display
     progressBar: true,
     tableData: false,
     footerTable: false,
@@ -34,6 +41,7 @@ parasails.registerPage('listUsers', {
     navegationsData: false,
     numResult: false,
 
+    // Config Alert Display
     alert: {
       active: false,
       icon: 'ion-ios-information-outline',
@@ -61,6 +69,7 @@ parasails.registerPage('listUsers', {
   },
   mounted: async function() {
     //…
+    this.findOneUserView("5bba3e2e07350403839903d6");
   },
 
   //  ╦╔╗╔╔╦╗╔═╗╦═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
@@ -68,6 +77,8 @@ parasails.registerPage('listUsers', {
   //  ╩╝╚╝ ╩ ╚═╝╩╚═╩ ╩╚═╝ ╩ ╩╚═╝╝╚╝╚═╝
   methods: {
 
+    // -
+    // --
     /**
      * dataDb
      * @description Esta funcion llama a la base de datos y trae 10 primeros
@@ -140,6 +151,8 @@ parasails.registerPage('listUsers', {
     },
 
 
+    // -
+    // --
     /**
      * paginationCount
      * @description Configuracion y renderizacion de paginacion
@@ -218,6 +231,8 @@ parasails.registerPage('listUsers', {
       }
     },
 
+    // -
+    // --
     /**
      * paginationClick
      * @description control de la paginacion, esta me permite
@@ -237,6 +252,8 @@ parasails.registerPage('listUsers', {
       }
     },
 
+    // -
+    // --
     /**
      * skipData
      * @description Calcula, cambia y activa la paginación minima, en caso
@@ -267,6 +284,8 @@ parasails.registerPage('listUsers', {
       this.dataDb();
     },
 
+    // -
+    // --
     /**
      * selectAll
      * @description Selecciona todos los datos que estan en pantalla
@@ -288,6 +307,8 @@ parasails.registerPage('listUsers', {
       }
     },
 
+    // -
+    // --
     /**
      * findOne
      * @description Realiza una busqueda en la base de datos que coincidan
@@ -307,6 +328,8 @@ parasails.registerPage('listUsers', {
       }
     },
 
+    // -
+    // --
     /**
      * findEnd
      * @description Reinicia la busqueda y pone en pantalla
@@ -324,16 +347,28 @@ parasails.registerPage('listUsers', {
       }
     },
 
+    // -
+    // --
     /**
      * findOneUser
      * @description
      * @author SaulNavarrov <sinavarrov@gmail.com>
      * @version 1.0
      */
-    findOneUser: async function (id) {
-      var urls = '/api/v1/users/findOne';
+    findOneUserView: async function (id, title) {
       let csrfToken = window.SAILS_LOCALS._csrf;
+      this.titleModal = 'Datos de: ';
       this.progressBar = true;
+      let urls = '/api/v1/users/findOne';
+      let modal = $('#pm-user-view');
+
+      // Cambio de titulo de la ventana
+      if(typeof(title) !== 'undefined'){
+        this.titleModal = title;
+      }else{
+        // No permite editar
+        this.editTrueData = true;
+      }
 
       // request list users
       await io.socket.request({
@@ -348,54 +383,89 @@ parasails.registerPage('listUsers', {
         }
       }, (resData, jwres) => {
 
-        console.log(jwres);
         // En caso de error
-        // if (jwres.error) {
-        //   this.progressBar = false;
-        //   if (jwres.statusCode >= 500 && jwres.statusCode <= 502) {
-        //     this.alert = {
-        //       active: true,
-        //       type: 'alert-danger',
-        //       icon: 'ion-ios-close-outline',
-        //       title: `Error: ${jwres.statusCode} - ${jwres.body}`,
-        //       message: jwres.error.message
-        //     };
-        //   } else if (jwres.statusCode >= 400 && jwres.statusCode <= 499){
-        //     this.alert = {
-        //       active: true,
-        //       type: 'alert-warning',
-        //       icon: 'ion-ios-close-outline',
-        //       title: `Error: ${jwres.statusCode} - ${jwres.body}`,
-        //       message: jwres.error.message
-        //     };
-        //   }
-        // }
-
-        // if(jwres.statusCode === 200) {
+        if (jwres.error) {
           this.progressBar = false;
-        //   this.tableData = this.search = this.footerTable = this.countData = true;
-        //   this.listCount = resData.list.length;
-        //   this.listData = resData.list;
-        //   this.listFullCount = resData.count;
-        //   if (resData.count > this.listCount) {
-        //     this.navegationsData = this.numResult = true;
-        //   }
-        //   this.paginationCount();
-        // }
-      });
+          if (jwres.statusCode >= 500 && jwres.statusCode <= 502) {
+            this.alert = {
+              active: true,
+              type: 'alert-danger',
+              icon: 'ion-ios-close-outline',
+              title: `Error: ${jwres.statusCode} - ${jwres.body}`,
+              message: jwres.error.message
+            };
+          } else if (jwres.statusCode >= 400 && jwres.statusCode <= 499){
+            this.alert = {
+              active: true,
+              type: 'alert-warning',
+              icon: 'ion-ios-close-outline',
+              title: `Error: ${jwres.statusCode} - ${jwres.body}`,
+              message: jwres.error.message
+            };
+          }
+        }
 
+        if(jwres.statusCode === 200) {
+          // Desactiva el progrees
+          this.progressBar = false;
+          // carga los datos
+          this.userData = resData.list;
+          // pone el estado del modal en activo
+          this.activeModal = true;
+
+          // Eject Modal
+          modal.modal('show');
+
+        }
+      });
     },
 
+    // -
+    // --
     /**
      * findOneUserEdith
-     * @description
+     * @description Habilita la edicion del usuario en la ventana del view
+     * para mayor facilidad y trabajo
      * @author SaulNavarrov <sinavarrov@gmail.com>
      * @version 1.0
      */
-    findOneUserEdith: async function (id) {
-      console.log(`findOneUserEdith: ${id}`);
+    findOneUserEdit: async function (id) {
+      // Verifica si el modal esta activo para ejecutar
+      // el request
+      if(!this.activeModal){
+        this.btnCerrar = 'Descartar Cambios';
+        this.editTrueData = false; // Permite editar los datos
+        this.findOneUserView(id, 'Editar datos de: ');
+      }else{
+        // Si el modal esta habierto cambia el titulo habilita
+        // la edicion del usuario
+        this.btnCerrar = 'Descartar Cambios';
+        this.titleModal = 'Editar datos de: '; // Cambia el titulo del modal
+        this.editTrueData = false; // Permite editar los datos
+      }
     },
 
+    // -
+    // --
+    /**
+     * closeModalView
+     * @description Cierra el modal que esta abierto y deja los estados
+     * como active modal el false, y editTrueModal false
+     * por si se abre el modal en modo vista no abra en modo edición
+     * @param {string} modal titulo del modal
+     * @author SaulNavarrov <sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    closeModalView: async function (modal) {
+      this.activeModal = false;
+      this.editTrueData = true;
+      $(`#${modal}`).modal('hide');
+      this.btnCerrar = 'cerrar';
+      this.userData = {}; // Limpia los Datos
+    },
+
+    // -
+    // --
     /**
      * updateUser
      * @description
@@ -406,6 +476,8 @@ parasails.registerPage('listUsers', {
       console.log(`updateUser: ${id}`);
     },
 
+    // -
+    // --
     /**
      * toUnlockUser
      * @description
@@ -416,6 +488,8 @@ parasails.registerPage('listUsers', {
       console.log(`toUnlockUser: ${id}`);
     },
 
+    // -
+    // --
     /**
      * deleteUser
      * @description
