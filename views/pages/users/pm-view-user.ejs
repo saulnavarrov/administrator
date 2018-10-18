@@ -34,7 +34,7 @@
               <div class="form-group row">
                 <div class="col-sm-2">Rol:</div>
                 <div class="col-sm-10">
-                  <select class="form-control form-control-sm" style="font-size: x-small;height: auto;" v-bind:disabled="editTrueData" v-model="userData.role">
+                  <select class="form-control form-control-sm" style="font-size: 13px;height: 30px;line-height: 30px;padding: 0px 10px 2px 9px;margin: 0px;" v-bind:disabled="editTrueData" v-model="userData.role">
                   <% if(me.role < 1) { %>
                     <option value="0">00 - Super Admin</option>
                   <% } %>
@@ -84,20 +84,33 @@
           <section class="row">
             <div class="col-sm-12 col-lg-4">
                <div class="form-group">
-                 <label>E-mail Status</label>
-                 <input type="text" class="form-control form-control-sm" v-model="userData.emailStatus" v-bind:disabled="editTrueData">
+                 <label>E-mail</label>
+                 <input type="text" class="form-control form-control-sm" v-model="userData.emailAddress" v-bind:disabled="editTrueData">
               </div>
+            </div>
+            <div class="col-sm-12 col-lg-4">
+              <div class="form-group">
+                <label>E-mail Status:</label>
+                <select class="form-control form-control-sm" style="font-size: 13px;height: 30px;line-height: 30px;padding: 0px 10px 2px 9px;margin: 0px;" v-bind:disabled="editTrueData" v-model="userData.emailStatus">
+                  <option value="unconfirmed">No Confirmado</option>
+                  <option value="changeRequested">Cambio Requisito</option>
+                  <option value="confirmed">Confirmado</option>
+                </select>
+              </div>
+              <%/**
+              <div class="form-control">
+              <label>E-mail Status</label>
+              <select class="form-control form-control-sm" s>
+                  <option value="unconfirmed">No Confirmado</option>
+                  <option value="changeRequested">Cambio Requisito</option>
+                  <option value="confirmed">Confirmado</option>
+                </select>
+                */%>
             </div>
             <div class="col-sm-12 col-lg-4">
                <div class="form-group">
                  <label>Telefono</label>
                  <input type="text" class="form-control form-control-sm" v-model="userData.phone" v-bind:disabled="editTrueData">
-              </div>
-            </div>
-            <div class="col-sm-12 col-lg-4">
-               <div class="form-group">
-                 <label>E-mail</label>
-                 <input type="text" class="form-control form-control-sm" v-model="userData.emailAddress" v-bind:disabled="editTrueData">
               </div>
             </div>
           </section>

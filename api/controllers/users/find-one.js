@@ -83,6 +83,8 @@ module.exports = {
 
     // Change Data Time
     findOneUser.lastSeenAt = moment(findOneUser.lastSeenAt).fromNow();
+    findOneUser.createdAt = moment(findOneUser.createdAt).format('llll');
+    findOneUser.updatedAt = moment(findOneUser.updatedAt).format('llll');
 
     // Retorna todos los datos si es correcto
     return exits.success({
