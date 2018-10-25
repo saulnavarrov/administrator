@@ -30,6 +30,8 @@ module.exports = {
     let rs = this.res;
     let userId = rq.session.userId;
     let fileTemp = '';
+    let imageNotFound = `${sails.config.appPath}/assets/images/imagenNoEncontrada.jpg`; // Archivo statico cuando no se encuentra la imagen
+
 
     // Verificando Session del usuario
     if (!userId) {
@@ -37,7 +39,7 @@ module.exports = {
     }
 
     // Parametros de ingresos
-    let exf = rq.query.exf;
+    let exf = rq.query.exf; // Extension del archivo
     let uif = rq.query.uif; // id para entregar el archivo
     let tfk = rq.query.tfk; // micro token para entregar el archivo
     let img = rq.params[0]; // Imagen que se buscara
@@ -60,7 +62,7 @@ module.exports = {
         }).exec((rErr, result) => {
           // en caso de error
           if (rErr) {
-            fileTemp = `${sails.config.appPath}/assets/images/imagenNoEncontrada.jpg`;
+            fileTemp = imageNotFound;
             console.log(rErr);
             return rs.sendFile(fileTemp);
           }
@@ -71,7 +73,7 @@ module.exports = {
             return rs.sendFile(fileTemp);
           }else{
             // Entrega un archivo en caso de no encontrarlo
-            fileTemp = `${sails.config.appPath}/assets/images/imagenNoEncontrada.jpg`;
+            fileTemp = imageNotFound;
             return rs.sendFile(fileTemp);
           }
         });
@@ -79,7 +81,7 @@ module.exports = {
 
       // por si no se encuentra la imagen solicitada en la db
       else{
-        fileTemp = `${sails.config.appPath}/assets/images/imagenNoEncontrada.jpg`;
+        fileTemp = imageNotFound;
         return rs.sendFile(fileTemp);
       }
     }
