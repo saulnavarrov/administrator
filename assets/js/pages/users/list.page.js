@@ -48,6 +48,13 @@ parasails.registerPage('listUsers', {
       title: 'Titulo de la alerta',
       message: 'Mensaje de la alerta content',
       type: 'alert-info'
+    },
+
+    // Change Image
+    updateAvatar: {
+      avatarFile: '',
+      uploadBtn: true,
+      progrees: false
     }
   },
 
@@ -69,7 +76,7 @@ parasails.registerPage('listUsers', {
   },
   mounted: async function() {
     //…
-    this.findOneUserView("5bba3e2e07350403839903d6");
+    this.findOneUserEdit('5bbbf38f0f6f213b88d8eb07');
   },
 
   //  ╦╔╗╔╔╦╗╔═╗╦═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
@@ -469,12 +476,117 @@ parasails.registerPage('listUsers', {
     /**
      * updateUser
      * @description
+     * @param {string} id codigo guardado en la base de datos
+     * para asegurarse de guardar los datos
      * @author SaulNavarrov <sinavarrov@gmail.com>
      * @version 1.0
      */
     updateUser: async function (id) {
       console.log(`updateUser: ${id}`);
     },
+
+    /**
+     * onChangeAvatar
+     * @description Guardas los datos del archivo en la variable
+     * para que el Method: updatechangeAvatar lo use
+     * @param {array} evt Eventos de que ocurren
+     * @author SaulNavarrov <sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    onChangeAvatar: async function (evt) {
+      let file = evt.target.files[0];
+      this.updateAvatar.avatarFile = file;
+      this.updateAvatar.uploadBtn = false;
+    },
+
+    /**
+     * updateChangeAvatar
+     * @description Actualiza la imagen avatar de un usuario en concreto
+     * mamipulandolo desde el administrador
+     * @author SaulNavarrov <sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    updateChangeAvatar: async function () {
+      let formD = new FormData();
+      // Deshabilito el Boton de Upload
+      this.updateAvatar.uploadBtn = true;
+      // active progress
+      this.updateAvatar.progrees = true;
+      // Se crean los datos para enviar
+      formD.append('uid', this.userData.id);
+      formD.append('type' , this.updateAvatar.avatarFile.type);
+      formD.append('nameFile' , this.updateAvatar.avatarFile.name);
+      formD.append('sizeFile', this.updateAvatar.avatarFile.size);
+      formD.append('avatar' , this.updateAvatar.avatarFile);
+
+      // Si el archivo no corresponde a una imagen
+      if (!(/\.(jpg|png|gif)$/i).test(this.updateAvatar.avatarFile.name)) {
+        swal({
+          type: 'error',
+          title: 'Arhivo no Compatible',
+          text: `El archivo de nombre: ${this.updateAvatar.avatarFile.name}
+          No es una IMAGEN.
+          Corríjalo y vuelva a intentarlo.`,
+        });
+      } else {
+
+        // Envia la información por Axios/Ajax
+        axios.patch('/api/v1/users/update-avatar', formD)
+          .then(response=>{
+            return response;
+          })
+          .then(respons => {
+            let dat = respons.data;
+            // ocultar el progres
+            this.updateAvatar.progrees = false;
+
+            // En caso de que el usuario coincida con la del mismo
+            // Perfil del usuario
+            if(this.me.id === this.userData.id){
+              swal({
+                type: 'success',
+                title: 'Avatar Actualizado',
+                text: `Mi Avatar se actualizo con Exito`,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+              }).then((result) => {
+                if (result.value) {
+                  location.reload();
+                }
+              });
+            }else{
+              swal({
+                type: 'success',
+                title: 'Avatar Actualizado',
+                text: `Se ha actualizado el Avatar de: ${this.userData.name}`,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+              }).then((result) => {
+                if (result.value) {
+
+                  // Reabro el modal de vista en modo view
+                  this.findOneUserView(dat.aid);
+                }
+              });
+            }
+          })
+          .catch(err=>{
+            // ocultar el progres
+            this.updateAvatar.progrees = false;
+            let data = err.response.data;
+            swal({
+              type: 'error',
+              title: 'Error al Subir',
+              text: data.message
+            });
+            console.error('Fail Upload Avatar');
+          });
+
+        // Reset data input file
+        this.updateAvatar.avatarFile = '';
+      }
+    },
+
 
     // -
     // --

@@ -66,11 +66,12 @@ module.exports.routes = {
   //  ╔═╗╔═╗╦  ╔═╗╔╗╔╔╦╗╔═╗╔═╗╦╔╗╔╔╦╗╔═╗
   //  ╠═╣╠═╝║  ║╣ ║║║ ║║╠═╝║ ║║║║║ ║ ╚═╗
   //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
-  'POST /api/v1/login':               { action: 'auth/login' },
-  'POST /api/v1/users':               { action: 'users/list' },
-  'POST /api/v1/users/findOne':       { action: 'users/find-one' },
-  'POST /api/v1/users/find-search':   { action: 'users/find-search' },
-  'POST /api/v1/users/create':        { action: 'users/create-user' }
+  'POST /api/v1/login':                 { action: 'auth/login' },
+  'POST /api/v1/users':                 { action: 'users/list' },
+  'POST /api/v1/users/findOne':         { action: 'users/find-one' },
+  'POST /api/v1/users/find-search':     { action: 'users/find-search' },
+  'POST /api/v1/users/create':          { action: 'users/create-user' },
+  'PATCH /api/v1/users/update-avatar':  { action: 'users/update-avatar' },
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗
@@ -80,4 +81,10 @@ module.exports.routes = {
   //  ╔╦╗╦╔═╗╔═╗
   //  ║║║║╚═╗║
   //  ╩ ╩╩╚═╝╚═╝
+
+  //  ╔═╗╔═╗╦  ╔═╗╦ ╦ ╔═╗ ╔═╗
+  //  ╠═╣╠═╝║  ╠═ ║ ║ ║╣  ╚═╗
+  //  ╩ ╩╩  ╩  ╩  ╩ ╚═╚═╝ ╚═╝
+  'GET /v/upld/imgs/vtrs/*':      { action: 'files/avatars', skipAssets: false},
+  'GET /v/upld/files/:idClient/*':  { action: 'files/files-clients', skipAssets: false},
 };

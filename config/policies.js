@@ -20,6 +20,7 @@ module.exports.policies = {
   '*': true,
 
   'auth/*':         ['debugNavigations'],
+  'files/*':        ['debugNavigations'],
   'users/*':        ['debugNavigations'],
   'view-pages/*':   ['debugNavigations']
 };
