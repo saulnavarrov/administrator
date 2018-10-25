@@ -1,16 +1,19 @@
+/**
+ * avatars
+ * @description :: Entregara los archivos imagenes 'avatars' de los diferentes
+ * usuarios, de manera dinamica, caso tal de que no tenga que recargar la pagina
+ * y borrar el cache para recargarlo, solo accesible para usuarios identificados
+ * y con parametros estrictos.
+ * @author Saul Navarrov <sinavarrov@gmail.com>
+ * @version 1.0
+ */
 module.exports = {
-
 
   friendlyName: 'Avatars',
 
-
   description: 'Entrega el archivo al usuario que lo pide.',
 
-
-  inputs: {
-
-  },
-
+  inputs: {},
 
   exits: {
     unauthorized: {
@@ -72,11 +75,16 @@ module.exports = {
             return rs.sendFile(fileTemp);
           }
         });
-      }else{
+      }
+
+      // por si no se encuentra la imagen solicitada en la db
+      else{
         fileTemp = `${sails.config.appPath}/assets/images/imagenNoEncontrada.jpg`;
         return rs.sendFile(fileTemp);
       }
-    }else{
+    }
+    // En caso de que los parametros no esten completos deveuelva un status 404
+    else{
       rs.status(404);
       return rs.json({
         error: true,
