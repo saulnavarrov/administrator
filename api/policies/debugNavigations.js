@@ -24,13 +24,15 @@ const l = require('./../../config/local');
 async function registerNavegations(opt) {
   let req = opt.req;
   let res = opt.res;
-  let ss = typeof (req.session) === 'undefined' ? true : false; // control de sesion
-  let guser = typeof (req.query.guser) === 'undefined' ? 'Guest' : req.query.guser; // Identifica el usuario que hace la solicitud con la url full
-  let userId = ss ? guser : typeof (req.session.userId) === 'undefined' ? 'Guest' : req.session.userId;
+
+  // Usar en caso de que no encuentre el supuesto sesion
+  // let ss = typeof (req.session) === 'undefined' ? true : false; // control de sesion
+  // let guser = typeof (req.query.guser) === 'undefined' ? 'Guest' : req.query.guser; // Identifica el usuario que hace la solicitud con la url full
+
+  let userId = typeof (req.session.userId) === 'undefined' ? 'Guest' : req.session.userId;
   // rr = {}, // Usarse para otra funcion e idientificar los paises de origen de Ip
   // nxe = true,
   // res = opt.res,
-
 
   let ip = req.headers['x-forwarded-for'] || '127.0.0.1';
   let datosReg = {
@@ -61,20 +63,6 @@ async function registerNavegations(opt) {
 
   datosReg.ipsl = '';
   await saveDataLogsNavigations(datosReg);
-
-  // En caso de que de que pida un archivo y no sabe quien lo pide
-  if (datosReg.opAction === 'files/avatars') {
-    let guluser = await User.findOne({id: guser}).select(['id']);
-
-    if(!guluser) {
-      res.status(400);
-      return res.json({
-        error: true,
-        message: 'Ivalid Params',
-        url: `${datosReg.host}${datosReg.url}`
-      });
-    }
-  }
 }
 
 

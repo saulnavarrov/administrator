@@ -74,6 +74,7 @@ module.exports = {
     let uid = inputs.uid; // id del usuario al que se le sube los archivos
     let szf = inputs.sizeFile; // Tamaño o Peso del arhivo
     let sfm = 1024 * 1024 * 2; // Tamaño maximo para subir archivos
+    let exf = '.jpg'; // Extencion con la que se guardaran las imagenes de avatars
 
     // Permisos para actualizar el avatar a los usuarios
     if(rq.me.role > 1){
@@ -136,7 +137,7 @@ module.exports = {
         // Direccion del archivo
         dirname: `${sails.config.appPath}/uploads/avatars/`,
         // Nombre de la imagen (en caso de que exista sera reemplazada)
-        saveAs: `vtr-${uid}.jpg`
+        saveAs: `vtr-${uid}${exf}`
       }, (rErr, uploadAvatar) => {
         if (rErr) {
           console.log(rErr);
@@ -149,8 +150,8 @@ module.exports = {
 
         // Guarda Data en la Variable Uni Global
         doneUpload = uploadAvatar[0];
-        doneUpload.src = `/v/upld/imgs/vtrs/vtr-${uid}.jpg`;
-        doneUpload.filenameSave = `vtr-${uid}.jpg`;
+        doneUpload.src = `/v/upld/imgs/vtrs/vtr-${uid}`;
+        doneUpload.filenameSave = `vtr-${uid}`;
       });
 
     // tiempo para que pueda actualizarse la variable que viene del rq.file('avatar')
@@ -158,7 +159,7 @@ module.exports = {
       // Generador de token
       let uifImage = uid.substring(0, 7) + Math.random().toString(36).substring(2, 5);
       let tfkImage = Math.random().toString(36).substring(2) + uid.substr(7, 15) + Math.random().toString(36).substring(2) + uifImage.toUpperCase() + Math.random().toString(36).substring(2);
-      let srcFile = `${doneUpload.src}?tfk=${tfkImage}&uif=${uifImage}`;
+      let srcFile = `${doneUpload.src}?exf=${exf}&tfk=${tfkImage}&uif=${uifImage}`;
 
       // Actualiza la imagen del
       await User.update({ id: uid })
@@ -199,6 +200,7 @@ module.exports = {
         size: doneUpload.size,
         type: doneUpload.type,
         filename: doneUpload.filenameSave,
+        exf: exf,
         filenameOriginal: naf,
         status: doneUpload.status,
         field: doneUpload.field,

@@ -69,14 +69,14 @@ parasails.registerPage('listUsers', {
     await this.dataDb();
 
     // Conexion con Socket.io Model
-    io.socket.on('users', msg =>{
-      console.log(msg);
-      //  console.log();
-    });
+    // io.socket.on('users', msg =>{
+    //   console.log(msg);
+    //   //  console.log();
+    // });
   },
   mounted: async function() {
     //…
-    this.findOneUserEdit('5bbbf38f0f6f213b88d8eb07');
+    // this.findOneUserEdit('5bbbf38f0f6f213b88d8eb07');
   },
 
   //  ╦╔╗╔╔╦╗╔═╗╦═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗

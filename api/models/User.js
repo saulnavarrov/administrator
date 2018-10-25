@@ -79,7 +79,7 @@ module.exports = {
     avatar: {
       type: 'string',
       description: `Imagen de perfil de la persona`,
-      defaultsTo: '/images/avatar/avatar-1.png'
+      defaultsTo: '/images/avatar/avatar-1.png?exf=.png'
 
     },
 

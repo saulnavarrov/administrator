@@ -63,6 +63,17 @@ module.exports = {
       para luego ser rescatado.`
     },
 
+    exf: {
+      type: 'string',
+      required: true,
+      example: '.jpg',
+      description: `Con este se sabra la extencion del filname ya que se parara como parametro
+      en la url debido a un problema de seguridad con la extencion
+      imagenes: filename.ext
+      Acronimo
+      exf = extension File`
+    },
+
     filenameOriginal: {
       type: 'string',
       required: true,
