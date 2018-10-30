@@ -1,3 +1,9 @@
+/**
+ * list.js
+ * @description :: Mirar abajo la description ► ↓↓↓
+ * @author Saul Navarrov <Sinavarrov@gmail.com>
+ * @version 1.0
+ */
 module.exports = {
   friendlyName: 'users/list',
 
@@ -93,11 +99,28 @@ module.exports = {
     // Protegiendo el Password para no visualizarlo en Json
     for (user of usersArray) {
       delete user.password;
+      // Organizando data entrega
+      delete user.avatar;
+      delete user.createdAt;
+      delete user.updatedAt;
+      delete user.password;
+      delete user.passwordResetToken;
+      delete user.passwordResetTokenExpiresAt;
+      delete user.emailProofToken;
+      delete user.emailProofTokenExpiresAt;
+      delete user.emailChangeCandidate;
+      delete user.tosAcceptedByIp;
+      delete user.lastSeenAt;
+      delete user.phone;
+      delete user.status;
+
+      // Entrega por Rol
       if(user.role > 1){
         delete user.isSuperAdmin;
       }
       users.push(user);
     }
+
 
     // Retorno de datos
     return exits.success({

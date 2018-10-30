@@ -1,11 +1,14 @@
+/**
+ * view-list.js
+ * @description :: Mirar abajo la description ► ↓↓↓
+ * @author Saul Navarrov <Sinavarrov@gmail.com>
+ * @version 1.0
+ */
 module.exports = {
-
 
   friendlyName: 'View list',
 
-
   description: 'Display "List" Users page.',
-
 
   exits: {
 

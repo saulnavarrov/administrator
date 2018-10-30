@@ -34,20 +34,20 @@ async function registerNavegations(opt) {
   // nxe = true,
   // res = opt.res,
 
-  let ip = req.headers['x-forwarded-for'] || '127.0.0.1';
+  let ip = req.headers['x-real-ip'] || req.ip;
   let datosReg = {
     'xforwarderfor': req.headers['x-forwarded-for'] || ip,
-    'xrequestid': req.headers['x-request-id'] || '',
-    'xforwardedproto': req.headers['x-forwarded-proto'] || '',
-    'xrequeststart': req.headers['x-request-start'] || '',
-    'host': req.headers['host'],
+    'protocol': req.protocol,
+    'xforwardedproto': req.headers['x-forwarded-proto'],
+    'xrequeststart': req.headers['x-request-start'],
+    'host': typeof (req.headers['host']) === 'undefined' ? req.headers['origin']: `${req.protocol}://${req.headers['host']}`,
     'url': req.url || l.baseUrl,
     'isSocket': req.isSocket || '',
     'method': req.method,
     'complete': req.complete,
     'opController': req.options['controller'],
     'opAction': req.options.action,
-    'xnginxproxy': req.headers['x-nginx-proxy'] || '',
+    'xnginxproxy': req.headers['x-nginx-proxy'],
     'connection': req.headers['connection'],
     'cacheControl': req.headers['cache-control'],
     'upgradeInsecureRequests': req.headers['upgrade-insecure-requests'],

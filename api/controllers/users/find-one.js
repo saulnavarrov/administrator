@@ -1,13 +1,16 @@
+/**
+ * find-one.js
+ * @description :: Mirar abajo la description ► ↓↓↓
+ * @author Saul Navarrov <Sinavarrov@gmail.com>
+ * @version 1.0
+ */
 module.exports = {
 
-
   friendlyName: 'Find one',
-
 
   description: `Busca un usuario especifico en la base de datos y lo devuelve
   haciendolo funcionar con el buscador si contontine tal dato, en 3 columnas
   el Nombre, Apellido, E-mail`,
-
 
   inputs: {
     id: {

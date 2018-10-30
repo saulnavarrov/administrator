@@ -1,0 +1,38 @@
+/**
+ * deltadmin.css
+ * delta admin styles bootstrap
+ *
+ * @Saul Navarrov <Sinavarrov@gmail.com>
+ * @license MIT License
+ */
+
+
+/* loading modal ajax */
+.m-loading-content {
+  display: flex;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 1.75em;
+  z-index: 5065;
+  overflow-x: hidden;
+  background: rgba(0, 0, 0, 0.667);
+}
+
+.m-loading-content .m-loading-popup {
+  background: #fff;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  width: 32em;
+  padding: 1em;
+  min-height: 200px;
+  border-radius: 5px;
+}
+
+/* loading modal ajax End */

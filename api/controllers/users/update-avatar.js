@@ -1,11 +1,14 @@
+/**
+ * update-avatar.js
+ * @description :: Mirar abajo la description ► ↓↓↓
+ * @author Saul Navarrov <Sinavarrov@gmail.com>
+ * @version 1.0
+ */
 module.exports = {
-
 
   friendlyName: 'Update avatar',
 
-
-  description: '',
-
+  description: 'Actualización de la imagen avatar del usuario',
 
   inputs: {
     uid: {
@@ -67,8 +70,10 @@ module.exports = {
 
 
   fn: async function (inputs, exits) {
-    const momnet = require('moment');
+    const moment = require('moment');
     let rq = this.req;
+
+    // Variables
     let naf = inputs.nameFile; // Nombre original del archivo
     let typ = inputs.type; // Tipo de archivo 'image/png'
     let uid = inputs.uid; // id del usuario al que se le sube los archivos
@@ -165,7 +170,7 @@ module.exports = {
       await User.update({ id: uid })
         .set({
           avatar: srcFile,
-          updatedAt: momnet().format()
+          updatedAt: moment().format()
         });
 
       // ACTUALIZACIÓN DE DATOS EN LA MODEL FILES
@@ -188,7 +193,7 @@ module.exports = {
           })
           .set({
             active: false,
-            updatedAt: momnet().format()
+            updatedAt: moment().format()
           });
         };
       }
@@ -222,6 +227,6 @@ module.exports = {
         aid: uid,
         srcAvatar: srcFile
       });
-    }, 47);
+    }, 57);
   }
 };

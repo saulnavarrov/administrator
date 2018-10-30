@@ -13,6 +13,7 @@ parasails.registerPage('listUsers', {
     titleModal: 'Datos de: ', // Titulo del modal que se abrira
     editTrueData: true, // Habilitar las casillas para editar el usuario
     btnCerrar: 'Cerrar', // Nombre del Btn de cerrar o descartar cambios
+    updateProgress: false, // Loading Progress ajax Modal
 
     limit: 10, // Limite por reques
     skip: 0, // Omision de datos * limit
@@ -61,7 +62,7 @@ parasails.registerPage('listUsers', {
   //  ╦  ╦╔═╗╔═╗╔═╗╦ ╦╔═╗╦  ╔═╗
   //  ║  ║╠╣ ║╣ ║  ╚╦╝║  ║  ║╣
   //  ╩═╝╩╚  ╚═╝╚═╝ ╩ ╚═╝╩═╝╚═╝
-  beforeMount: async function() {
+  beforeMount: async function () {
     // Attach any initial data from the server.
     _.extend(this, SAILS_LOCALS);
 
@@ -74,7 +75,7 @@ parasails.registerPage('listUsers', {
     //   //  console.log();
     // });
   },
-  mounted: async function() {
+  mounted: async function () {
     //…
     // this.findOneUserEdit('5bbbf38f0f6f213b88d8eb07');
   },
@@ -84,8 +85,6 @@ parasails.registerPage('listUsers', {
   //  ╩╝╚╝ ╩ ╚═╝╩╚═╩ ╩╚═╝ ╩ ╩╚═╝╝╚╝╚═╝
   methods: {
 
-    // -
-    // --
     /**
      * dataDb
      * @description Esta funcion llama a la base de datos y trae 10 primeros
@@ -97,12 +96,12 @@ parasails.registerPage('listUsers', {
      * @version 1.0
      */
     dataDb: async function () {
-      var urls = '/api/v1/users';
+      let urls = '/api/v1/users';
       let csrfToken = window.SAILS_LOCALS._csrf;
       this.progressBar = true;
 
       // Control de urls find or findOne
-      if(this.searching){
+      if (this.searching) {
         urls = '/api/v1/users/find-search';
       }
 
@@ -123,27 +122,10 @@ parasails.registerPage('listUsers', {
 
         // En caso de error
         if (jwres.error) {
-          this.progressBar = false;
-          if (jwres.statusCode >= 500 && jwres.statusCode <= 502) {
-            this.alert = {
-              active: true,
-              type: 'alert-danger',
-              icon: 'ion-ios-close-outline',
-              title: `Error: ${jwres.statusCode} - ${jwres.body}`,
-              message: jwres.error.message
-            };
-          } else if (jwres.statusCode >= 400 && jwres.statusCode <= 499){
-            this.alert = {
-              active: true,
-              type: 'alert-warning',
-              icon: 'ion-ios-close-outline',
-              title: `Error: ${jwres.statusCode} - ${jwres.body}`,
-              message: jwres.error.message
-            };
-          }
+          this.jwresError(jwres);
         }
 
-        if(jwres.statusCode === 200) {
+        if (jwres.statusCode === 200) {
           this.progressBar = false;
           this.tableData = this.search = this.footerTable = this.countData = true;
           this.listCount = resData.list.length;
@@ -158,8 +140,6 @@ parasails.registerPage('listUsers', {
     },
 
 
-    // -
-    // --
     /**
      * paginationCount
      * @description Configuracion y renderizacion de paginacion
@@ -191,7 +171,7 @@ parasails.registerPage('listUsers', {
       this.pagination.list = [];
 
       // Config Render Page
-      for ( o; o < b; o++ ) {
+      for (o; o < b; o++) {
         this.pagination.list[o] = {
           nn: o + 1,
           aa: '',
@@ -200,7 +180,7 @@ parasails.registerPage('listUsers', {
       }
 
       // Renderiza los datos de paginacion activos
-      for( j; j < k; j++ ) {
+      for (j; j < k; j++) {
         // Para mantener la paginacion del 1 al 3
         if (r < q) {
           this.pagination.list[j] = {
@@ -208,7 +188,7 @@ parasails.registerPage('listUsers', {
             aa: j === this.pagination.a ? 'active' : '',
             ss: true
           };
-        }else if( j < ( k-p ) && j < m ) {
+        } else if (j < (k - p) && j < m) {
           // Para dar continuacion de 2 en adelante hasta donde
           // alcance la variable "b"
           this.pagination.list[j] = {
@@ -220,7 +200,7 @@ parasails.registerPage('listUsers', {
       }
 
       // activate prev
-      if(this.pagination.a > 0 && this.pagination.c > this.pagination.v) {
+      if (this.pagination.a > 0 && this.pagination.c > this.pagination.v) {
         this.pagination.prev = '';
         this.pagination.pre = true;
       } else {
@@ -238,8 +218,6 @@ parasails.registerPage('listUsers', {
       }
     },
 
-    // -
-    // --
     /**
      * paginationClick
      * @description control de la paginacion, esta me permite
@@ -249,7 +227,7 @@ parasails.registerPage('listUsers', {
      */
     paginationClick: async function (e) {
       // Cuando viene un numero
-      if (typeof (e) === 'number'){
+      if (typeof (e) === 'number') {
         // No sobrepase la paginacion
         if ((this.pagination.a > 0) || ((this.pagination.a + 1) < this.pagination.c)) {
           this.skip = e;
@@ -259,8 +237,6 @@ parasails.registerPage('listUsers', {
       }
     },
 
-    // -
-    // --
     /**
      * skipData
      * @description Calcula, cambia y activa la paginación minima, en caso
@@ -278,7 +254,7 @@ parasails.registerPage('listUsers', {
       p = Math.ceil(p.toFixed(2));
 
       // Entrando al bucle
-      if(this.listFullCount !== 0 && p < 1){
+      if (this.listFullCount !== 0 && p < 1) {
         let n = p;
         while (n < 1) {
           n++;
@@ -291,8 +267,6 @@ parasails.registerPage('listUsers', {
       this.dataDb();
     },
 
-    // -
-    // --
     /**
      * selectAll
      * @description Selecciona todos los datos que estan en pantalla
@@ -303,7 +277,7 @@ parasails.registerPage('listUsers', {
      */
     selectAll: async function () {
       // llama la lista y los va seleccionando 1 por 1
-      for (d of this.listData) {
+      for (let d of this.listData) {
         // verifica el check que se crea desde el html
         // porque en la DB no viene.
         if (!d.check) {
@@ -314,8 +288,6 @@ parasails.registerPage('listUsers', {
       }
     },
 
-    // -
-    // --
     /**
      * findOne
      * @description Realiza una busqueda en la base de datos que coincidan
@@ -324,19 +296,31 @@ parasails.registerPage('listUsers', {
      * @version 1.0
      */
     findOneSearch: async function () {
+
+      // Reinicia el buscador
+      if (!this.searching) {
+        if(this.skip > 0){
+          this.skip = 0;
+          this.pagination.a = 0;
+        }
+        if (this.limit > 10) {
+          this.limit = 10;
+        }
+      }
+
+      // Se activa el modo busqueda en la funcion this.dataDB()
       this.searching = true;
+
       // realiza la busqueda si searching esta en true y
       // si hay al menos 3 caracteres en pantalla escrito
-      if(this.searching && this.searchs.length !== 0) {
+      if (this.searching && this.searchs.length !== 0) {
         this.dataDb();
-      }else{
+      } else {
         this.searching = false;
         this.dataDb();
       }
     },
 
-    // -
-    // --
     /**
      * findEnd
      * @description Reinicia la busqueda y pone en pantalla
@@ -345,17 +329,17 @@ parasails.registerPage('listUsers', {
      * @version 1.0
      */
     findEndSearch: async function () {
-      if (this.searching && this.searchs.length === 0) {
+      if (this.searching && this.searchs.length > 0) {
         this.searchs = '';
         this.searching = false;
-
         // Ejecicion del request
         this.dataDb();
+      }else{
+        // Blanqueando Caja
+        this.searchs = '';
       }
     },
 
-    // -
-    // --
     /**
      * findOneUser
      * @description
@@ -370,9 +354,9 @@ parasails.registerPage('listUsers', {
       let modal = $('#pm-user-view');
 
       // Cambio de titulo de la ventana
-      if(typeof(title) !== 'undefined'){
+      if (typeof (title) !== 'undefined') {
         this.titleModal = title;
-      }else{
+      } else {
         // No permite editar
         this.editTrueData = true;
       }
@@ -392,27 +376,10 @@ parasails.registerPage('listUsers', {
 
         // En caso de error
         if (jwres.error) {
-          this.progressBar = false;
-          if (jwres.statusCode >= 500 && jwres.statusCode <= 502) {
-            this.alert = {
-              active: true,
-              type: 'alert-danger',
-              icon: 'ion-ios-close-outline',
-              title: `Error: ${jwres.statusCode} - ${jwres.body}`,
-              message: jwres.error.message
-            };
-          } else if (jwres.statusCode >= 400 && jwres.statusCode <= 499){
-            this.alert = {
-              active: true,
-              type: 'alert-warning',
-              icon: 'ion-ios-close-outline',
-              title: `Error: ${jwres.statusCode} - ${jwres.body}`,
-              message: jwres.error.message
-            };
-          }
+          this.jwresError(jwres);
         }
 
-        if(jwres.statusCode === 200) {
+        if (jwres.statusCode === 200) {
           // Desactiva el progrees
           this.progressBar = false;
           // carga los datos
@@ -427,8 +394,32 @@ parasails.registerPage('listUsers', {
       });
     },
 
-    // -
-    // --
+    /**
+     * jwresError
+     * @description alertas en pantalla en caso de haber un error
+     * @param {json} jwres Datos del error
+     */
+    jwresError: async function (jwres) {
+      this.progressBar = false;
+      if (jwres.statusCode >= 500 && jwres.statusCode <= 502) {
+        this.alert = {
+          active: true,
+          type: 'alert-danger',
+          icon: 'ion-ios-close-outline',
+          title: `Error: ${jwres.statusCode} - ${jwres.body}`,
+          message: jwres.error.message
+        };
+      } else if (jwres.statusCode >= 400 && jwres.statusCode <= 499) {
+        this.alert = {
+          active: true,
+          type: 'alert-warning',
+          icon: 'ion-ios-close-outline',
+          title: `Error: ${jwres.statusCode} - ${jwres.body}`,
+          message: jwres.error.message
+        };
+      }
+    },
+
     /**
      * findOneUserEdith
      * @description Habilita la edicion del usuario en la ventana del view
@@ -439,11 +430,11 @@ parasails.registerPage('listUsers', {
     findOneUserEdit: async function (id) {
       // Verifica si el modal esta activo para ejecutar
       // el request
-      if(!this.activeModal){
+      if (!this.activeModal) {
         this.btnCerrar = 'Descartar Cambios';
         this.editTrueData = false; // Permite editar los datos
         this.findOneUserView(id, 'Editar datos de: ');
-      }else{
+      } else {
         // Si el modal esta habierto cambia el titulo habilita
         // la edicion del usuario
         this.btnCerrar = 'Descartar Cambios';
@@ -452,8 +443,6 @@ parasails.registerPage('listUsers', {
       }
     },
 
-    // -
-    // --
     /**
      * closeModalView
      * @description Cierra el modal que esta abierto y deja los estados
@@ -471,18 +460,103 @@ parasails.registerPage('listUsers', {
       this.userData = {}; // Limpia los Datos
     },
 
-    // -
-    // --
     /**
-     * updateUser
-     * @description
-     * @param {string} id codigo guardado en la base de datos
-     * para asegurarse de guardar los datos
+     * btnUpdateUser
+     * @description hace que el usuario confirme que se va actualizar los datos
+     * mostrando una ventana emergente.
+     * @param {string} id del usuario que se va acutalizar
      * @author SaulNavarrov <sinavarrov@gmail.com>
      * @version 1.0
      */
-    updateUser: async function (id) {
-      console.log(`updateUser: ${id}`);
+    btnUpdateUser: async function (id) {
+      // // CODIGO VIEJO
+      swal({
+        type: 'warning',
+        title: '¿Actualizar Datos?',
+        text: `Confirme si desea Actualizar los datos del usuario: ${this.userData.name}`,
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
+        confirmButtonColor: '#616161',
+        confirmButtonText: 'Actualizar'
+      }).then((result) => {
+        if (result.value) {
+          // Ejecuta el Actualizador de Datos
+          this.updateProgress = true;
+          this.updateUserData(id);
+        }
+      });
+    },
+
+    /**
+     * updateUserData
+     * @description Enviara los datos del usuario para ser actualizados en la base de datos
+     * @param {string} id Del usuario que se va actualizar los datos
+     * @param {boolean} cnf Confirmación de la accion
+     * @author SaulNavarrov <sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    updateUserData: async function (id) {
+      let csrfToken = window.SAILS_LOCALS._csrf;
+      let urls = '/api/v1/users/update-data-user';
+      console.log('Actualizando datos del usuario: ');
+
+      // request list update user
+      await io.socket.request({
+        url: urls,
+        method: 'PATCH',
+        data: {
+          id: id,
+          role: this.userData.role,
+          name: this.userData.name,
+          lastName: this.userData.lastName,
+          superAdmin: this.userData.isSuperAdmin,
+          emailAddress: this.userData.emailAddress,
+          emailStatus: this.userData.emailStatus,
+          phone: this.userData.phone,
+          status: this.userData.status
+        },
+        headers: {
+          'content-type': 'application/json',
+          'x-csrf-token': csrfToken
+        }
+      }, (resData, jwres) => {
+
+        this.updateProgress = false;
+        // En caso de error
+        if (jwres.error) {
+          swal({
+            type: 'error',
+            title: 'Error al actualizar datos',
+            text: `Se presento un error inesperado, intentelo nuevamente o
+            consulte con el administrador del sistema`
+          });
+          console.log(jwres);
+        }
+
+        if (jwres.statusCode === 200) {
+          console.log(resData);
+          swal({
+            type: 'success',
+            title: 'Actualización Correcta',
+            text: `Se ha actualizado de manera correcta el Usuario.`,
+            confirmButtonText: 'Ok'
+          });
+          // Me muestra en pantalla la actualización
+          this.findOneUserView(id);
+
+          // Actualiza los datos en la lista de la pantalla
+          this.listData.forEach((el,ix) => {
+            if (el.id === id) {
+              this.listData[ix].role = resData.user.role;
+              this.listData[ix].roleName = resData.user.roleName;
+              this.listData[ix].name = resData.user.name;
+              this.listData[ix].lastName = resData.user.lastName;
+              this.listData[ix].emailAddress = resData.user.emailAddress;
+              this.listData[ix].emailStatus = resData.user.emailStatus;
+            }
+          });
+        }
+      });
     },
 
     /**
@@ -511,13 +585,13 @@ parasails.registerPage('listUsers', {
       // Deshabilito el Boton de Upload
       this.updateAvatar.uploadBtn = true;
       // active progress
-      this.updateAvatar.progrees = true;
+      this.updateProgress = true;
       // Se crean los datos para enviar
       formD.append('uid', this.userData.id);
-      formD.append('type' , this.updateAvatar.avatarFile.type);
-      formD.append('nameFile' , this.updateAvatar.avatarFile.name);
+      formD.append('type', this.updateAvatar.avatarFile.type);
+      formD.append('nameFile', this.updateAvatar.avatarFile.name);
       formD.append('sizeFile', this.updateAvatar.avatarFile.size);
-      formD.append('avatar' , this.updateAvatar.avatarFile);
+      formD.append('avatar', this.updateAvatar.avatarFile);
 
       // Si el archivo no corresponde a una imagen
       if (!(/\.(jpg|png|gif)$/i).test(this.updateAvatar.avatarFile.name)) {
@@ -532,17 +606,17 @@ parasails.registerPage('listUsers', {
 
         // Envia la información por Axios/Ajax
         axios.patch('/api/v1/users/update-avatar', formD)
-          .then(response=>{
+          .then(response => {
             return response;
           })
           .then(respons => {
             let dat = respons.data;
             // ocultar el progres
-            this.updateAvatar.progrees = false;
+            this.updateProgress = false;
 
             // En caso de que el usuario coincida con la del mismo
             // Perfil del usuario
-            if(this.me.id === this.userData.id){
+            if (this.me.id === this.userData.id) {
               swal({
                 type: 'success',
                 title: 'Avatar Actualizado',
@@ -554,7 +628,7 @@ parasails.registerPage('listUsers', {
                   location.reload();
                 }
               });
-            }else{
+            } else {
               swal({
                 type: 'success',
                 title: 'Avatar Actualizado',
@@ -563,16 +637,15 @@ parasails.registerPage('listUsers', {
                 confirmButtonText: 'Ok'
               }).then((result) => {
                 if (result.value) {
-
                   // Reabro el modal de vista en modo view
                   this.findOneUserView(dat.aid);
                 }
               });
             }
           })
-          .catch(err=>{
+          .catch(err => {
             // ocultar el progres
-            this.updateAvatar.progrees = false;
+            this.updateProgress = false;
             let data = err.response.data;
             swal({
               type: 'error',
@@ -588,8 +661,6 @@ parasails.registerPage('listUsers', {
     },
 
 
-    // -
-    // --
     /**
      * toUnlockUser
      * @description
@@ -600,8 +671,6 @@ parasails.registerPage('listUsers', {
       console.log(`toUnlockUser: ${id}`);
     },
 
-    // -
-    // --
     /**
      * deleteUser
      * @description

@@ -3,16 +3,45 @@
  *
  * @description :: A model definition.  Represents a database table/collection/etc.
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
+ * @author Saul Navarrov <Sinavarrov@gmail.com>
+ * @version 1.0
  */
 
 module.exports = {
 
   tableName: 'users',
+  schema: true,
   attributes: {
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
-    //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
+    //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝╠╣ ╚═╗
     //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
+    identification: {
+      type: 'string',
+      required: true,
+      unique: true,
+      maxLength: 25,
+      example: '1028004969',
+      description: `Numero de identificación de una persona, esta puede ser
+      Cedula, Cedula Extrangera, Nit u otro numero valido para identificarse`
+    },
+
+    status: {
+      type: 'string',
+      isIn: ['E', 'I', 'B', 'N', 'ID'],
+      example: 'N',
+      description: `Estado del usuario al momento luego de crear una nueva cuenta.
+        permitiendome asi sea bloquear los datos o inabilitarla
+        E: Enable, funcional para trabajar.
+        I: Inabled, Deshabilitado por el administrador, y solo el admin puede cambiar
+            este estado debido a que la persona se fue de la empresa y paso algo.
+        B: Block, Cuenta bloqueada por ingresar el password mal # de cantidad de veces.
+        N: New, Es una cuenta nueva, esta es cuando se crean y aun no se ha confirmado el E-mail
+            de esta cuenta nueva.
+        ID: Acount Delete No habilitada, aqui el usuario puede recuperar su cuenta
+            siguiendo algunos pasos para habilitarla de nuevo `
+    },
+
     emailAddress: {
       type: 'string',
       required: true,
@@ -48,9 +77,9 @@ module.exports = {
 
     phone:{
       type: 'string',
+      maxLength: 15,
       description: `Numero telefonico de la persona, tanto como datos, como para
       recuperar la contraseña en caso de haberla perdido`,
-      maxLength: 15
     },
 
     role:{
@@ -58,16 +87,16 @@ module.exports = {
       isIn: [0,1,2,3,4,5,6,7,8,9],
       defaultsTo: 9,
       description: `Rol de la persona en la compañia
-      0 = 'Super Administrador',
-      1 = 'Administrador',
-      2 = 'Supervisor',
-      3 = 'Secretaria',
-      4 = 'Vendedor',
-      5 = '',
-      6 = '',
-      7 = 'Usuario',
-      8 = 'Cliente',
-      9 = 'Guest'`
+        0 = 'Super Administrador',
+        1 = 'Administrador',
+        2 = 'Supervisor',
+        3 = 'Secretaria',
+        4 = 'Vendedor',
+        5 = '',
+        6 = '',
+        7 = 'Usuario',
+        8 = 'Cliente',
+        9 = 'Guest'`
     },
 
     roleName: {
@@ -87,9 +116,8 @@ module.exports = {
       type: 'boolean',
       defaultsTo: false,
       description: 'Whether this user is a "super admin" with extra permissions, etc.',
-      extendedDescription:
-`Super admins might have extra permissions, see a different default home page when they log in,
-or even have a completely different feature set from normal users.`
+      extendedDescription: `Super admins might have extra permissions, see a different default home page when they log in,
+        or even have a completely different feature set from normal users.`
     },
 
     passwordResetToken: {
@@ -117,14 +145,13 @@ or even have a completely different feature set from normal users.`
     emailStatus: {
       type: 'string',
       isIn: ['unconfirmed', 'changeRequested', 'confirmed'],
-      defaultsTo: 'confirmed',
+      defaultsTo: 'unconfirmed',
       description: 'The confirmation status of the user\'s email address.',
-      extendedDescription:
-`Users might be created as "unconfirmed" (e.g. normal signup) or as "confirmed" (e.g. hard-coded
-admin users).  When the email verification feature is enabled, new users created via the
-signup form have \`emailStatus: 'unconfirmed'\` until they click the link in the confirmation email.
-Similarly, when an existing user changes their email address, they switch to the "changeRequested"
-email status until they click the link in the confirmation email.`
+      extendedDescription: `Users might be created as "unconfirmed" (e.g. normal signup) or as "confirmed" (e.g. hard-coded
+        admin users).  When the email verification feature is enabled, new users created via the
+        signup form have \`emailStatus: 'unconfirmed'\` until they click the link in the confirmation email.
+        Similarly, when an existing user changes their email address, they switch to the "changeRequested"
+        email status until they click the link in the confirmation email.`
     },
 
     emailChangeCandidate: {
@@ -145,9 +172,8 @@ email status until they click the link in the confirmation email.`
       example: 1502844074211
     },
 
-
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
-    //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
+    //  ╠╣ ║║║╠╩╗╠╣  ║║╚═╗
     //  ╚═╝╩ ╩╚═╝╚═╝═╩╝╚═╝
 
 
@@ -157,5 +183,47 @@ email status until they click the link in the confirmation email.`
 
   },
 
-};
+  //   ╔═╗╦ ╦╔═╗╔╦╗╔═╗╔╗╔  ╔╦╗╔═╗    ╦╔═╗╔═╗╔╗╔
+  //   ║  ║ ║╚═╗ ║ ║ ║║║║   ║ ║ ║    ║╚═╗║ ║║║║
+  //   ╚═╝╚═╝╚═╝ ╩ ╚═╝╝╚╝   ╩ ╚═╝   ╚╝╚═╝╚═╝╝╚╝
 
+  customToJSON: function () {
+    return _.omit(this, ['password']);
+  },
+
+  //  ╦  ╦╔═╗╔═╗╔═╗╦ ╦╔═╗╦  ╔═╗╔═╗  ╔═╗╦  ╔═╗╔═╗╔╦╗╔═╗╔═╗
+  //  ║  ║╠═ ╠╣ ║  ╚╦╝║  ║  ╠╣ ╚═╗  ║  ║  ╠╣ ╠═╣ ║ ╠╣ ╚═╗
+  //  ╚═╝╩╚  ╚═╝╚═╝ ╩ ╚═╝╚═╝╚═╝╚═╝  ╚═╝╚═╝╚═╝╩ ╩ ╩ ╚═╝╚═╝
+  beforeCreate: async (valueToCreate, proceed) => {
+    const _ = require('@sailshq/lodash');
+    let roleNames = ['Super Administrador', 'Administrador', 'Supervisor', 'Secretaria', 'Vendedor', '', '', 'Usuario', 'Cliente', 'Guest'];
+
+    // Antes de actualizar los datos, este actualiza el campo de
+    //   roleName con el numero del rol
+    if (!_.isUndefined(roleNames[valueToCreate.role])) {
+      valueToCreate.roleName = roleNames[valueToCreate.role];
+    }
+
+    // retorno de datos
+    return proceed();
+  },
+
+  //  ╦  ╦╔═╗╔═╗╔═╗╦ ╦╔═╗╦  ╔═╗╔═╗  ╦ ╦╔═╗╔╦═╗╔═╗╔╦╗╔═╗╔═╗
+  //  ║  ║╠═ ╠╣ ║  ╚╦╝║  ║  ╠╣ ╚═╗  ║ ║╠═╝ ║ ║╠═╣ ║ ╠╣ ╚═╗
+  //  ╚═╝╩╚  ╚═╝╚═╝ ╩ ╚═╝╚═╝╚═╝╚═╝  ╚═╝╩  ═╩═╝╩ ╩ ╩ ╚═╝╚═╝
+  // Actualiza el campo roleName con el nombre designado al campo rol
+  // ya que son 2 arrays conjuntos
+  beforeUpdate: async function (valuesToSet, proceed) {
+    const _ = require('@sailshq/lodash');
+    let roleNames = ['Super Administrador', 'Administrador', 'Supervisor', 'Secretaria', 'Vendedor', '', '', 'Usuario', 'Cliente', 'Guest'];
+
+    // Antes de actualizar los datos, este actualiza el campo de
+    //   roleName con el numero del rol
+    if (!_.isUndefined(roleNames[valuesToSet.role]) ) {
+      valuesToSet.roleName = roleNames[valuesToSet.role];
+    }
+
+    // Retorno de datos.
+    return proceed();
+  }
+};

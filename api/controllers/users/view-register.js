@@ -1,12 +1,15 @@
+/**
+ * view-register.js
+ * @description :: Mirar abajo la description ► ↓↓↓
+ * @author Saul Navarrov <Sinavarrov@gmail.com>
+ * @version 1.0
+ */
 module.exports = {
-
 
   friendlyName: 'View register',
 
-
   description: `Display "Register User New"
   view => Con el cual registramos a nuevos usuarios `,
-
 
   exits: {
 

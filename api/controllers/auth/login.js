@@ -86,8 +86,13 @@ requests over WebSockets instead of HTTP).`,
     // Modify the active session instance.
     this.req.session.userId = userRecord.id;
 
-    delete userRecord.password;
+    // Adjuntando Ip de inicio de sesion
+    await User.update({id: userRecord.id})
+      .set({
+        tosAcceptedByIp: this.req.headers['x-real-ip'] || this.req.ip
+      });
 
+    delete userRecord.password;
 
     // Respond with view.
     return exits.success(userRecord);

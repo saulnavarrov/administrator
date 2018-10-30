@@ -118,7 +118,7 @@
               <div class="row" v-show="footerTable">
 
                 <div class="col-md-12 col-lg-3 text-center" style="line-height: 33px;" v-show="countData">
-                  <p>Resultados: {{ (limit * skip) + 1 }} - {{ listCount + (skip * limit) }} de {{ listFullCount }}</p>
+                  <p>R: {{ (limit * skip) + 1 }} - {{ listCount + (skip * limit) }} de {{ listFullCount }}</p>
                 </div>
 
                 <%/* NAVEGACION DE LAS PAGINAS */%>
@@ -159,7 +159,7 @@
 
                 <%/* CANTIDAD DE RESULTADOS */%>
                 <div class="col-12 col-lg-4 row" v-show="numResult" style="display: flex;justify-content: center;">
-                  <label for="resultados" class="col-7t" style="line-height: 33px;"># Resultados: </label>
+                  <label for="resultados" class="col-7t" style="line-height: 33px;">Cantidad: </label>
                   <select class="col-5 custom-select custom-select-sm" style="height: fit-content;max-width: 100px;margin-left: 10px;" v-model="limit" v-on:change="skipData()" width="100">
                     <option value="10" selected>10</option>
                     <option value="25">25</option>

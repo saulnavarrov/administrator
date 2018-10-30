@@ -1,13 +1,16 @@
+/**
+ * find-search.js
+ * @description :: Mirar abajo la description ► ↓↓↓
+ * @author Saul Navarrov <Sinavarrov@gmail.com>
+ * @version 1.0
+ */
 module.exports = {
 
-
   friendlyName: 'Find one',
-
 
   description: `Busca un usuario especifico en la base de datos y lo devuelve
   haciendolo funcionar con el buscador si contontine tal dato, en 3 columnas
   el Nombre, Apellido, E-mail`,
-
 
   inputs: {
     count: {
@@ -67,6 +70,7 @@ module.exports = {
     let count = 0;
 
     // formateando datos para busquedas exactas ya que sin camelcase
+    let uid = String(inputs.finds);
     let searchEmail = _.lowerCase(String(inputs.finds));
     let searchName = _.startCase(_.lowerCase(String(inputs.finds)));
     let searchLastName = _.startCase(_.lowerCase(String(inputs.finds)));
@@ -79,20 +83,29 @@ module.exports = {
       });
     }
 
+    // Filtro
+    let findContainer = [
+      { 'id':           { 'contains': uid } },
+      { 'emailAddress': { 'contains': searchEmail } },
+      { 'name':         { 'contains': searchName } },
+      { 'lastName':     { 'contains': searchLastName } },
+      { 'id':           { 'contains': inputs.finds } },
+      { 'emailAddress': { 'contains': inputs.finds } },
+      { 'name':         { 'contains': inputs.finds } },
+      { 'lastName':     { 'contains': inputs.finds } }
+    ];
+
     // funcion de buscador, donde buscara de los 3 la funcion
     let findUsers = await User.find()
-      .where({
-        'or': [
-          { 'emailAddress': { 'contains': searchEmail } },
-          { 'name':         { 'contains': searchName } },
-          { 'lastName':     { 'contains': searchLastName } }
-        ]
-      })
+      .where({ 'or': findContainer })
       .limit(inputs.lim)
       .skip(inputs.lim * inputs.sk);
 
     // Cuenta el numero de resultados
-    count = findUsers.length;
+    count = await User.find()
+      .where({ 'or': findContainer });
+
+    count = count.length;
 
     // Protegiendo el Password para no visualizarlo en Json
     for (user of findUsers) {

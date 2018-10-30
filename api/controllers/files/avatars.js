@@ -1,17 +1,18 @@
 /**
- * avatars
- * @description :: Entregara los archivos imagenes 'avatars' de los diferentes
- * usuarios, de manera dinamica, caso tal de que no tenga que recargar la pagina
- * y borrar el cache para recargarlo, solo accesible para usuarios identificados
- * y con parametros estrictos.
- * @author Saul Navarrov <sinavarrov@gmail.com>
+ * avatars.js
+ * @description :: Mirar abajo la description ► ↓↓↓
+ * @author Saul Navarrov <Sinavarrov@gmail.com>
  * @version 1.0
  */
 module.exports = {
 
   friendlyName: 'Avatars',
 
-  description: 'Entrega el archivo al usuario que lo pide.',
+  description: `Entrega el archivo al usuario que lo pide.
+    Entregara los archivos imagenes 'avatars' de los diferentes
+    usuarios, de manera dinamica, caso tal de que no tenga que recargar la pagina
+    y borrar el cache para recargarlo, solo accesible para usuarios identificados
+    y con parametros estrictos.`,
 
   inputs: {},
 
@@ -21,7 +22,6 @@ module.exports = {
       description: 'No autorizado para ver los resultados de la pagina'
     }
   },
-
 
   fn: async function (inputs, exits) {
     let _ = require('@sailshq/lodash');

@@ -22,13 +22,16 @@
         <div class="container-fluit">
 
           <section class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-6">
                <div class="form-group row">
                  <div class="col-sm-1">Id:</div>
                  <div class="col-sm-11">
                   <input type="text" class="form-control form-control-sm" v-model="userData.id" disabled>
                  </div>
               </div>
+            </div>
+            <div class="col-sm-2">
+              <p>Status: {{ userData.status }}</p>
             </div>
             <div class="col-sm-4">
               <div class="form-group row">
@@ -97,15 +100,6 @@
                   <option value="confirmed">Confirmado</option>
                 </select>
               </div>
-              <%/**
-              <div class="form-control">
-              <label>E-mail Status</label>
-              <select class="form-control form-control-sm" s>
-                  <option value="unconfirmed">No Confirmado</option>
-                  <option value="changeRequested">Cambio Requisito</option>
-                  <option value="confirmed">Confirmado</option>
-                </select>
-                */%>
             </div>
             <div class="col-sm-12 col-lg-4">
                <div class="form-group">
@@ -195,12 +189,6 @@
             </div>
             <div class="col-sm-12 col-lg-8 row">
               <div class="col-sm-12">
-                <div class="progress" v-show="updateAvatar.progrees">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-                <br><br>
-              </div>
-              </div>
-              <div class="col-sm-12">
                 <div class="form-group">
                   <label>Cambiar Imagen</label>
                   <input type="file" class="form-control .form-control-file" v-bind:disabled="editTrueData" v-on:change="onChangeAvatar" accept="image/*">
@@ -214,13 +202,27 @@
           </section>
 
         </div>
+
+        <%/* LOADING MODAL */%>
+        <div class="container-fluit m-loading-content" v-show="updateProgress">
+          <div class="row m-loading-popup">
+            <div class="col-12 text-center">
+              <h1>Cargando...</h1>
+            </div>
+            <div class="col-12">
+                <div class="progress">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+                </div>
+              </div>
+            </div>
+        </div>
       </div>
 
       <%/* FOOTER MODAL */%>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary btn-sm" v-on:click="findOneUserEdit(userData.id)" v-show="editTrueData">Editar</button>
         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"  v-on:click="closeModalView('pm-user-view')">{{ btnCerrar }}</button>
-        <button type="button" class="btn btn-primary btn-sm" v-show="!editTrueData" v-on:click="updateUser(userData.id)">Guardar Cambios</button>
+        <button type="button" class="btn btn-primary btn-sm" v-show="!editTrueData" v-on:click="btnUpdateUser(userData.id)">Guardar Cambios</button>
       </div>
     </div>
   </div>

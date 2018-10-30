@@ -1,4 +1,11 @@
+/**
+ * create-user.js
+ * @description :: Mirar abajo la description ► ↓↓↓
+ * @author Saul Navarrov <Sinavarrov@gmail.com>
+ * @version 1.0
+ */
 module.exports = {
+
   friendlyName: 'new acount',
 
   description: 'POST new acounts.',
@@ -45,12 +52,6 @@ module.exports = {
       example: 0,
       description: 'Rol de la persona en Numero'
     },
-    roleName: {
-      type: 'string',
-      example: 'User',
-      description: `Nombre del Rol de la persona que se asocio, si viene
-      vacio se porcedera a poner como usuario hasta ser autorizado`
-    },
     isSuperAdmin: {
       type: 'boolean',
       example: false,
@@ -62,7 +63,13 @@ module.exports = {
       description: `Confirmacion del usuario con el email. si vienen vacio se pondra "unconfirmed,"
       el cual obliga a la persona a confirmar la cuenta de email por seguridad esta puede ser cambiada
       por el usuario administrador con privilegio de super admin`
-    }
+    },
+    status: {
+      type: 'string',
+      isIn: ['E', 'I', 'B', 'N', 'ID'],
+      example: 'N',
+      description: `Estado del usuario al momento luego de crear una nueva`
+    },
   },
 
   exits: {
