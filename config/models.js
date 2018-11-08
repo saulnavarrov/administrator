@@ -75,6 +75,8 @@ module.exports.models = {
     updatedAt: { type: 'string', autoCreatedAt: true, columnType: 'datetime', },
     id: l.db.production.type,
     // id: { type: 'number', autoIncrement: true, },
+    //
+    // configure tipo de tiempo: columnType: 'datetime'
     //--------------------------------------------------------------------------
     //  /\   Using MongoDB?
     //  ||   Replace `id` above with this instead:
@@ -82,6 +84,8 @@ module.exports.models = {
     // ```
     // id: { type: 'string', columnName: '_id' },
     // ```
+    // Cambia la manera en la que si visualiza los datos de tiempo con
+    //    columnType: 'datetime'
     //
     // Plus, don't forget to configure MongoDB as your default datastore:
     // https://sailsjs.com/docs/tutorials/using-mongo-db
