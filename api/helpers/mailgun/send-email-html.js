@@ -97,7 +97,7 @@ module.exports = {
       var recipients = [
         { emailAddress: inputs.to, name: inputs.toName }
       ];
-      return recipients.map(function(recipient) {
+      return recipients.map((recipient) => {
         if (recipient.name) {
           return recipient.name+' <'+recipient.emailAddress+'>';
         } else {
@@ -120,7 +120,7 @@ module.exports = {
         return inputs.fromName+' <'+inputs.from+'>';
       })()//º
     })
-    .build(function(err, message) {
+    .build((err, message) => {
       if (err) { return exits.error(err); }
 
       // Note: The old approach of using NODE_ENV was removed deliberately
@@ -137,7 +137,7 @@ module.exports = {
         to: formattedRecipients,
         message: message.toString('ascii'),
         'o:testmode': inputs.testMode? 'yes' : undefined
-      }, function (err) {
+      }, (err) => {
         if (err) { return exits.error(err); }
         return exits.success();
       });//_∏_   </ mailgun…sendMime() >
