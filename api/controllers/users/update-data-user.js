@@ -119,10 +119,10 @@ module.exports = {
       id: inputs.id
     })
     .set({
-      role: inputs.role,
+      role: Number(inputs.role),
       name: _.startCase(_.lowerCase(inputs.name)),
       lastName: _.startCase(_.lowerCase(inputs.lastName)),
-      emailAddress: inputs.emailAddress,
+      emailAddress: _.toLower(inputs.emailAddress),
       emailStatus: inputs.emailStatus,
       phone: String(inputs.phone),
       // status: inputs.status, // Aun no configurado
