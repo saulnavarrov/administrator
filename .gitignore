@@ -132,5 +132,8 @@ lib-cov
 
 #################################################
 # Archivos de Clientes y Usuarios
+#
+#   Esta carpeta se crea automaticamente al momento
+#   de subir archivos o avatars para la app
 #################################################
 uploads
