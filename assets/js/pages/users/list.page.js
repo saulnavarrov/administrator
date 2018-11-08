@@ -77,7 +77,6 @@ parasails.registerPage('listUsers', {
   },
   mounted: async function () {
     //…
-    // this.findOneUserEdit('5bbbf38f0f6f213b88d8eb07');
   },
 
   //  ╦╔╗╔╔╦╗╔═╗╦═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
@@ -135,6 +134,16 @@ parasails.registerPage('listUsers', {
             this.navegationsData = this.numResult = true;
           }
           this.paginationCount();
+
+          // cuando se realiza la busqueda
+          if (this.searching && (this.listCount === 0)) {
+            this.tableData = this.footerTable = false;
+            this.alert.title = 'No hay Resultados';
+            this.alert.message = `No se encontraron resultados para la busqueda: ${this.search}`;
+            this.alert.active = true;
+          }else{
+            this.alert.active = false;
+          }
         }
       });
     },
@@ -317,6 +326,7 @@ parasails.registerPage('listUsers', {
         this.dataDb();
       } else {
         this.searching = false;
+        this.alert.active = false;
         this.dataDb();
       }
     },
@@ -332,6 +342,7 @@ parasails.registerPage('listUsers', {
       if (this.searching && this.searchs.length > 0) {
         this.searchs = '';
         this.searching = false;
+        this.alert.active = false;
         // Ejecicion del request
         this.dataDb();
       }else{
@@ -679,6 +690,60 @@ parasails.registerPage('listUsers', {
      */
     deleteUser: async function (id) {
       console.log(`deleteUser: ${id}`);
+      let csrfToken = window.SAILS_LOCALS._csrf;
+      let urls = '/api/v1/users/delete-users';
+
+      swal({
+        type: 'warning',
+        title: '¿Eliminar usuario?',
+        text: `Para eliminar este usuario presione DELETE`,
+        confirmButtonColor: 'red',
+        showCancelButton: true,
+        cancelButtonColor: 'grey',
+        confirmButtonText: 'DELETE'
+      }).then(async (e) => {
+        if (e) {
+
+          // request list update user
+          await io.socket.request({
+            url: urls,
+            method: 'DELETE',
+            data: {
+              id: id,
+            },
+            headers: {
+              'content-type': 'application/json',
+              'x-csrf-token': csrfToken
+            }
+          }, async (resData, jwRes) => {
+            console.log(jwRes);
+
+            if (jwRes.statusCode === 200) {
+              swal({
+                type: 'success',
+                title: 'Usuario eliminado',
+                text: 'Se ha eliminado el usuario con exito'
+              });
+
+              // Elimina el dato de la pantalla
+              this.listData.forEach((el, ix) => {
+                if (el.id === id) {
+                  this.listData.splice(ix, 1);
+                }
+                if( this.listData.length === 0 ) {
+                  this.tableData = false;
+                  this.footerTable = false;
+                  this.alert.active = true;
+                  this.alert.title = 'No hay datos para mostrar';
+                  this.alert.message = `Se han eliminado todos los usuarios seleccionados
+                  y no hay datos para mostrar en pantalla. Reinicie la busqueda o la pagina
+                  para visualizar mas usuarios.`;
+                }
+              });
+            }
+          });
+        }
+      });
     }
   }
 });
