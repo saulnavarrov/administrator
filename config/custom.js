@@ -11,6 +11,8 @@ const l = require('./local');
 
 module.exports.custom = {
 
+  baseUrl: l.baseUrl[0],
+
   // config locale moments
   localeMoment: l.localeMoment,
 
