@@ -77,7 +77,7 @@ module.exports = {
 
     phone:{
       type: 'string',
-      maxLength: 15,
+      maxLength: 20,
       description: `Numero telefonico de la persona, tanto como datos, como para
       recuperar la contraseña en caso de haberla perdido`,
     },
