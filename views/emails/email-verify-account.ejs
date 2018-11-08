@@ -1,10 +1,18 @@
-<% /* Note: This is injected into `views/layouts/layout-email.ejs` */ %>
-<div style="padding: 25px; margin-top:10px; background-color: #14acc2; border-top-left-radius: 6px; border-top-right-radius: 6px; border: 1px solid #0c8da0;">
-  <h2 style="text-align: center; color: #ffffff; margin:0px; font-size: 34px;">Confirm your email</h2>
+<% /* Note: This is injected into `views/layouts/layout-email.ejs`*/ %>
+
+<div style=" font-size: 1.7em; text-align: left; ">
+  <p>Confirmar E-mail</p>
 </div>
-<div style="background-color: #ffffff; padding: 25px; margin-bottom: 25px; color: #303030; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px; border: 1px solid #cccccc;">
-  <p style="margin-bottom: 35px;">Welcome, <%= fullName %>!</p>
-  <p>Haga clic en el siguiente enlace para confirmar la dirección de correo electrónico de su cuenta:</p>
-  <p style="margin-bottom: 35px;"><a style="color: #14acc2" href="<%= url.resolve(sails.config.custom.baseUrl,'/email/confirm')+'?token='+encodeURIComponent(token) %>"><%= url.resolve(sails.config.custom.baseUrl,'/email/confirm')+'?token='+encodeURIComponent(token) %></a></p>
-  <p></p>
+
+<div id="contenido">
+  <p>Bienvenido: <%= fullName %></p>
+  <p>Para nosotros es un privilegio darte la bienvenida a este equipo de trabajo, para continuar por favor ingresa al enlace que esta en la parte de abajo para confirmar tu email</p>
+  <p>Para iniciar Sesión utiliza tu Email como usuario y la contraseña que se genero.</p>
+  <br>
+  <p>Email: %Email%<br>
+  Contraseña: %Password%</p>
+  <br>
+  <a href="<%= url.resolve(sails.config.custom.baseUrl[0],'/email/confirm')+'?token='+encodeURIComponent(token) %>" style="text-decoration: none;"> <button style=" width: 200px; height: 50px; background-color: #1A237E; border: 0px; border-style: none; margin: 0px auto; display: table; font-size: 1.3em; border-radius: 4px; cursor: pointer; color: #FFF; ">Confirmar</button> </a>
+  <br>
+  <p>Link <a href="<%= url.resolve(sails.config.custom.baseUrl[0],'/email/confirm')+'?token='+encodeURIComponent(token) %>"><%= url.resolve(sails.config.custom.baseUrl[0],'/email/confirm')+'?token='+encodeURIComponent(token) %></a></p>
 </div>
