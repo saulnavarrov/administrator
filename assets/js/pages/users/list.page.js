@@ -734,7 +734,7 @@ parasails.registerPage('listUsers', {
                   this.tableData = false;
                   this.footerTable = false;
                   this.alert.active = true;
-                  this.alert.title = 'No hay datos para mostrar';
+                  this.alert.title = 'No se encontro mas usuarios';
                   this.alert.message = `Se han eliminado todos los usuarios seleccionados
                   y no hay datos para mostrar en pantalla. Reinicie la busqueda o la pagina
                   para visualizar mas usuarios.`;
