@@ -36,7 +36,7 @@ module.exports.routes = {
   // '/term':               {action: '', locals:{layout:'layouts/a'}},
   // //---
   'GET /singup':             {action: 'view-pages/register', locals:{layout:'layouts/login'}},
-  // '/email/confirm':      {action: '', locals:{layout:'layouts/a'}},
+  'GET /email/confirm':      {action: 'users/confirm-email'},
   // '/email/confirmed':    {action: '', locals:{layout:'layouts/a'}},
   // //---
   'GET /login':              {action: 'view-pages/login', locals:{layout:'layouts/login'}},
@@ -73,6 +73,7 @@ module.exports.routes = {
   'POST /api/v1/users/create':            { action: 'users/create-user' },
   'PATCH /api/v1/users/update-avatar':    { action: 'users/update-avatar' },
   'PATCH /api/v1/users/update-data-user': { action: 'users/update-data-user' },
+  'DELETE /api/v1/users/delete-users':    { action: 'users/delete' },
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗
