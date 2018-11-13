@@ -24,32 +24,30 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  // 'GET /':              {action:'view-pages/index', locals: {layout:'layouts/layout'}},
+  'GET /':                    { action: 'view-pages/dashboard', locals:{layout:'layouts/dashboard'} },
+  // ---
+  // '/faq':                  { action: '', locals:{layout:'layouts/a'} },
+  // '/legal':                { action: '', locals:{layout:'layouts/a'} },
+  // '/legal/terminos':       { action: '', locals:{layout:'layouts/a'} },
+  // '/legal/privacidad':     { action: '', locals:{layout:'layouts/a'} },
+  // '/term':                 { action: '', locals:{layout:'layouts/a'} },
+  'GET /contacto':            { action: 'view-pages/contact', locals:{layout:'layouts/login'} },
+  // ---
+  'GET /singup':              { action: 'view-pages/register', locals:{layout:'layouts/login'} },
+  'GET /email/confirm':       { action: 'users/confirm-email' },
+  'GET /email/confirmed':     { action: 'users/view-confirmed-user-email', locals:{layout:'layouts/login'} },
+  // ---
+  'GET /login':               { action: 'view-pages/login', locals:{layout:'layouts/login'} },
+  'GET /password/forgot':     { action: 'view-pages/forgot-password', locals:{layout:'layouts/login'} },
+  'GET /password/new':        { action: 'view-pages/reset-password', locals:{layout:'layouts/login'} },
+  'GET /logout':              { action: 'auth/logout' },
+  // ---
+  // '/acount':               { action: '', locals:{layout:'layouts/a'} },
+  // '/acount/password':      { action: '', locals:{layout:'layouts/a'} },
+  // '/acount/profile':       { action: '', locals:{layout:'layouts/a'} },
 
-  // '/wellcome':           {action: '', locals:{layout:'layouts/a'}},
-  'GET /':         {action: 'view-pages/dashboard', locals:{layout:'layouts/dashboard'}},
-  // //---
-  // '/faq':                {action: '', locals:{layout:'layouts/a'}},
-  // '/legal':              {action: '', locals:{layout:'layouts/a'}},
-  // '/legal/terminos':     {action: '', locals:{layout:'layouts/a'}},
-  // '/legal/privacidad':   {action: '', locals:{layout:'layouts/a'}},
-  // '/term':               {action: '', locals:{layout:'layouts/a'}},
-  // //---
-  'GET /singup':             {action: 'view-pages/register', locals:{layout:'layouts/login'}},
-  'GET /email/confirm':      {action: 'users/confirm-email'},
-  // '/email/confirmed':    {action: '', locals:{layout:'layouts/a'}},
-  // //---
-  'GET /login':              {action: 'view-pages/login', locals:{layout:'layouts/login'}},
-  'GET /password/forgot':    {action: 'view-pages/forgot-password', locals:{layout:'layouts/login'}},
-  'GET /password/new':       {action: 'view-pages/reset-password', locals:{layout:'layouts/login'}},
-  'GET /logout':             {action: 'auth/logout'},
-  // //---
-  // '/acount':             {action: '', locals:{layout:'layouts/a'}},
-  // '/acount/password':    {action: '', locals:{layout:'layouts/a'}},
-  // '/acount/profile':     {action: '', locals:{layout:'layouts/a'}},
-
-  'GET /users':             {action: 'users/view-list', locals:{layout:'layouts/dashboard'}},
-  'GET /users/new':         {action: 'users/view-register', locals:{layout:'layouts/dashboard'}},
+  'GET /users':               { action: 'users/view-list', locals:{layout:'layouts/dashboard'} },
+  'GET /users/new':           { action: 'users/view-register', locals:{layout:'layouts/dashboard'} },
 
   /***************************************************************************
   *                                                                          *
@@ -66,14 +64,16 @@ module.exports.routes = {
   //  ╔═╗╔═╗╦  ╔═╗╔╗╔╔╦╗╔═╗╔═╗╦╔╗╔╔╦╗╔═╗
   //  ╠═╣╠═╝║  ║╣ ║║║ ║║╠═╝║ ║║║║║ ║ ╚═╗
   //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
-  'POST /api/v1/login':                   { action: 'auth/login' },
-  'POST /api/v1/users':                   { action: 'users/list' },
-  'POST /api/v1/users/findOne':           { action: 'users/find-one' },
-  'POST /api/v1/users/find-search':       { action: 'users/find-search' },
-  'POST /api/v1/users/create':            { action: 'users/create-user' },
-  'PATCH /api/v1/users/update-avatar':    { action: 'users/update-avatar' },
-  'PATCH /api/v1/users/update-data-user': { action: 'users/update-data-user' },
-  'DELETE /api/v1/users/delete-users':    { action: 'users/delete' },
+  'POST /api/v1/login':                         { action: 'auth/login' },
+  'POST /api/v1/users':                         { action: 'users/list' },
+  'POST /api/v1/users/findOne':                 { action: 'users/find-one' },
+  'POST /api/v1/users/find-search':             { action: 'users/find-search' },
+  'POST /api/v1/users/create':                  { action: 'users/create-user' },
+  'PATCH /api/v1/users/update-avatar':          { action: 'users/update-avatar' },
+  'PATCH /api/v1/users/update-data-user':       { action: 'users/update-data-user' },
+  'DELETE /api/v1/users/delete-users':          { action: 'users/delete' },
+
+  'POST /api/v1/deliver-contact-form-message':  { action: 'deliver-contact-form-message' },
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗
@@ -85,8 +85,9 @@ module.exports.routes = {
   //  ╩ ╩╩╚═╝╚═╝
 
   //  ╔═╗╔═╗╦  ╔═╗╦ ╦ ╔═╗ ╔═╗
-  //  ╠═╣╠═╝║  ╠═ ║ ║ ║╣  ╚═╗
+  //  ╠═╣╠═╝║  ╠╣ ║ ║ ╠╣  ╚═╗
   //  ╩ ╩╩  ╩  ╩  ╩ ╚═╚═╝ ╚═╝
-  'GET /v/upld/imgs/vtrs/*':      { action: 'files/avatars', skipAssets: false},
-  'GET /v/upld/files/:idClient/*':  { action: 'files/files-clients', skipAssets: false},
+  'GET /v/upld/imgs/vtrs/*':          { action: 'files/avatars', skipAssets: false},
+  'GET /v/upld/files/:idClient/*':    { action: 'files/files-clients', skipAssets: false},
+
 };

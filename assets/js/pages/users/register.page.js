@@ -60,6 +60,12 @@ parasails.registerPage('register-new-user', {
   mounted: async function() {
 
     //…
+    swal({
+      title: 'Borrar auto carga de datos',
+      text: `Borrar las lineas de autocarga de datos que estan en situadas
+      en el codigo para hacer las pruebas`,
+      type: 'warning'
+    });
     this.formNewUser.role = 1;
     this.formNewUser.identification = String(Date.now());
     this.formNewUser.name = 'saul';
@@ -157,7 +163,7 @@ parasails.registerPage('register-new-user', {
       let modal = $('#pm-view-new-user-create');
       if (!reload) {
         swal({
-          tipe: 'success',
+          type: 'success',
           title: 'Usuario Creado con Exito',
           text: `El usuario ${data.user.name +' '+ data.user.lastName}. Ha sido creado exitosamente.`,
           confirmButtonText: 'Aceptar',

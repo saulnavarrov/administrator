@@ -48,6 +48,7 @@ module.exports.custom = {
   sendEmailtestMode: l.sendEmailtestMode,
 
   // The sender that all outgoing emails will appear to come from.
+  internalEmailAddress: l.internalEmailAddress,
   fromEmailAddress: l.fromEmailAddress,
   fromName: l.fromName,
 
@@ -64,5 +65,6 @@ module.exports.custom = {
 
   // Pasarela de pagos
   stripeSecret: l.stripeSecret,
+  enableBillingFeatures: l.enableBillingFeatures,
 
 };

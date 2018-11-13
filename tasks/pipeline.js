@@ -98,6 +98,7 @@ var jsFilesToInject = [
   'js/utilities/**/*.js',
 
   // Comportamiento del Admin Stisla
+  'js/stisla/stisla.js',
   'js/stisla/scripts.js',
 
 

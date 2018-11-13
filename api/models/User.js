@@ -38,7 +38,7 @@ module.exports = {
         B: Block, Cuenta bloqueada por ingresar el password mal # de cantidad de veces.
         N: New, Es una cuenta nueva, esta es cuando se crean y aun no se ha confirmado el E-mail
             de esta cuenta nueva.
-        ID: Acount Delete No habilitada, aqui el usuario puede recuperar su cuenta
+        ID: Acount Delete No habilitada, aqui el Cliente puede recuperar su cuenta
             siguiendo algunos pasos para habilitarla de nuevo `
     },
 
