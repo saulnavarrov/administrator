@@ -1,8 +1,12 @@
+body {
+  background-color: #F5F5F5;
+}
+
 .navbar.active {
 	background-color: #fff;
 }
 .navbar-bg {
-	background-color: #fff;
+	background-color: #ECEFF1;
 }
 .navbar .nav-link {
 	color: #2C2E3E;
@@ -39,8 +43,8 @@
 	background-color: #1f202e;
 }
 .main-sidebar .sidebar-menu li.menu-header {
-	color: #3f4257;
+	color: #607D8B;
 }
 .main-sidebar .sidebar-user .sidebar-user-details .user-name {
-	color: #ededed;	
+	color: #ededed;
 }
