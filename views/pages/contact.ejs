@@ -1,0 +1,120 @@
+<div id="contacto" v-cloak>
+  <section class="section">
+    <div class="container mt-3">
+      <div class="row">
+        <div class="col-12 col-md-10 offset-md-1 col-lg-10 offset-lg-1">
+
+          <div class="brand">
+            <img src="/images/favicons/apple-icon-114x114.png">
+          </div>
+
+          <div class="card card-primary card-lg">
+            <!-- Header Principal -->
+            <div class="row">
+              <div class="col-12 col-md-12 mt-2">
+                <div class="container text-center">
+                  <h1>Ponte en Contacto.</h1>
+                  <p class="text-center">¿Tiene alguna pregunta para nosotros? Tal vez algunos comentarios? Nos encanta hablar con los amigos, y nos complace responder preguntas sobre nuestros precios, planes de trabajo o soluciones empresariales. Envíenos un mensaje y nos pondremos en contacto con usted lo antes posible o si prefieres puedes comunicarte con nosotros a los telefonos que aparecen en pantalla o E-mails</p>
+                  <hr>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contenidos -->
+            <div class="row">
+
+              <!-- Contacto lado izq -->
+              <div class="col-12 col-md-12 col-lg-6">
+                <div class="card-header text-center">
+                  <h4>Envianos un Mensaje</h4>
+                </div>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="full-name">Nombre Completo</label>
+                    <input class="form-control" id="full-name" name="full-name" type="text"  :class="[formErrors.fullName ? 'is-invalid' : '']" v-model.trim="formData.fullName" placeholder="Sturgis P. Sturgeon" autofocus>
+                    <div class="invalid-feedback" v-if="formErrors.fullName">Por favor ingrese su nombre completo aqui.</div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="email-address">Email o Correo electronico</label>
+                    <input class="form-control" id="email-address" name="email-address" type="email"  :class="[formErrors.emailAddress ? 'is-invalid' : '']" v-model.trim="formData.emailAddress" placeholder="sturgeon@example.com">
+                    <div class="invalid-feedback" v-if="formErrors.emailAddress">Por favor ingrese un correo electronico Valido.</div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="full-name">Telefono de Contacto</label>
+                    <input class="form-control" id="full-name" name="full-name" type="text"  :class="[formErrors.fullName ? 'is-invalid' : '']" v-model.trim="formData.fullName" placeholder="(57) 300 1234567 | (4) 5556677">
+                    <div class="invalid-feedback" v-if="formErrors.fullName">Por favor ingrese su Numero de telefono.</div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="topic">Asunto</label>
+                    <input class="form-control" id="topic" name="topic" type="text"  :class="[formErrors.topic ? 'is-invalid' : '']" v-model.trim="formData.topic" placeholder="Preguntar por precios">
+                    <div class="invalid-feedback" v-if="formErrors.topic">Ingrese el Asunto del mensaje.</div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="message">Mensaje</label>
+                    <textarea class="form-control" id="message" name="message" :class="[formErrors.message ? 'is-invalid' : '']"
+                      v-model.trim="formData.message" placeholder="¿Cuál es la diferencia entre &quot; Individual &quot; plan y el &quot; Profesional &quot; ¿plan?" rows="5"></textarea>
+                    <div class="invalid-feedback" v-if="formErrors.message">Ingrese su mensaje aqui.</div>
+                  </div>
+
+                  <p class="text-danger" v-if="cloudError"><small>Se ha presentado un error al procesar el mensaje. Por favor verifique su información e intentelo de nuevo, o <a href="/contacto">contacte con soporte</a> si persiste el error.</small></p>
+                  <div class="form-group">
+                    <button :syncing="syncing" class="btn btn-dark btn-lg btn-block">Enviar Mensaje</button>
+                  </div>
+
+                </div>
+
+                <div class="success-message" v-if="cloudSuccess">
+                  <p class="text-center">Gracias por contactarnos!</p>
+                  <hr/>
+                  <p>Hemos recibido tu mensaje y alguien de nuestro equipo te responderá pronto.</p>
+                </div>
+
+              </div>
+
+              <!-- lado der -->
+              <div class="col-12 col-md-12 col-lg-6">
+                <div class="card-header text-center">
+                  <h4>Telefonos y Correos</h4>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-6">
+                      <h5><i class="fab fa-whatsapp"></i> WhatsApp:</h5>
+                        <p><a href="http://api.whatsapp.com/send?phone=573046324147&text=Hola %0AMi nombre es:%0AEstoy contactando por el App administrator" target="_bank">+57 304 6324147</a></p>
+                    </div>
+
+                    <div class="col-6">
+                      <h5><i class="fas fa-location-arrow"></i> Ubicación:</h5>
+                        <p>Medellín - Colombia</p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63458.369948475156!2d-75.61623095432081!3d6.244202292885608!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e4428f8a25d97c9%3A0x4acd7ae72ed66caf!2sEDIFICIO+SEGUROS+BOLIVAR!5e0!3m2!1ses-419!2sco!4v1541811044552" frameborder="0" style="border: 0px;width: 100%;min-height: 384px;"></iframe>
+                    </div>
+                  </div>
+                  <div class="row mt-5">
+                    <div class="col-12">
+                      <h5>Login</h5>
+                      <br>
+                      <div class="form-group">
+                        <a href="/" class="btn btn-dark btn-lg btn-block">Iniciar Sesión</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>
+

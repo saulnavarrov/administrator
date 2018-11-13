@@ -42,8 +42,24 @@
   <body class="my-login-page">
     <%- body %>
 
+    <!-- Footer -->
+    <footer id="page-footer">
+      <div class="navbar justify-content-between flex-row-reverse" style=" width: 100%; height: 40px; left: 0px; right: 0px;  ">
+        <div class="nav">
+          <small class="nav-item"><a class="nav-link text-info" href="/contacto">Contacto<span class="d-none d-sm-inline"></span></a></small>
+          <small class="nav-item"><a class="nav-link text-info" href="/legal/terms">Terminos<span class="d-none d-sm-inline"> de uso</span></a></small>
+          <small class="nav-item"><a class="nav-link text-info" href="/legal/privacy">Politicas<span class="d-none d-sm-inline"> de privacidad</span></a></small>
+        </div>
+
+        <small class="copy">
+          <%= typeof(i18n('Copyright')) === 'undefinded' ? 'Copyright &copy; Saúl Navarrov 2018' : i18n('Copyright') %>
+        </small>
+      </div>
+    </footer>
+    <!-- Footer End -->
+
     <!--TEMPLATES-->
-    
+
     <!--TEMPLATES END-->
 
     <% /* Delete the global `self` to help avoid client-side bugs.
@@ -71,12 +87,15 @@
     <script src="/js/modules/scroll-up-bar.min.js"></script>
     <script src="/js/modules/toastr.min.js"></script>
     <script src="/js/cloud.setup.js"></script>
+    <script src="/js/stisla/stisla.js"></script>
     <script src="/js/stisla/scripts.js"></script>
+    <script src="/js/pages/contact.page.js"></script>
     <script src="/js/pages/dashboard.page.js"></script>
     <script src="/js/pages/forgot.page.js"></script>
     <script src="/js/pages/login.page.js"></script>
     <script src="/js/pages/register.page.js"></script>
     <script src="/js/pages/reset.page.js"></script>
+    <script src="/js/pages/users/confirmed-user.page.js"></script>
     <script src="/js/pages/users/list.page.js"></script>
     <script src="/js/pages/users/register.page.js"></script>
     <!--SCRIPTS END-->

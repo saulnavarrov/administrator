@@ -14,17 +14,18 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-              <div class="float-right">
 
-                  <div class="input-group" v-show="search" >
-                    <input type="text" class="form-control" placeholder="Search" v-model="searchs" v-on:keyup.enter="findOneSearch()">
+                <h4>Lista de Usuarios</h4>
+
+                <div class="card-header-form" v-show="search" >
+                  <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Buscar Usuario" v-model="searchs" v-on:keyup.enter="findOneSearch()">
                     <div class="input-group-btn">
-                      <button class="btn btn-secondary" v-on:click="findEndSearch()"><i class="ion ion-close"></i></button>
+                      <button class="btn btn-primary btn-icon" v-on:click="findEndSearch()"><i class="ion ion-close"></i></button>
                     </div>
                   </div>
+                </div>
 
-              </div>
-              <h4>Lista de Usuarios</h4>
             </div>
             <div class="card-body">
 
