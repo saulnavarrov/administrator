@@ -146,9 +146,9 @@ requests over WebSockets instead of HTTP).`,
         success: false,
         type: 'E-Sr-Blck-N-Confir',
         text: {
-          Inactive: userRecord.status === 'I' ? 'Este usuario se encuntra suspendido o bloqueado, por favor comuniquese con soporte para tener mas información' : '',
-          block: userRecord.status === 'B' ? 'El usuario se bloqueo por seguridad, lo invitamos a cambiar su contraseña y volverlo a intentar' : '',
-          confirmed: userRecord.emailStatus !== 'confirmed' ? 'Confirme su Email para porder acceder.' : ''
+          Inactive: userRecord.status === 'I' ? 'Este usuario se encuntra suspendido o bloqueado, por favor comuniquese con soporte para tener mas información. ' : '',
+          block: userRecord.status === 'B' ? 'El usuario se bloqueo por seguridad, lo invitamos a cambiar su contraseña y volverlo a intentar. ' : '',
+          confirmed: userRecord.emailStatus !== 'confirmed' ? 'Confirme su Email para porder acceder. ' : ''
         }
       });
       // throw 'badCombo';
