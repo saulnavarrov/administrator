@@ -7,10 +7,14 @@ parasails.registerPage('login', {
     // Main syncing/loading state for this page.
     syncing: false,
 
+    // Progress
+    progressLogin: false,
+
     // Form data
     formData: {
       emailAddress: null,
-      password: null
+      password: null,
+      rememberMe: false,
     },
 
     // For tracking client-side validation errors in our form.
@@ -18,6 +22,8 @@ parasails.registerPage('login', {
     formErrors: {
       /* … */
       emailAddress: false,
+      emailLoginError: false,
+      emailValid: false,
       password: false
     },
 
@@ -58,9 +64,11 @@ parasails.registerPage('login', {
       var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       if (re.test(this.formData.emailAddress)){
         this.formErrors.emailAddress = false;
+        this.formErrors.emailValid = false;
         return true;
       }else{
         this.formErrors.emailAddress = true;
+        this.formErrors.emailValid = true;
         return false;
       }
     },
@@ -78,30 +86,89 @@ parasails.registerPage('login', {
 
     submitLogin: async function () {
       let csrfToken = window.SAILS_LOCALS._csrf;
+      let formLogin = new FormData();
+      this.progressLogin = true;
 
-      io.socket.request({
-        url: '/api/v1/login',
-        method: 'POST',
-        data: {
-          // _csrf: csrfToken
-          emailAddress: this.formData.emailAddress,
-          password: this.formData.password,
-          rememberMe: this.formData.rememberMe
-        },
-        headers: {
-          'content-type': 'application/json',
-          'x-csrf-token': csrfToken
-        }
-      },(resData, jwres) => {
-        if (jwres.error) {
-          console.log(jwres); // => e.g. 403
-          return;
-        }
+      // Creando datos para enviar
+      formLogin.append('emailAddress', this.formData.emailAddress);
+      formLogin.append('password', this.formData.password);
+      formLogin.append('rememberMe', this.formData.rememberMe);
 
-        if (jwres.statusCode === 200) {
+      // request login
+      axios.post('/api/v1/login', formLogin)
+        .then(resp => {
+          return resp;
+        })
+        .then(resp => {
+          let resData = resp.data;
           location.href = '/';
-        }
-      });
+        })
+        .catch(err => {
+          this.progressLogin = false;
+          this.formErrors.emailAddress = true;
+          this.formErrors.emailLoginError = true;
+          let data = err.response.data;
+          let resp = err.response;
+
+          // Errores
+          if (data === 'Unauthorized') {
+            swal({
+              title: 'Error: Usuario y Contraseña',
+              text: 'Error al iniciar sesión, por favor verifique su credencial e intentelo de nuevo, si se equiboca 5 veces el usuario y contraseña se bloqueara. y tendras que solicitar el cambio de contraseña.',
+              type: 'warning'
+            });
+          }
+
+          else if (data.type === 'E-Sr-Ps-NF' || data.type === 'Block-user') {
+            swal({
+              title: 'Error al iniciar sesión',
+              text: data.text,
+              type: 'warning'
+            });
+          }
+
+          else if (data.type === 'E-Sr-Blck-N-Confir') {
+            swal({
+              title: 'Error al iniciar sesión',
+              text: `${data.text.Inactive}
+              ${data.text.block}
+              ${data.text.confirmed}`,
+              type: 'warning'
+            });
+          }
+
+          else {
+
+            console.log(resp);
+            console.log(data);
+            console.log(new Error(err));
+          }
+
+        });
+
+      // io.socket.request({
+      //   url: '/api/v1/login',
+      //   method: 'POST',
+      //   data: {
+      //     // _csrf: csrfToken
+      //     emailAddress: this.formData.emailAddress,
+      //     password: this.formData.password,
+      //     rememberMe: this.formData.rememberMe
+      //   },
+      //   headers: {
+      //     'content-type': 'application/json',
+      //     'x-csrf-token': csrfToken
+      //   }
+      // },(resData, jwres) => {
+      //   if (jwres.error) {
+      //     console.log(jwres); // => e.g. 403
+      //     return;
+      //   }
+
+      //   if (jwres.statusCode === 200) {
+      //     location.href = '/';
+      //   }
+      // });
     },
     /**
      * submittedLogin

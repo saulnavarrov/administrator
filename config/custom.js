@@ -13,6 +13,13 @@ module.exports.custom = {
 
   baseUrl: l.baseUrl[0],
 
+  // Intentos de login por persona antes de bloquear la cuenta.
+  attemptsLogin: l.attemptsLogin,
+  // Cantidad de tiempo para evaluar los intentos, si se hacen 5 intentos
+  // fallidos en menos de 1 hora, se bloqueara el usuario y tendra que cambiar
+  // la contraseña
+  attemptsTime: 1 * l.attemptsTime,
+
   // config locale moments
   localeMoment: l.localeMoment,
 

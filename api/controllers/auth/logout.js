@@ -26,6 +26,15 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
+    await AttemptsLogin.create({
+      email: this.req.me.emailAddress,
+      successType: 'logout',
+      users: this.req.session.userId,
+      success: 'true',
+      ip: this.req.headers['x-forwarded-for'],
+      port: this.req.protocol
+    });
+
     // Clear the `userId` property from this session.
     delete this.req.session.userId;
 

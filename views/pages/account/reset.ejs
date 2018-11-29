@@ -8,33 +8,66 @@
 						<img src="/images/favicons/apple-icon-114x114.png">
 					</div>
 					<div class="card fat">
-						<div class="card-body">
+						<div class="card-body"  v-show="!success">
 							<h4 class="card-title"><%= typeof(i18n('Reset.title')) === 'undefinded' ? 'Reset password' : i18n('Reset.title') %></h4>
-							<form method="POST">
 
-								<div class="form-group">
-									<label for="new-password"><%= typeof(i18n('Reset  .form New Password')) === 'undefinded' ? 'Reset Password' : i18n('Reset.form New Password') %></label>
-									<input id="new-password" type="password" class="form-control" name="password" required autofocus data-eye>
-									<div class="form-text text-muted">
-									<%= typeof(i18n('Reset.form Text')) === 'undefinded' ? 'Reset Password' : i18n('Forgot.form Text') %>
-									</div>
-								</div>
+
+                <div class="form-group">
+									<label for="new-password"><%= typeof(i18n('Reset  .form New Password')) === 'undefinded' ? 'Reset Password' : i18n('Reset.form New Password') %> - <span v-bind:class="[formErrors.password.power]"><strong > {{ powerPassword }} </strong></span></label>
+                  <input type="text" class="form-control" v-bind:class="[formErrors.password.valid]" v-model="formData.passwordNew" required autofocus v-on:keyup="validatePassword()">
+
+                  <div class="invalid-feedback" v-show="formErrors.password.mayus">- Introdusca al menos 1 letra Mayuscula.</div>
+                  <div class="invalid-feedback" v-show="formErrors.password.minus">- Introdusca al menos 1 letra Minuscula.</div>
+                  <div class="invalid-feedback" v-show="formErrors.password.numb">- Introdusca al menos 1 Numero.</div>
+                  <div class="invalid-feedback" v-show="formErrors.password.min">- Minimo 8 caracteres</div>
+                </div>
+
+                <div class="form-group text-center">
+                  <a class="btn btn-sm" v-on:click="generateNewPassword()" >Generar Contraseña</a>
+                </div>
 
 								<div class="form-group no-margin">
-									<button type="submit" class="btn btn-primary btn-block">
+									<button type="submit" class="btn btn-primary btn-block" v-on:click="sendChangePasswordUser()">
 										<%= typeof(i18n('Reset.form Btn Reset')) === 'undefinded' ? 'Text	Make sure your password is strong and easy to remember' : i18n('Reset.form Btn Reset') %>
 									</button>
-								</div>
-							</form>
-						</div>
-					</div>
+                </div>
+
+
+            </div>
+
+            <%/* Proceso completado */%>
+            <div class="card-body" v-show="success" style="display: none;">
+              <h4 class="card-title"><%= typeof(i18n('Reset.title')) === 'undefinded' ? 'Reset password' : i18n('Reset.title') %></h4>
+              <p>Se han realizado las actualizacion de manera correcta, por favor inicie session con su nueva contraseña</p>
+              <div class="form-group text-center">
+                  <a class="btn btn-sm" href="/login">Iniciar Sesión</a>
+                </div>
+            </div>
+
+
+            </div>
 					<div class="footer">
 						<a class="nav-link text-info" href="/contacto">Contacte<span class="d-none d-sm-inline"> a soporte</span></a>
 					</div>
 				</div>
 			</div>
-		</div>
-	</section>
+    </div>
 
+    <%/* LOADING MODAL */%>
+      <div class="container-fluit m-loading-content" v-show="updateProgressModal" style="display: none;">
+        <div class="row m-loading-popup">
+          <div class="col-12 text-center">
+            <h2>Actualizando Contraseña Nueva...</h2>
+          </div>
+          <div class="form-divider"></div>
+          <div class="col-12">
+              <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+              </div>
+            </div>
+          </div>
+      </div>
+
+  </section>
 </div>
 <%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>

@@ -92,12 +92,16 @@ module.exports = {
       { 'id':           { 'contains': inputs.finds } },
       { 'emailAddress': { 'contains': inputs.finds } },
       { 'name':         { 'contains': inputs.finds } },
-      { 'lastName':     { 'contains': inputs.finds } }
+      { 'lastName':     { 'contains': inputs.finds } },
+      // { 'role':         { '>=': rq.me.role } }
     ];
 
     // funcion de buscador, donde buscara de los 3 la funcion
     let findUsers = await User.find()
-      .where({ 'or': findContainer })
+      .where({
+        'or': findContainer,
+        'and': [{'role': {'>=':rq.me.role}}]
+      })
       .limit(inputs.lim)
       .skip(inputs.lim * inputs.sk);
 

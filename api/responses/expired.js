@@ -31,7 +31,7 @@ module.exports = function expired() {
     return res.status(498).send('Token Expired/Invalid');
   }
   else {
-    return res.status(498).view('498');
+    return res.status(498).view('498', {titlePage: 'Token Invalid'});
   }
 
 };

@@ -68,7 +68,7 @@ module.exports = {
     var user = await User.findOne({ emailProofToken: inputs.token });
 
     // validando usuario no este desactivado
-    if (user.role < 7 && user.status === 'I') {
+    if (user.role < 8 && user.status === 'I') {
       throw 'userInabled';
     }
 

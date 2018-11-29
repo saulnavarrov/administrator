@@ -71,7 +71,8 @@ module.exports = {
 
     // funcion de buscador, donde buscara de los 3 la funcion
     let findOneUser = await User.findOne({
-      'id': inputs.id
+      'id': inputs.id,
+      'and': [{ 'role': {'>=':rq.me.role} }]
     });
 
 

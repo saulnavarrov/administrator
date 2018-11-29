@@ -65,19 +65,22 @@ module.exports = {
     let message = _.isUndefined(inputs.message) ? false : inputs.message;
 
     if (!emailAddress || !phone || !topic || !fullName || !message) {
+      let formErrors = {
+        emailAddress: !emailAddress ? 'is-invalid' : '',
+        phone: !phone ? 'is-invalid' : '',
+        topic: !topic ? 'is-invalid' : '',
+        fullName: !fullName ? 'is-invalid' : '',
+        message: !message ? 'is-invalid' : ''
+      };
+
+      // Response
       this.res.status(400);
       return this.res.json({
         status: 400,
         error: true,
         message: 'Faltan datos.',
         type: 'incomplete_data',
-        form: {
-          emailAddress: !emailAddress ? 'is-invalid' : '',
-          phone: !phone ? 'is-invalid' : '',
-          topic: !topic ? 'is-invalid' : '',
-          fullName: !fullName ? 'is-invalid' : '',
-          message: !message ? 'is-invalid' : ''
-        }
+        form: formErrors
       });
     }
 
@@ -97,15 +100,17 @@ your custom config -- usually in \`config/custom.js\`, \`config/staging.js\`,
       to: sails.config.custom.internalEmailAddress,
       subject: 'Nuevo mensaje de formulario de contacto',
       template: 'internal/email-contact-form',
-      layout: false,
+      // layout: false,
       templateData: {
         contactName: inputs.fullName,
         contactEmail: inputs.emailAddress,
+        phone: phone,
         topic: inputs.topic,
         message: inputs.message
       }
     });
 
+    // Retorno
     return exits.success({
       status: 'success',
       message: 'Mensaje enviado con exito.',

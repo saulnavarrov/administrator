@@ -93,7 +93,6 @@ parasails.registerPage('register-new-user', {
       let urls = '/api/v1/users/create';
       this.progressBar = true;
       this.updateProgress = true;
-      console.log(JSON.stringify(this.formNewUser).toString());
 
       await io.socket.request({
         url: urls,

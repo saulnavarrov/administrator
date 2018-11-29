@@ -89,15 +89,18 @@ module.exports = {
 
     // Ejecucion luego entregar el contador y saber que esta autorizado
     // para visualizar estos datos
-    let usersArray = await User.find()
-                            .limit(inputs.lim)
-                            .skip(inputs.lim * inputs.sk); // Todos los usuarios
+    let usersArray = await User.find({
+      role: { '>=': rq.me.role }
+    })
+    .limit(inputs.lim)
+    .skip(inputs.lim * inputs.sk); // Todos los usuarios
 
     // Devuelve la cantidad de datos almacenados
     count = await User.count();
 
     // Protegiendo el Password para no visualizarlo en Json
     for (user of usersArray) {
+
       delete user.password;
       // Organizando data entrega
       delete user.avatar;
@@ -115,7 +118,7 @@ module.exports = {
       delete user.status;
 
       // Entrega por Rol
-      if(user.role > 1){
+      if(user.role > 0){
         delete user.isSuperAdmin;
       }
       users.push(user);

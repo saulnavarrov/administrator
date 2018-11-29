@@ -40,9 +40,9 @@ async function registerNavegations(opt) {
     'protocol': req.protocol,
     'xforwardedproto': req.headers['x-forwarded-proto'],
     'xrequeststart': req.headers['x-request-start'],
-    'host': typeof (req.headers['host']) === 'undefined' ? req.headers['origin']: `${req.protocol}://${req.headers['host']}`,
+    'host': typeof (req.headers['host']) === 'undefined' ? req.headers['origin'] : `${req.protocol}://${req.headers['host']}`,
     'url': req.url || l.baseUrl,
-    'isSocket': req.isSocket || '',
+    'isSocket': req.isSocket || false,
     'method': req.method,
     'complete': req.complete,
     'opController': req.options['controller'],
@@ -61,7 +61,22 @@ async function registerNavegations(opt) {
     'user': userId,
   };
 
-  datosReg.ipsl = '';
+  // Pega datos en caso de que sea enviados por socket
+  if (req.isSocket) {
+    datosReg.xforwarderfor = req.socket.handshake.headers['x-forwarded-for'];
+    datosReg.xnginxproxy = req.socket.handshake.headers['x-nginx-proxy'];
+    datosReg.connection = req.socket.handshake.headers['connection'];
+    datosReg.cacheControl = req.socket.handshake.headers['cache-control'];
+    datosReg.upgradeInsecureRequests = req.socket.handshake.headers['upgrade-insecure-requests'];
+    datosReg.userAgent = req.socket.handshake.headers['user-agent'];
+    datosReg.acceptEncoding = req.socket.handshake.headers['accept-encoding'];
+    datosReg.acceptLanguage = req.socket.handshake.headers['accept-lenguage'];
+  }
+
+  // Guarda la ip
+  datosReg.ipsl = ip;
+
+  // Envia los datos para ser guardados
   await saveDataLogsNavigations(datosReg);
 }
 

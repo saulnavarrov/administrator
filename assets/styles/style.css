@@ -269,7 +269,7 @@ select.form-control:not([size]):not([multiple]),
 }
 
 textarea.form-control {
-  height: 64px !important;
+  height: auto !important;
 }
 
 .custom-control {
@@ -2472,14 +2472,14 @@ blockquote .blockquote-footer {
 }
 
 .ion {
-  font-size: 15px;
+  font-size: 22px;
 }
 
 .fas,
 .far,
 .fab,
 .fal {
-  font-size: 13px;
+  font-size: 22px;
 }
 
 #visitorMap {

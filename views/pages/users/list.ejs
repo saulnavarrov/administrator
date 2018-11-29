@@ -91,16 +91,20 @@
                         <td>{{ list.emailStatus }}</td>
                         <td width="130">
                           <div class="btn-group dropleft float-right">
-                            <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Detalles
                             </button>
                             <div class="dropdown-menu" x-placement="left-start" style="position: absolute; transform: translate3d(-202px, 0px, 0px); top: 0px; left: 0px; will-change: transform;">
-                              <a class="dropdown-item" v-on:click="findOneUserView(list.id)">Ver Completo</a>
-                              <a class="dropdown-item" v-on:click="findOneUserEdit(list.id)">Editar</a>
-                              <a class="dropdown-item" v-on:click="toUnlockUser(list.id)">Desbloquear</a>
+                              <a class="dropdown-item" href="#" v-on:click="findOneUserView(list.id)">Ver Completo</a>
+                              <a class="dropdown-item" href="#" v-on:click="findOneUserEdit(list.id)">Editar</a>
+                              <a class="dropdown-item" href="#" v-on:click="toUnlockUser(list.id)">Desbloquear</a>
                               <% if( me.role === 0 ) { %>
                               <div class="dropdown-divider"></div>
-                              <a class="dropdown-item" v-on:click="deleteUser(list.id)">Eliminar</a>
+                              <a class="dropdown-item" href="#" title="Hace la petición para cambiar el E-mail">Cambiar su E-mail</a>
+                              <a class="dropdown-item" href="#" title="Reenvia un email para Reconfirmar E-Mail">Reconfirmar E-mail</a>
+                              <a class="dropdown-item" href="#" title="Envia un Email para recuperar contraseña">Reiniciar Contraseña</a>
+                              <div class="dropdown-divider"></div>
+                              <a class="dropdown-item" href="#" v-on:click="deleteUser(list.id)">Eliminar</a>
                               <% } %>
                             </div>
                           </div>

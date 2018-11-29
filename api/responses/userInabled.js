@@ -30,7 +30,7 @@ module.exports = function expired() {
   if (req.wantsJSON) {
     return res.status(497).send('Usuario No Habilitado');
   } else {
-    return res.status(497).view('497');
+    return res.status(497).view('497', {titlePage: 'Enlace Caducado'});
   }
 
 };

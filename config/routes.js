@@ -38,8 +38,8 @@ module.exports.routes = {
   'GET /email/confirmed':     { action: 'users/view-confirmed-user-email', locals:{layout:'layouts/login'} },
   // ---
   'GET /login':               { action: 'view-pages/login', locals:{layout:'layouts/login'} },
-  'GET /password/forgot':     { action: 'view-pages/forgot-password', locals:{layout:'layouts/login'} },
-  'GET /password/new':        { action: 'view-pages/reset-password', locals:{layout:'layouts/login'} },
+  'GET /password/forgot':     { action: 'users/view-forgot-password', locals:{layout:'layouts/login'} },
+  'GET /password/new':        { action: 'users/view-new-password', locals:{layout:'layouts/login'} },
   'GET /logout':              { action: 'auth/logout' },
   // ---
   // '/acount':               { action: '', locals:{layout:'layouts/a'} },
@@ -71,9 +71,11 @@ module.exports.routes = {
   'POST /api/v1/users/create':                  { action: 'users/create-user' },
   'PATCH /api/v1/users/update-avatar':          { action: 'users/update-avatar' },
   'PATCH /api/v1/users/update-data-user':       { action: 'users/update-data-user' },
-  'DELETE /api/v1/users/delete-users':          { action: 'users/delete' },
+  'PATCH /api/v1/users/forgot-passwords':           { action: 'users/forgot-passwords' },
+  'PATCH /api/v1/users/update-password-and-login':  { action: 'users/update-password-and-login' },
+  'DELETE /api/v1/users/delete-users':              { action: 'users/delete' },
 
-  'POST /api/v1/deliver-contact-form-message':  { action: 'deliver-contact-form-message' },
+  'POST /api/v1/deliver-contact-form-message':      { action: 'deliver-contact-form-message' },
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗

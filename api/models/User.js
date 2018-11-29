@@ -181,6 +181,12 @@ module.exports = {
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
 
+    // Intentos de Login
+    attemptsLogin: {
+      collection: 'attemptslogin',
+      via: 'users'
+    }
+
   },
 
   //   ╔═╗╦ ╦╔═╗╔╦╗╔═╗╔╗╔  ╔╦╗╔═╗    ╦╔═╗╔═╗╔╗╔
