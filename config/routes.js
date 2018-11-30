@@ -24,7 +24,7 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  'GET /':                    { action: 'view-pages/dashboard', locals:{layout:'layouts/dashboard'} },
+  'GET /':                    { action: 'view-pages/dashboard', locals:{ layout:'layouts/dashboard' } },
   // ---
   // '/faq':                  { action: '', locals:{layout:'layouts/a'} },
   // '/legal':                { action: '', locals:{layout:'layouts/a'} },
@@ -46,8 +46,24 @@ module.exports.routes = {
   // '/acount/password':      { action: '', locals:{layout:'layouts/a'} },
   // '/acount/profile':       { action: '', locals:{layout:'layouts/a'} },
 
-  'GET /users':               { action: 'users/view-list', locals:{layout:'layouts/dashboard'} },
-  'GET /users/new':           { action: 'users/view-register', locals:{layout:'layouts/dashboard'} },
+  'GET /users':               { action: 'users/view-list', locals: { layout:'layouts/dashboard' } },
+  'GET /users/new':           { action: 'users/view-register', locals: { layout:'layouts/dashboard' } },
+
+
+  /***************************************************************************
+  * Archivos Maestros
+  **************************************************************************/
+
+  // Clientes de la empresa
+  'GET /customers':               { action: 'customers/view-list', locals: { layout:'layouts/dashboard' } },
+
+  // Cuentas de bancos
+  'GET /masterFul/bankAccounts':  { action: 'masters/bank-accounts/view-list', locals: { layout:'layouts/dashboard' } },
+
+  // Empresas Asociadas
+  'GET /masterFul/holdings':       { action: 'masters/holding/view-list', locals: { layout:'layouts/dashboard' } },
+
+
 
   /***************************************************************************
   *                                                                          *
@@ -75,6 +91,7 @@ module.exports.routes = {
   'PATCH /api/v1/users/update-password-and-login':  { action: 'users/update-password-and-login' },
   'DELETE /api/v1/users/delete-users':              { action: 'users/delete' },
 
+  // Mensajes de soporte y contactenos
   'POST /api/v1/deliver-contact-form-message':      { action: 'deliver-contact-form-message' },
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
