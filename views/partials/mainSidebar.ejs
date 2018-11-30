@@ -49,7 +49,13 @@
       <li class="dropdown <%= menu.l1 === 'masterFul' ? 'active' : '' %>">
           <a href="#" class="nav-link has-dropdown"><i class="ion ion-ios-albums"></i> <span>Main MasterFul</span></a>
           <ul class="dropdown-menu">
-            <li class="<%= menu.l2 === 'backAccounts' ? 'active' : '' %>"><a class="nav-link" href="/masterFul/bankAccounts"><i class="ion ion-chatbox-working"> </i>Bank Accounts</a></li>
+
+          <li class="<%= menu.l2 === 'afp' ? 'active' : '' %>"><a class="nav-link" href="/masterFul/afp"><i class="ion ion-plane"> </i>AFP's</a></li>
+          <li class="<%= menu.l2 === 'arl' ? 'active' : '' %>"><a class="nav-link" href="/masterFul/arl"><i class="ion ion-nuclear"> </i>ARL's</a></li>
+          <li class="<%= menu.l2 === 'banks' ? 'active' : '' %>"><a class="nav-link" href="/masterFul/banks"><i class="ion ion-cash"> </i>Bancos</a></li>
+          <li class="<%= menu.l2 === 'backAccounts' ? 'active' : '' %>"><a class="nav-link" href="/masterFul/bankAccounts"><i class="ion ion-chatbox-working"> </i>Bank Accounts</a></li>
+            <li class="<%= menu.l2 === 'ccf' ? 'active' : '' %>"><a class="nav-link" href="/masterFul/ccf"><i class="ion ion-jet"> </i>CCF's</a></li>
+            <li class="<%= menu.l2 === 'eps' ? 'active' : '' %>"><a class="nav-link" href="/masterFul/eps"><i class="ion ion-load-a"> </i>EPS's</a></li>
             <li class="<%= menu.l2 === 'holdings' ? 'active' : '' %>"><a class="nav-link" href="/masterFul/holdings"><i class="ion ion-pull-request"> </i>Holding</a></li>
           </ul>
         </li>

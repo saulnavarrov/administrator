@@ -55,14 +55,26 @@ module.exports.routes = {
   **************************************************************************/
 
   // Clientes de la empresa
-  'GET /customers':               { action: 'customers/view-list', locals: { layout:'layouts/dashboard' } },
+  'GET /customers':                 { action: 'customers/view-list', locals: { layout:'layouts/dashboard' } },
 
   // Cuentas de bancos
-  'GET /masterFul/bankAccounts':  { action: 'masters/bank-accounts/view-list', locals: { layout:'layouts/dashboard' } },
+  'GET /masterFul/bankAccounts':    { action: 'masters/bank-accounts/view-list', locals: { layout:'layouts/dashboard' } },
+
+  // BANCOS
+  'GET /masterFul/banks':           { action: 'masters/banks/view-list', locals: { layout: 'layouts/dashboard'} },
 
   // Empresas Asociadas
-  'GET /masterFul/holdings':       { action: 'masters/holding/view-list', locals: { layout:'layouts/dashboard' } },
+  'GET /masterFul/holdings':        { action: 'masters/holding/view-list', locals: { layout:'layouts/dashboard' } },
 
+
+  // AFP
+  'GET /masterFul/afp':             { action: 'masters/afp/view-list', locals: { layout: 'layouts/dashboard'} },
+  // ARL
+  'GET /masterFul/arl':             { action: 'masters/arl/view-list', locals: { layout: 'layouts/dashboard'} },
+  // CCF
+  'GET /masterFul/ccf':             { action: 'masters/ccf/view-list', locals: { layout: 'layouts/dashboard'} },
+  // EPS
+  'GET /masterFul/eps':             { action: 'masters/eps/view-list', locals: { layout: 'layouts/dashboard'} },
 
 
   /***************************************************************************
