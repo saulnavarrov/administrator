@@ -106,10 +106,7 @@ module.exports = {
       .skip(inputs.lim * inputs.sk);
 
     // Cuenta el numero de resultados
-    count = await User.find()
-      .where({ 'or': findContainer });
-
-    count = count.length;
+    count = findUsers.length;
 
     // Protegiendo el Password para no visualizarlo en Json
     for (user of findUsers) {

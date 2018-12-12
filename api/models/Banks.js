@@ -11,6 +11,10 @@ module.exports = {
   schema: true,
   attributes: {
 
+    //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
+    //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
+    //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
+
     nombre: {
       type: 'string',
       required: true,
@@ -23,10 +27,24 @@ module.exports = {
       defaultsTo: ''
     },
 
-    //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
-    //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
-    //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
+    nit: {
+      type: 'string',
+      defaultsTo: '00000000000000',
+      maxLength: 15,
+      minLength: 6
+    },
 
+    consecutive: {
+      type: 'string',
+      defaultsTo: '0',
+      maxLength: 2
+    },
+
+    status: {
+      type: 'string',
+      isIn: ['A','I'],
+      defaultsTo: 'I'
+    },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗

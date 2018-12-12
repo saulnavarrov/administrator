@@ -66,7 +66,6 @@ module.exports.routes = {
   // Empresas Asociadas
   'GET /masterFul/holdings':        { action: 'masters/holding/view-list', locals: { layout:'layouts/dashboard' } },
 
-
   // AFP
   'GET /masterFul/afp':             { action: 'masters/afp/view-list', locals: { layout: 'layouts/dashboard'} },
   // ARL
@@ -92,6 +91,8 @@ module.exports.routes = {
   //  ╔═╗╔═╗╦  ╔═╗╔╗╔╔╦╗╔═╗╔═╗╦╔╗╔╔╦╗╔═╗
   //  ╠═╣╠═╝║  ║╣ ║║║ ║║╠═╝║ ║║║║║ ║ ╚═╗
   //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
+
+  // USUARIOS Y LOGING
   'POST /api/v1/login':                         { action: 'auth/login' },
   'POST /api/v1/users':                         { action: 'users/list' },
   'POST /api/v1/users/findOne':                 { action: 'users/find-one' },
@@ -102,6 +103,14 @@ module.exports.routes = {
   'PATCH /api/v1/users/forgot-passwords':           { action: 'users/forgot-passwords' },
   'PATCH /api/v1/users/update-password-and-login':  { action: 'users/update-password-and-login' },
   'DELETE /api/v1/users/delete-users':              { action: 'users/delete' },
+
+  // BANCOS
+  'POST /api/v1/masters/banks':               { action: 'masters/banks/list' },
+  'POST /api/v1/masters/banks/find-one':      { action: 'masters/banks/find-one' },
+  'POST /api/v1/masters/banks/find-search':   { action: 'masters/banks/find-search' },
+  'POST /api/v1/masters/banks/create':        { action: 'masters/banks/create' },
+  'PATCH /api/v1/masters/banks/update':       { action: 'masters/banks/update' },
+  'DELETE /api/v1/masters/banks/delete':      { action: 'masters/banks/delete' },
 
   // Mensajes de soporte y contactenos
   'POST /api/v1/deliver-contact-form-message':      { action: 'deliver-contact-form-message' },

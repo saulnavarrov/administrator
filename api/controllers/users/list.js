@@ -79,6 +79,16 @@ module.exports = {
       });
     }
 
+    // Busco el usuario para verificar si tiene el roll suficiente para  hacer el procedimiento
+    let user = await User.findOne({'id': userId});
+    let autorize = user.role <= 2 ? true : false; // Autorización de usuarios
+
+    // Verifico que usuario tiene pases de seguridad para crear el nuevo usuario
+    // para ver esta pagina
+    if(!autorize){
+      throw 'unauthorized';
+    }
+
     // Enviando Numero complto de registros que hay en la base de datos
     if(inputs.count){
       return exits.success({

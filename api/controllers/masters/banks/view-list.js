@@ -38,6 +38,20 @@ module.exports = {
       'l3': null
     };
 
+    // Si no es usuario registrado no puede acceder a la pagina y se redirecciona
+    if (!userId) {
+      throw {redirect:'/login'};
+    }
+
+    // Busco el usuario para verificar si tiene el roll suficiente para  hacer el procedimiento
+    let user = await User.findOne({'id': userId});
+    let autorize = user.role <= 2 ? true : false; // Autorización de usuarios
+
+    // Verifico que usuario tiene pases de seguridad para crear el nuevo usuario
+    // para ver esta pagina
+    if(!autorize){
+      throw {redirect:'/'};
+    }
 
     // Respond with view.
     return exits.success({

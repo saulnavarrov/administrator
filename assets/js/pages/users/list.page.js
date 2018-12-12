@@ -679,7 +679,12 @@ parasails.registerPage('listUsers', {
      * @version 1.0
      */
     toUnlockUser: async function (id) {
-      console.log(`toUnlockUser: ${id}`);
+      swal({
+        title: 'Funcion no terminada',
+        text: `Terminar la funcion para desbloquear usuarios,
+        esta se encargara de hacer lo mismo como forgot, pero la accion
+        la podra hacer el mismo administrador`
+      });
     },
 
     /**

@@ -20,10 +20,9 @@ module.exports.policies = {
   '*': true,
 
   'auth/*':         ['debugNavigations'],
-  'files/*':        ['debugNavigations'],
-  'users/*':        ['debugNavigations'],
   'customers/*':    ['debugNavigations'],
+  'files/*':        ['debugNavigations'],
   'masters/*':      ['debugNavigations'],
-  'masters/*/**':   ['debugNavigations'],
+  'users/*':        ['debugNavigations'],
   'view-pages/*':   ['debugNavigations']
 };
