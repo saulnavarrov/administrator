@@ -132,6 +132,7 @@ module.exports = {
 
     // Variables Nuevos
     let doneUpload = {}; //
+    doneUpload.endUpload = false;
 
     // Subo la imagen al servidor con los parametros iniciales
     // para el nombre usar el uid para no cambiar de imagen y no crear una galeria
@@ -157,76 +158,102 @@ module.exports = {
         doneUpload = uploadAvatar[0];
         doneUpload.src = `/v/upld/imgs/vtrs/vtr-${uid}`;
         doneUpload.filenameSave = `vtr-${uid}`;
+        doneUpload.endUpload = true;
+
+        sails.log('Terminado de cargar el archivo');
       });
 
-    // tiempo para que pueda actualizarse la variable que viene del rq.file('avatar')
-    setTimeout(async () => {
-      // Generador de token
-      let uifImage = uid.substring(0, 7) + Math.random().toString(36).substring(2, 5);
-      let tfkImage = Math.random().toString(36).substring(2) + uid.substr(7, 15) + Math.random().toString(36).substring(2) + uifImage.toUpperCase() + Math.random().toString(36).substring(2);
-      let srcFile = `${doneUpload.src}?exf=${exf}&tfk=${tfkImage}&uif=${uifImage}`;
 
-      // Actualiza la imagen del
-      await User.update({ id: uid })
+
+    // tiempo para que pueda actualizarse la variable que viene del rq.file('avatar')
+    let endUpload = setInterval(await finishUpload, 1000);
+
+
+    // Finish Upload Return
+    async function finishUpload(){
+      if (!doneUpload.endUpload) {
+        sails.log('Subiendo Avatar');
+      } else {
+        // Generador de token
+        let uifImage = uid.substring(0, 7) + Math.random().toString(36).substring(2, 5);
+        let tfkImage = Math.random().toString(36).substring(2) + uid.substr(7, 15) + Math.random().toString(36).substring(2) + uifImage.toUpperCase() + Math.random().toString(36).substring(2);
+        let srcFile = `${doneUpload.src}?exf=${exf}&tfk=${tfkImage}&uif=${uifImage}`;
+
+        // Actualiza la imagen del
+        await User.update({
+          id: uid
+        })
         .set({
           avatar: srcFile,
           updatedAt: moment().format()
         });
 
-      // ACTUALIZACIÓN DE DATOS EN LA MODEL FILES
-      // > Aregar los tokens para comprobar la imagen
-      // > Actualizar el model files desactualizando la
-      //    data y creando nueva data
+        // ACTUALIZACIÓN DE DATOS EN LA MODEL FILES
+        // > Aregar los tokens para comprobar la imagen
+        // > Actualizar el model files desactualizando la
+        //    data y creando nueva data
 
-      // Busca el usuario con el anterior docuento en la base de datos
-      let fileUser = await UploadFiles.find({
-        filename: doneUpload.filenameSave,
-        active: true
-      }).select(['id']);
+        // Busca el usuario con el anterior docuento en la base de datos
+        let fileUser = await UploadFiles.find({
+          filename: doneUpload.filenameSave,
+          active: true
+        }).select(['id']);
 
-      // Actualiza el viejo Documento si existe.
-      if(typeof(fileUser) !== 'undefined') {
-        // en caso de que se encuentren mas de 2 documentos como un array
-        for(elId of fileUser) {
-          await UploadFiles.update({
-            id: elId.id
-          })
-          .set({
-            active: false,
-            updatedAt: moment().format()
-          });
-        };
+        // Actualiza el viejo Documento si existe.
+        if (typeof (fileUser) !== 'undefined') {
+          // en caso de que se encuentren mas de 2 documentos como un array
+          for (elId of fileUser) {
+            await UploadFiles.update({
+              id: elId.id
+            })
+            .set({
+              active: false,
+              updatedAt: moment().format()
+            });
+          }
+        }
+
+        sails.log(doneUpload);
+
+        // Crea el documento en la base de datos para mantener la información actualizada
+        await UploadFiles.create({
+          dirName: 'avatar',
+          fd: doneUpload.fd,
+          size: doneUpload.size,
+          type: doneUpload.type,
+          filename: doneUpload.filenameSave,
+          exf: exf,
+          filenameOriginal: naf,
+          status: doneUpload.status,
+          field: doneUpload.field,
+          extra: '',
+          src: srcFile,
+          active: true,
+          tfk: tfkImage,
+          uif: uifImage,
+          confirmate: true,
+          observation: 'Change avatar',
+          onwerFile: uid,
+          userId: rq.me.id
+        });
+
+        // Devolviendo variable a su estado inicial
+        doneUpload.endUpload = false;
+        clearIntervalEndUpload();
+
+        // Devuelve los datos al usuarios
+        return exits.success({
+          success: 'ok',
+          message: 'Upload Avatar Imagen',
+          aid: uid,
+          srcAvatar: srcFile
+        });
       }
+    }
 
-      // Crea el documento en la base de datos para mantener la información actualizada
-      await UploadFiles.create({
-        dirName: 'avatar',
-        fd: doneUpload.fd,
-        size: doneUpload.size,
-        type: doneUpload.type,
-        filename: doneUpload.filenameSave,
-        exf: exf,
-        filenameOriginal: naf,
-        status: doneUpload.status,
-        field: doneUpload.field,
-        extra: '',
-        src: srcFile,
-        active: true,
-        tfk: tfkImage,
-        uif: uifImage,
-        confirmate: true,
-        observation: 'Change avatar',
-        onwerFile: uid,
-        userId: rq.me.id
-      });
-
-      // Devuelve los datos al usuarios
-      return exits.success({
-        success: 'ok',
-        message: 'Upload Avatar Imagen',
-        aid: uid,
-        srcAvatar: srcFile
-      });
-    }, 57);
+    // Clear Interval EndUpload
+    function clearIntervalEndUpload() {
+      clearInterval(endUpload);
+    }
   }
 };
