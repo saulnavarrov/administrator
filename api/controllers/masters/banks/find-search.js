@@ -111,6 +111,7 @@ module.exports = {
       { 'status':       { 'contains': inputs.finds } },
       { 'nit':          { 'contains': inputs.finds } },
       { 'consecutive':  { 'contains': inputs.finds } },
+      { 'nombre':       { 'contains': _.upperCase(nombre)}}
     ];
 
     // funcion de buscador, donde buscara de los 3 la funcion
