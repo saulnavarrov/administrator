@@ -35,6 +35,21 @@ module.exports.bootstrap = async function(done) {
       password: await sails.helpers.passwords.hashPassword('abc123')
     }, ]);
   }
+
+  if (await BankAccounts.count() === 0) {
+    await BankAccounts.createEach([
+      {
+        nombrePersonalizado: 'Primera Cuenta',
+        nunCuenta: '00000000000',
+        fechaApertura: 1514782800,
+        fechaVencimiento: 1672462800,
+        saldo: 00,
+        tipoCuenta: 'CA',
+        nameTypeAcount: 'Cuenta Ahorros'
+      },
+    ]);
+
+  }
   // ```
 
   // Don't forget to trigger `done()` when this bootstrap function's logic is finished.
