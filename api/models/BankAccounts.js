@@ -44,7 +44,7 @@ module.exports = {
     tipoCuenta: {
       type: 'string',
       required: true,
-      example: 'cc',
+      example: 'CC',
       isIn: ['CA','CC'],
       description: ``
     },
