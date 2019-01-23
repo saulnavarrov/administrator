@@ -36,3 +36,23 @@
 }
 
 /* loading modal ajax End */
+
+
+/* Modales Segundario y Terciarios en pantalla */
+.modal2 {
+  z-index: 1200;
+  position: fixed;
+  background-color: #00000080;
+}
+
+.modal3 {
+  z-index: 1300;
+  position: fixed;
+  background-color: #00000080;
+}
+
+.modal4 {
+  z-index: 1400;
+  position: fixed;
+  background-color: #00000080;
+}
