@@ -112,6 +112,9 @@ module.exports.routes = {
   'PATCH /api/v1/masters/banks/update':       { action: 'masters/banks/update' },
   'DELETE /api/v1/masters/banks/delete':      { action: 'masters/banks/delete' },
 
+  // CUENTAS DE BANCOS
+  'POST /api/v1/masters/bankAccounts/find-one':  { action: 'masters/bank-accounts/find-one' },
+
   // Mensajes de soporte y contactenos
   'POST /api/v1/deliver-contact-form-message':      { action: 'deliver-contact-form-message' },
 
