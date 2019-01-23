@@ -5,7 +5,11 @@ parasails.registerPage('banks-list', {
   data: {
     //…
     listData: {}, // Listado de Bancos
-    bankData: {}, // Bancos individuales
+    bankData: {
+      userCreated: {name: '', lastName: '', },
+      bankAccount: [],
+    }, // Bancos individuales
+    bankAccountOne: { userCreated: {name: '', lastName: '', }, }, // Datos de las cuentas para visualizarlas de manera individual
     listCount: 0, // cantidad de resultados en pantalla
     listFullCount: 0, // Total de resultados
     activeModal: false, // Si el modal de Edicion o edicion esta activo
@@ -63,6 +67,12 @@ parasails.registerPage('banks-list', {
   },
   mounted: async function () {
     //…
+
+    console.log(' ✔ ');
+    console.log('============== Borrar apenas Termine ==============');
+    console.log('============== Linea 68 - list.page.js => banks js assets ==============');
+    console.log(' ✔ ');
+    // await this.findOneView('5c05bf1cbffc1c05e72023cc');
   },
 
   //  ╦╔╗╔╔╦╗╔═╗╦═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
@@ -400,7 +410,6 @@ parasails.registerPage('banks-list', {
           'x-csrf-token': csrfToken
         }
       }, (resData, jwres) => {
-        console.log(jwres);
 
         // En caso de error
         if (jwres.error) {
@@ -414,6 +423,10 @@ parasails.registerPage('banks-list', {
           this.bankData = resData.one;
           // pone el estado del modal en activo
           this.activeModal = true;
+
+          // Limpio los datos de las cuentas de bancos.
+          this.bankAccountOne = { userCreated: {name: '', lastName: '', } };
+
 
           // Eject Modal
           modal.modal('show');
@@ -455,12 +468,61 @@ parasails.registerPage('banks-list', {
      * @author SaulNavarrov <sinavarrov@gmail.com>
      * @version 1.0
      */
-    closeModalView: async function (modal) {
+    closeModalView: async function (modal, c) {
       this.activeModal = false;
       this.editTrueData = true;
       $(`#${modal}`).modal('hide');
       this.btnCerrar = 'cerrar';
-      this.userData = {}; // Limpia los Datos
+
+      // limpieza de variables
+      if (c === 'bankAccount') {
+        this.bankAccountOne = { userCreated: {name: '', lastName: '', } }; // Limpia los Datos
+      }
     },
+
+    /**
+     * viewAccountBank
+     * @description Mostrara en pantalla en modo modal los datos de la cuenta
+     * sin momvimientos
+     * @param {string} id Cuenta que se buscara para verla en pantalla
+     * @author SaulNavarrov <sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    viewAccountBank: async function (id) {
+      let csrfToken = window.SAILS_LOCALS._csrf;
+      this.updateProgress = true;
+      let urls = '/api/v1/masters/bankAccounts/find-one';
+      let modal = $('#pm-bankAccount-view');
+
+      // request list users
+      await io.socket.request({
+        url: urls,
+        method: 'POST',
+        data: {
+          id: id
+        },
+        headers: {
+          'content-type': 'application/json',
+          'x-csrf-token': csrfToken
+        }
+      }, (resData, jwres) => {
+        console.log(jwres);
+
+        // En caso de error
+        if (jwres.error) {
+          this.jwresError(jwres);
+        }
+
+        if (jwres.statusCode === 200) {
+          // Desactiva el progrees
+          this.updateProgress = false;
+          // Cargo los datos de la cuenta de banco
+          this.bankAccountOne = resData.one;
+          // Abrir modal
+          modal.modal('show');
+        }
+      });
+
+    }
   }
 });
