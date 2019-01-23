@@ -24,9 +24,7 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/': {
-    view: 'pages/homepage'
-  },
+  'GET /':                    { action: 'view-pages/view-dashboard', locals:{ layout:'layouts/dashboard' } },
 
   /***************************************************************************
   *                                                                          *
