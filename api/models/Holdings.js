@@ -7,18 +7,20 @@
 
 module.exports = {
 
+  tableName: 'Holdings',
+  schema: true,
   attributes: {
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
     //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
 
-    nombreRazon: {
+    reasonName: {
       type: 'string',
       example: 'Union Empresarial Colombiana SAS',
       description: `Nombre completo de la razon social`
     },
-    matricula: {
+    enrollment: {
       type: 'number',
       example: 1234567890,
       required: true,
@@ -27,7 +29,7 @@ module.exports = {
       min: 1000000,
       description: `Numero de la matricula inscrita en camara de comercio`
     },
-    identificacion: {
+    identificación: {
       type: 'number',
       example: 123456789,
       required:true,
@@ -36,14 +38,14 @@ module.exports = {
       min: 1000000,
       description: `Numero de identificación o Nit`
     },
-    consecutivo: {
+    consecutive: {
       type: 'number',
       max: 2,
       required: true,
       example: 2,
       description: `Numero consecutivo del Nit este va despues del guion`
     },
-    estado: {
+    state: {
       type: 'string',
       isIn: ['A', 'I', 'S', 'C'],
       example: 'activo',
@@ -53,22 +55,22 @@ module.exports = {
       S = Suspendido
       C = Cancelada`,
     },
-    fechaRenovado: {
+    renewedDate: {
       type: 'string',
-      example: '10/2018',
+      example: '2019',
       description: `Ultima fecha de renovación de la matricula`
     },
-    fechaCreado: {
+    createdDate: {
       type: 'string',
-      example: '10/2010',
+      example: '2019-01-01',
       description: `fecha en la que fue inscrita la matricula en camara de comercio`
     },
-    siglas: {
+    acronym: {
       type: 'string',
       example: 'Uniempresas',
       description: `Nombre corto de la empresa`
     },
-    ubicacion: {
+    location: {
       type: 'string',
       example: 'Medellin',
       description: `ubicación de la empresa actualmente`
@@ -109,7 +111,7 @@ module.exports = {
       mas no limitara la iscripcion de los usuarios`
     },
 
-    saldoActual: {
+    balance: {
       type: 'number',
 
     },
@@ -123,14 +125,16 @@ module.exports = {
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
 
-    userCreate: {
-      type: 'string',
-      example: '',
+    // Usuario quien crea esta empresa
+    userCreated: {
+      model: 'user',
       description: ``
     },
-    bankaccounts: {
-      type: 'string',
-      example: '',
+
+    // Cuenta de banco asociada
+    bankAccount: {
+      collection: 'bankAccounts',
+      via: 'holding',
       description: ``
     },
   },
