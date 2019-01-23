@@ -73,6 +73,9 @@ requests over WebSockets instead of HTTP).`,
     //   });
     // }
 
+    sails.log('login');
+    console.log(inputs);
+
 
     // Evaluando Email
     let email = _.isUndefined(inputs.emailAddress) ? false : true;

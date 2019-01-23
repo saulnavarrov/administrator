@@ -86,8 +86,6 @@ var jsFilesToInject = [
   'dependencies/**/*.js',
 
   // Modules admin
-  'js/modules/popper.js',
-  'js/modules/tooltip.js',
   'js/modules/*.js',
 
   // First amongst the app-level files, bring in cloud configuration

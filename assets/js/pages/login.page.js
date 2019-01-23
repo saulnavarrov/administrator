@@ -90,12 +90,17 @@ parasails.registerPage('login', {
       this.progressLogin = true;
 
       // Creando datos para enviar
-      formLogin.append('emailAddress', this.formData.emailAddress);
-      formLogin.append('password', this.formData.password);
-      formLogin.append('rememberMe', this.formData.rememberMe);
+
 
       // request login
-      axios.post('/api/v1/login', formLogin)
+      axios.post('/api/v1/login', {
+        'emailAddress': this.formData.emailAddress,
+        'password': this.formData.password,
+        'rememberMe': this.formData.rememberMe
+      }, {headers: {
+        'content-type': 'application/json',
+        'x-csrf-token': csrfToken
+      }})
         .then(resp => {
           return resp;
         })

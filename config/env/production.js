@@ -121,6 +121,7 @@ module.exports = {
   *                                                                         *
   ***************************************************************************/
   blueprints: {
+    action: false,
     shortcuts: false,
   },
 
@@ -151,12 +152,10 @@ module.exports = {
     *                                                                          *
     ***************************************************************************/
     cors: {
-      allowOrigins: [
-        l.baseUrl,
-        l.baseUrl2,
-      ]
+      allowOrigins: l.baseUrl
     },
 
+    csrf: false
   },
 
 
@@ -229,7 +228,7 @@ module.exports = {
     *                                                                          *
     ***************************************************************************/
     cookie: {
-      secure: true,
+      secure: l.https,
       maxAge: 24 * 60 * 60 * 1000,  // 24 hours
     },
 
@@ -258,10 +257,7 @@ module.exports = {
     * > Be sure to use the right protocol!  ("http://" vs. "https://")         *
     *                                                                          *
     ***************************************************************************/
-    onlyAllowOrigins: [
-      l.baseUrl,
-      l.baseUrl2,
-    ],
+    onlyAllowOrigins: l.baseUrl,
 
 
     /***************************************************************************
@@ -300,7 +296,7 @@ module.exports = {
   *                                                                         *
   ***************************************************************************/
   log: {
-    level: 'debug'
+    // level: 'debug'
   },
 
 

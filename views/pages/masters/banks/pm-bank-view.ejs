@@ -76,10 +76,10 @@
             <div class="col-sm-12 col-lg-3">
               <div class="form-group">
                 <label>Banco Nacional</label>
-                <input type="text" class="form-control form-control-sm" v-model="bankData.BankNacional" v-bind:disabled="editTrueData" v-show="editTrueData">
+                <input type="text" class="form-control form-control-sm" v-model="bankData.bankNacional" v-bind:disabled="editTrueData" v-show="editTrueData">
                 <!-- v-bind:disabled="editTrueData" -->
 
-                <select class="custom-select custom-select-sm" v-model="bankData.BankNacional" v-show="!editTrueData">
+                <select class="custom-select custom-select-sm" v-model="bankData.bankNacional" v-show="!editTrueData">
                   <option value="" selected disabled>Seleccionar:</option>
                   <option value="**">**</option>
                   <option value="Si">Si</option>
@@ -178,6 +178,20 @@
         <div class="container-fluit m-loading-content" v-show="updateProgress">
           <div class="row m-loading-popup">
             <div class="col-12 text-center">
+              <h1>Actualizando...</h1>
+            </div>
+            <div class="col-12">
+                <div class="progress">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <%/* LOADING MODAL */%>
+        <div class="container-fluit m-loading-content" v-show="modalProgress">
+          <div class="row m-loading-popup">
+            <div class="col-12 text-center">
               <h1>Cargando...</h1>
             </div>
             <div class="col-12">
@@ -192,8 +206,8 @@
       <%/* FOOTER MODAL */%>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary btn-sm" v-on:click="findOneEdit(bankData.id)" v-show="editTrueData">Editar</button>
-        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"  v-on:click="closeModalView('pm-user-view', 'bank')">{{ btnCerrar }}</button>
-        <button type="button" class="btn btn-primary btn-sm" v-show="!editTrueData" v-on:click="btnUpdate(bankData.id)">Guardar Cambios</button>
+        <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal"  v-on:click="closeModalView('pm-user-view')">{{ btnCerrar }}</button>
+        <button type="button" class="btn btn-primary btn-sm" v-show="!editTrueData" v-on:click="btnUpdateBank(bankData.id)">Guardar Cambios</button>
       </div>
     </div>
   </div>

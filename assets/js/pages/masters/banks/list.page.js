@@ -16,7 +16,8 @@ parasails.registerPage('banks-list', {
     titleModal: 'Datos de: ', // Titulo del modal que se abrira
     editTrueData: true, // Habilitar las casillas para editar el usuario
     btnCerrar: 'Cerrar', // Nombre del Btn de cerrar o descartar cambios
-    updateProgress: false, // Loading Progress ajax Modal
+    updateProgress: false, // Loading Progress Update ajax Modal
+    modalProgress: false, // Loading Progress ajax Modal
 
     limit: 10, // Limite por reques
     skip: 0, // Omision de datos * limit
@@ -460,6 +461,93 @@ parasails.registerPage('banks-list', {
     },
 
     /**
+     * btnUpdateBank
+     * @description Guarda los datos editados,
+     * pregunta si desea confirmar si desea hacer los cambios.
+     * @author SaulNavarrov <sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    btnUpdateBank: async function (id) {
+      swal.fire({
+        type: 'warning',
+        title: '¿Actualizar Cambios?',
+        text: `Confirme se desea actualizar el Banco: ${this.bankData.nombre}`,
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
+        confirmButtonColor: '#616161',
+        confirmButtonText: 'Actualizar'
+      }).then((result) => {
+        if (result.value) {
+          // Ejecutar el Actualizar Datos.
+          this.updateBankData(id);
+        }
+      });
+    },
+
+    /**
+     * updateBankData
+     * @description request de actualización de datos de los bancos
+     * en caso de que acepte que se realizaran los cambios al banco
+     * seleccionado.
+     * @param {string} id
+     * @author SaulNavarrov <sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    updateBankData: async function (id) {
+      let csrfToken = window.SAILS_LOCALS._csrf;
+      let urls = '/api/v1/masters/banks/update';
+      this.updateProgress = true;
+      let modal = $('#pm-bank-view');
+
+
+      // request list update user
+      await io.socket.request({
+        url: urls,
+        method: 'PATCH',
+        data: {
+          id: this.bankData.id,
+          nombre: this.bankData.nombre,
+          pais: this.bankData.pais,
+          nit: this.bankData.nit,
+          consecutive: this.bankData.consecutive,
+          phone: this.bankData.phone,
+          ach: this.bankData.ach,
+          BankNacional: this.bankData.bankNacional,
+        }, // this.bankData.
+        headers: {
+          'content-type': 'application/json',
+          'x-csrf-token': csrfToken
+        }
+      }, (rsData, jwRs) => {
+
+        // En caso de error
+        if (jwRs.error) {
+          swal({
+            type: 'error',
+            title: 'Error al actualizar datos',
+            text: `Se ha presentado un error inesperado, intentelo nuevamente o consulte con el administrador del sistema`
+          });
+          console.error(new Error(jwRs));
+        }
+
+        // Success Update
+        if (jwRs.statusCode === 200) {
+          console.log(rsData);
+
+          // Actualización de  datos en pantalla de la lista.
+          // this.listData.forEach((el, ix) =>{
+          //   if (el.id === id) {
+          //     this.listData[ix]. =rsData.bank.
+          //   }
+          // });
+          this.findOneView(id);
+          this.closeModalView('pm-user-view'); // Cierra el modal
+          this.updateProgress = false;
+        }
+      });
+    },
+
+    /**
      * closeModalView
      * @description Cierra el modal que esta abierto y deja los estados
      * como active modal el false, y editTrueModal false
@@ -490,7 +578,7 @@ parasails.registerPage('banks-list', {
      */
     viewAccountBank: async function (id) {
       let csrfToken = window.SAILS_LOCALS._csrf;
-      this.updateProgress = true;
+      this.modalProgress = true;
       let urls = '/api/v1/masters/bankAccounts/find-one';
       let modal = $('#pm-bankAccount-view');
 
@@ -515,7 +603,7 @@ parasails.registerPage('banks-list', {
 
         if (jwres.statusCode === 200) {
           // Desactiva el progrees
-          this.updateProgress = false;
+          this.modalProgress = false;
           // Cargo los datos de la cuenta de banco
           this.bankAccountOne = resData.one;
           // Abrir modal

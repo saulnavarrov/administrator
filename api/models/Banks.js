@@ -56,7 +56,7 @@ module.exports = {
       defaultsTo: '',
     },
 
-    BankNacional: {
+    bankNacional: {
       type: 'string',
       defaultsTo: '',
       isIn: ['','**','Si','No']

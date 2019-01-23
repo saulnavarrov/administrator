@@ -11,7 +11,7 @@ const l = require('./local');
 
 module.exports.custom = {
 
-  baseUrl: l.baseUrl[0],
+  baseUrl: l.baseUrl,
 
   // Intentos de login por persona antes de bloquear la cuenta.
   attemptsLogin: l.attemptsLogin,

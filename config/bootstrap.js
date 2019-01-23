@@ -32,7 +32,9 @@ module.exports.bootstrap = async function(done) {
       name: 'Saul',
       lastName: 'Navarrov',
       isSuperAdmin: true,
-      password: await sails.helpers.passwords.hashPassword('abc123')
+      role: 0,
+      identification: '1028004969',
+      password: await sails.helpers.passwords.hashPassword('Abcd1234')
     }, ]);
   }
 

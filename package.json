@@ -37,6 +37,7 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon app.js --port=1337",
+    "dev2": "NODE_ENV=production nodemon app.js --port=1337",
     "start": "NODE_ENV=production nodemon app.js --port=80",
     "test": "sails run rebuild-cloud-sdk && npm run lint && npm run custom-tests && echo 'Done.'",
     "lint": "eslint . --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look good.'",
