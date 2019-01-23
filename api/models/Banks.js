@@ -46,6 +46,29 @@ module.exports = {
       defaultsTo: 'I'
     },
 
+    phone: {
+      type: 'string',
+      defaultsTo: '',
+    },
+
+    ach: {
+      type: 'string',
+      defaultsTo: '',
+    },
+
+    BankNacional: {
+      type: 'string',
+      defaultsTo: '',
+      isIn: ['','**','Si','No']
+    },
+
+    balance: {
+      type: 'number',
+      defaultsTo: 0,
+      example: '',
+      description: ``
+    },
+
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
     //  ╚═╝╩ ╩╚═╝╚═╝═╩╝╚═╝
@@ -55,11 +78,12 @@ module.exports = {
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
     userCreated: {
-      type: 'string'
+      model: 'user'
     },
 
-    bankaccount: {
-      type: 'string',
+    bankAccount: {
+      collection: 'bankaccounts',
+      via: 'bancos'
     }
 
   },
