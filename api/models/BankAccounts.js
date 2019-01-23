@@ -17,7 +17,7 @@ module.exports = {
       example: 'Personalizada Cuenta',
       description: `Nombre personalizado de la cuenta, que se vizualizara en pantalla`
     },
-    nunCuenta: {
+    numAccount: {
       type: 'string',
       required: true,
       example: '16884-15-151531',
@@ -29,19 +29,13 @@ module.exports = {
       example: 1543527790838.0,
       description: `Fecha de apertura de la cuenta`
     },
-    fechaVencimiento: {
-      type: 'string',
-      required: true,
-      example: '05/19',
-      description: `fecha cuando vence cuando vence la tarjeta`
-    },
-    saldo: {
+    balance: {
       type: 'number',
-      required: true,
+      defaultsTo: 0,
       example: '',
       description: ``
     },
-    tipoCuenta: {
+    typeAccount: {
       type: 'string',
       required: true,
       example: 'CC',
@@ -49,9 +43,15 @@ module.exports = {
       description: ``
     },
 
-    nameTypeAcount: {
+    nameTypeAccount: {
       type: 'string',
       isIn: ['Cuenta Ahorros', 'Cuenta Corriente']
+    },
+
+    status: {
+      type: 'string',
+      isIn: ['A', 'I'],
+      defaultsTo: 'I'
     },
 
 
@@ -68,18 +68,20 @@ module.exports = {
     //  ╔═╗╔═╗╔═╗╔═╗╔═╗╦╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
-    banco: {
-      type:'string',
-      example: 'Bancolombia',
-      description: `Nombre del banco donde esta esta cuenta`
+
+    // Banco de la cuenta
+    bancos: {
+      model: 'banks',
     },
 
+    // Usuario que creao la cuenta de banco
     userCreated: {
-      type: 'string'
+      model: 'user'
     },
 
-    holdings: {
-      type: 'string',
+    // Empresa que pertenece la cuenta
+    holding: {
+      model: 'holdings'
     }
 
   },
