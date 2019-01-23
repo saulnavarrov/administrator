@@ -17,7 +17,7 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
 
-  '*': true,
+  '*': ['dbgNavigations'],
 
   // 'auth/*':         ['debugNavigations'],
   // 'customers/*':    ['debugNavigations'],
