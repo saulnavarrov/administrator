@@ -1,37 +1,49 @@
 {
   "name": "administrator",
   "private": true,
-  "version": "0.0.0",
-  "description": "a Sails application",
+  "version": "0.0.2",
+  "description": "Aplicacion para el control de trabajo de uniempresas (Medellín - Colombia)",
   "keywords": [],
   "dependencies": {
+    "@sailshq/connect-redis": "^3.2.1",
+    "@sailshq/lodash": "^3.10.3",
+    "@sailshq/socket.io-redis": "^5.2.0",
+    "async": "2.0.1",
+    "axios": "^0.18.0",
+    "connect-mongo": "^2.0.3",
+    "grunt": "^1.0.3",
+    "moment": "^2.24.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2",
     "sails": "^1.0.2",
-    "grunt": "1.0.1",
+    "sails-hook-apianalytics": "^2.0.3",
     "sails-hook-grunt": "^3.0.2",
+    "sails-hook-organics": "^0.15.1",
     "sails-hook-orm": "^2.0.0-16",
     "sails-hook-sockets": "^1.4.0",
-    "@sailshq/connect-redis": "^3.2.1",
-    "@sailshq/socket.io-redis": "^5.2.0",
-    "@sailshq/lodash": "^3.10.3",
-    "async": "2.0.1"
+    "sails-mongo": "^1.0.1",
+    "sinch-sms": "0.0.8"
   },
   "devDependencies": {
-    "@sailshq/eslint": "^4.19.3"
+    "@sailshq/eslint": "^4.19.3",
+    "eslint": "^5.12.1"
   },
   "scripts": {
-    "start": "NODE_ENV=production node app.js",
-    "test": "npm run lint && npm run custom-tests && echo 'Done.'",
+    "dev": "NODE_ENV=development nodemon app.js --port=1337",
+    "dev2": "NODE_ENV=production nodemon app.js --port=1337",
+    "start": "NODE_ENV=production nodemon app.js --port=80",
+    "test": "sails run rebuild-cloud-sdk && npm run lint && npm run custom-tests && echo 'Done.'",
     "lint": "eslint . --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look good.'",
     "custom-tests": "echo \"(No other custom tests yet.)\" && echo"
   },
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/root/administrator.git"
+    "url": "https://github.com/saulnavarrov/administrator.git"
   },
-  "author": "root",
-  "license": "",
+  "author": "Saúl Navarrov <sinavarrov@gmail.com> github.com/saulnavarrov",
+  "license": "MIT",
   "engines": {
-    "node": ">=11.4"
+    "node": ">=8.11"
   }
 }
