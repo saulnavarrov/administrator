@@ -1,8 +1,8 @@
 <%
 /**
- * views/page/users/pm-edit-user.ejs
+ * views/page/masters/banks/pm-bank-view.ejs
  * Partial Modal
- * Para ver los datos completos del usuario.
+ * Para ver los datos completos de los bancos.
  */%>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="pm-bank-view" data-backdrop="static" data-keyboard="false" aria-labelledby="pm-bank-view" aria-hidden="true">
@@ -11,8 +11,8 @@
 
       <%/* HEADER MODAL */%>
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">{{ titleModal }} {{ bankData.nombre }}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" v-on:click="closeModalView('pm-user-view')">
+        <h4 class="modal-title" id="exampleModalLongTitle">{{ titleModal }} {{ bankData.nombre }}</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" v-on:click="closeModalView('pm-user-view', 'bank')">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -21,155 +21,155 @@
       <div class="modal-body">
         <div class="container-fluit">
 
+          <%/* Id, Status */%>
           <section class="row">
-            <div class="col-sm-6">
-               <div class="form-group row">
-                 <div class="col-sm-1">Id:</div>
-                 <div class="col-sm-11">
-                  <input type="text" class="form-control form-control-sm" v-model="bankData.id" disabled>
-                 </div>
+            <div class="col-sm-12 col-lg-4">
+              <p><b>Id:</b> {{ typeof(bankData.id) === 'undefined' ? 'Indefinido' : bankData.id }}</p>
+            </div>
+            <div class="col-sm-12 col-lg-3">
+              <p><b>Estato:</b> {{ bankData.status === 'A' ? 'Activo' : bankData.status === 'I' ? 'Desactivado' : 'Indefinido'}}</p>
+            </div>
+            <div class="col-sm-12 col-lg-2">
+              <p><b># Cuentas:</b> {{ typeof(bankData.bankAccount) === 'object' ? bankData.bankAccount.length : 0 }}</p>
+            </div>
+            <div class="col-sm-12 col-lg-3">
+              <p><b>Balance:</b> {{ typeof(bankData.balance) === 'number' ? bankData.balance : 0 }}</p>
+            </div>
+          </section>
+
+          <%/* DATOS */%>
+          <section class="row">
+            <div class="col-sm-12 col-lg-2">
+              <div class="form-group">
+                <label>ACH</label>
+                <input type="text" class="form-control form-control-sm" v-model="bankData.ach" v-bind:disabled="editTrueData">
               </div>
             </div>
-            <div class="col-sm-2">
-              <p>Status: {{ bankData.status }}</p>
+            <div class="col-sm-12 col-lg-6">
+              <div class="form-group">
+                <label>Nombres</label>
+                <input type="text" class="form-control form-control-sm" v-model="bankData.nombre" v-bind:disabled="editTrueData">
+              </div>
             </div>
-            <div class="col-sm-4">
-              <div class="form-group row">
-                <div class="col-sm-2">Rol:</div>
-                <div class="col-sm-10">
-                  <select class="form-control form-control-sm" style="font-size: 13px;height: 30px;line-height: 30px;padding: 0px 10px 2px 9px;margin: 0px;" v-bind:disabled="editTrueData" v-model="bankData.role">
-                  <% if(me.role < 1) { %>
-                    <option value="0">00 - Super Admin</option>
-                  <% } %>
-                    <option value="1">01 - Administrador</option>
-                    <option value="2">02 - Supervisor</option>
-                    <option value="3">03 - Secretario</option>
-                    <option value="4">04 - Vendedores</option>
-                    <option value="5">05 - </option>
-                    <option value="6">06 - </option>
-                    <option value="7">07 - Usuario</option>
-                    <option value="8">08 - Client</option>
-                    <option value="9">09 - Guest</option>
-                  </select>
-                </div>
+            <div class="col-sm-12 col-lg-3">
+              <div class="form-group">
+                <label>Nit </label>
+                <input type="text" class="form-control form-control-sm" v-model="bankData.nit" v-bind:disabled="editTrueData">
+              </div>
+            </div>
+            <div class="col-sm-12 col-lg-1">
+              <div class="form-group">
+                <label>Cons</label>
+                <input type="text" class="form-control form-control-sm" v-model="bankData.consecutive" v-bind:disabled="editTrueData">
               </div>
             </div>
           </section>
 
-          <hr>
           <section class="row">
-            <div class="col-sm-12 col-lg-4">
-               <div class="form-group">
-                 <label>Nombres</label>
-                 <input type="text" class="form-control form-control-sm" v-model="bankData.nombre" v-bind:disabled="editTrueData">
-              </div>
-            </div>
-            <div class="col-sm-12 col-lg-4">
-               <div class="form-group">
-                 <label>Nit </label>
-                 <input type="text" class="form-control form-control-sm" v-model="bankData.nit" v-bind:disabled="editTrueData">
-              </div>
-            </div>
-            <div class="col-sm-12 col-lg-4">  
+            <div class="col-sm-12 col-lg-6">
               <div class="form-group">
-                 <label>Consecutivo </label>
-                 <input type="text" class="form-control form-control-sm" v-model="bankData.consecutive" v-bind:disabled="editTrueData">
+                <label>Telefono: </label>
+                <input type="text" class="form-control form-control-sm" v-model="bankData.phone" v-bind:disabled="editTrueData">
               </div>
             </div>
-          </section>
-          <section class="row">
-            <div class="col-sm-12 col-lg-4">
-               <div class="form-group">
-                 <label>E-mail</label>
-                 <input type="text" class="form-control form-control-sm" v-model="bankData.emailAddress" v-bind:disabled="editTrueData">
-              </div>
-            </div>
-            <div class="col-sm-12 col-lg-4">
+
+            <div class="col-sm-12 col-lg-3">
               <div class="form-group">
-                <label>E-mail Status:</label>
-                <select class="form-control form-control-sm" style="font-size: 13px;height: 30px;line-height: 30px;padding: 0px 10px 2px 9px;margin: 0px;" v-bind:disabled="editTrueData" v-model="bankData.emailStatus">
-                  <option value="unconfirmed">No Confirmado</option>
-                  <option value="changeRequested">Cambio Requisito</option>
-                  <option value="confirmed">Confirmado</option>
+                <label>Banco Nacional</label>
+                <input type="text" class="form-control form-control-sm" v-model="bankData.BankNacional" v-bind:disabled="editTrueData" v-show="editTrueData">
+                <!-- v-bind:disabled="editTrueData" -->
+
+                <select class="custom-select custom-select-sm" v-model="bankData.BankNacional" v-show="!editTrueData">
+                  <option value="" selected disabled>Seleccionar:</option>
+                  <option value="**">**</option>
+                  <option value="Si">Si</option>
+                  <option value="No">No</option>
                 </select>
+
               </div>
             </div>
-            <div class="col-sm-12 col-lg-4">
-               <div class="form-group">
-                 <label>Telefono</label>
-                 <input type="text" class="form-control form-control-sm" v-model="bankData.phone" v-bind:disabled="editTrueData">
-              </div>
-            </div>
-          </section>
-          <section class="row">
-            <div class="col-sm-12 col-lg-4">
+            <div class="col-sm-12 col-lg-3">
               <div class="form-group">
-                <label for="">Ultima login:</label>
-                <input type="text" class="form-control form-control-sm" v-model="bankData.lastSeenAt" disabled>
-              </div>
-            </div>
-            <div class="col-sm-12 col-lg-4">
-              <div class="form-group">
-                <label for="">Ultima Edicion</label>
-                <input type="text" class="form-control form-control-sm" v-model="bankData.updatedAt" disabled>
-              </div>
-            </div>
-            <div class="col-sm-12 col-lg-4">
-              <div class="form-group">
-                <label for="">Creado desde:</label>
-                <input type="text" class="form-control form-control-sm" v-model="bankData.createdAt" disabled>
+                <label>Pais</label>
+                <input type="text" class="form-control form-control-sm" v-model="bankData.pais" v-bind:disabled="editTrueData">
               </div>
             </div>
           </section>
 
-          <hr>
-          <section class="row">
-            <div class="col-sm-12 col-lg-4">
-              <h5>Miselanea</h5>
+          <%/* ACCORDION - CUENTAS ASOCIADAS */%>
+          <section class="accordion" v-show="editTrueData">
+            <div class="accordion-header collapsed" role="button" data-toggle="collapse" data-target="#panel-body-1" aria-expanded="false">
+              <h4>Cuentas de Bancos Asociadas</h4>
+            </div>
+            <div class="accordion-body collapse" id="panel-body-1">
+              <section class="row">
+                <div class="col-12" v-show="bankData.bankAccount.length === 0 ? true : false">
+                  <h4>No hay Cuentas Asociadas</h4>
+                </div>
+                <div class="col-12" v-show="bankData.bankAccount.length > 0 ? true : false">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th class="text-right" width="50">#</th>
+                        <th class="text-center">Type</th>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">N Cuenta</th>
+                        <th class="text-center">Balance</th>
+                        <th class="text-center" width="130">Action</th>
+                      </tr>
+                    </thead>
+                      <tr v-for="(lst, i) of bankData.bankAccount" v-bind:id="'id-'+lst.id">
+                        <td class="text-leght">{{ i + 1 }}</td>
+                        <td>{{ lst.typeAccount }}</td>
+                        <td>{{ lst.nombrePersonalizado }}</td>
+                        <td class="text-lenght">{{ lst.numAccount }}</td>
+                        <td class="text-lenght">{{ lst.balance }}</td>
+                        <td class="text-lenght">
+                          <button type="button" class="btn btn-primary btn-sm " v-on:click="viewAccountBank(lst.id)">Ver Datos</button>
+                        </td>
+                      </tr>
+                    <tbody>
+
+                    </tbody>
+                  </table>
+                </div>
+              </section>
             </div>
           </section>
 
-          <section class="row">
-            <div class="col-sm-12 col-lg-4">
-              <div class="form-group">
-                <label for="">Ultima Ip:</label>
-                <input type="text" class="form-control form-control-sm" v-model="bankData.tosAcceptedByIp" disabled>
-              </div>
+          <%/* ACCORDION - OTROS DATOS */%>
+          <section class="accordion"  v-show="editTrueData">
+            <div class="accordion-header collapsed" role="button" data-toggle="collapse" data-target="#panel-body-9" aria-expanded="false">
+              <h4>Otros datos</h4>
             </div>
-            <div class="col-sm-12 col-lg-4">
-              <div class="form-group">
-                <label for="">Password Rest Token</label>
-                <input type="text" class="form-control form-control-sm" v-model="bankData.passwordResetToken" disabled>
-              </div>
-            </div>
-            <div class="col-sm-12 col-lg-4">
-              <div class="form-group">
-                <label for="">Password Reset Token Exp</label>
-                <input type="text" class="form-control form-control-sm" v-model="bankData.passwordResetTokenExpiresAt" disabled>
-              </div>
-            </div>
-          </section>
-          <section class="row">
-            <div class="col-sm-12 col-lg-4">
-              <div class="form-group">
-                <label for="">Email Proof Token</label>
-                <input type="text" class="form-control form-control-sm" v-model="bankData.emailProofToken" disabled>
-              </div>
-            </div>
-            <div class="col-sm-12 col-lg-4">
-              <div class="form-group">
-                <label for="">Email Proof Token Exp</label>
-                <input type="text" class="form-control form-control-sm" v-model="bankData.emailProofTokenExpiresAt" disabled>
-              </div>
-            </div>
-            <div class="col-sm-12 col-lg-4">
-              <div class="form-group">
-                <label for="">Email Change Candidate</label>
-                <input type="text" class="form-control form-control-sm" v-model="bankData.emailChangeCandidate" disabled>
-              </div>
+            <div class="accordion-body collapse" id="panel-body-9">
+              <section class="row">
+                <div class="col-sm-12 col-lg-4">
+                  <div class="form-group">
+                    <label for="">Creado desde:</label>
+                    <input type="text" class="form-control form-control-sm" v-bind:value="bankData.createdAt" disabled>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-lg-4">
+                  <div class="form-group">
+                    <label for="">Ultima Edicion</label>
+                    <input type="text" class="form-control form-control-sm" v-bind:value="bankData.updatedAt" disabled>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-lg-4">
+                  <div class="form-group">
+                    <label for="">Creado por:</label>
+                    <input type="text" class="form-control form-control-sm" v-bind:value="bankData.userCreated.name + ' ' + bankData.userCreated.lastName"
+                      disabled>
+                  </div>
+                </div>
+              </section>
             </div>
           </section>
 
+
+          <%/* =================================================================== */%>
+          <div class="form-divider"><hr></div>
 
 
         </div>
@@ -192,7 +192,7 @@
       <%/* FOOTER MODAL */%>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary btn-sm" v-on:click="findOneEdit(bankData.id)" v-show="editTrueData">Editar</button>
-        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"  v-on:click="closeModalView('pm-user-view')">{{ btnCerrar }}</button>
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"  v-on:click="closeModalView('pm-user-view', 'bank')">{{ btnCerrar }}</button>
         <button type="button" class="btn btn-primary btn-sm" v-show="!editTrueData" v-on:click="btnUpdate(bankData.id)">Guardar Cambios</button>
       </div>
     </div>
