@@ -105,7 +105,8 @@ module.exports = {
     let banks = await Banks.find()
     .limit(inputs.lim)
     .skip(inputs.lim * inputs.sk)
-    .select(['id', 'nombre', 'nit', 'consecutive', 'status']);
+    .select(['id', 'nombre', 'nit', 'consecutive', 'status', 'balance'])
+    .populate('bankAccount');
 
     // Retorno de datos
     return exits.success({
