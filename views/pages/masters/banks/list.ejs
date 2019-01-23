@@ -98,10 +98,10 @@
                             <label v-bind:for="'ch-'+list.id" class="custom-control-label"></label>
                           </div>
                         </td>
-                        <td>{{ list.nit }}-{{ list.consecutive }}</td>
+                        <td width="145">{{ list.nit }}-{{ list.consecutive }}</td>
                         <td>{{ list.nombre }}</td>
-                        <td> Cuentas asociadas </td>
-                        <td>{{ list.status }}</td>
+                        <td>{{ list.bankAccount.length }} </td>
+                        <td>{{ list.status === 'A' ? 'Activo' : list.status === 'I' ? 'Desactivado' : list.status }}</td>
                         <td width="130">
                           <div class="btn-group dropleft float-right">
                             <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
@@ -112,7 +112,10 @@
                               <a class="dropdown-item" href="#" v-on:click="findOneView(list.id)">Ver Completo</a>
                               <a class="dropdown-item" href="#" v-on:click="findOneEdit(list.id)">Editar</a>
                               <div class="dropdown-divider"></div>
-                              <a class="dropdown-item" href="#" v-on:click="deleteBank(list.id)">Eliminar</a>
+                              <a class="dropdown-item" href="#" v-on:click="statusChange(list.id)">{{ list.status === 'A' ? 'Inactivar' : list.status === 'I' ? 'Activar' : '' }}</a>
+
+                              <div class="dropdown-divider" v-if="(list.balance > 0) || (list.bankAccount.length > 0) ? false : true "></div>
+                              <a class="dropdown-item" href="#" v-on:click="deleteBank(list.id)" v-if="(list.balance > 0) || (list.bankAccount.length > 0) ? false : true ">Eliminar</a>
                             </div>
                           </div>
                         </td>
@@ -191,6 +194,7 @@
 
   <%/* PARTIALES DE LA PAGINA */%>
   <%- partial('./pm-bank-view.ejs') %>
+  <%- partial('./pm-bankAccount-view.ejs') %>
   <%/* FIN PARTIALES DE LA PAGINA */%>
 
 
