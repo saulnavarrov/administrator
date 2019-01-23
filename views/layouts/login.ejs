@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title><%= typeof(i18n('Name App')) === 'undefinied' ? 'Administrator App' : titlePage +' - '+ i18n('Name App') %></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/images/favicons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicons/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <!--STYLES-->
+    <link rel="stylesheet" href="/min/production.min.css">
+    <!--STYLES END-->
+    <style>
+      body,html{height:100%}body.my-login-page{background-color:#f7f9fb;font-size:14px}.my-login-page .brand{width:90px;height:90px;overflow:hidden;border-radius:50%;margin:40px auto;box-shadow:0 0 40px rgba(0,0,0,.05)}.my-login-page .brand img{width:100%}.my-login-page .card-wrapper{width:400px}.my-login-page .card{border-color:transparent;box-shadow:0 0 40px rgba(0,0,0,.05)}.my-login-page .card.fat{padding:10px}.my-login-page .card .card-title{margin-bottom:30px}.my-login-page .form-control{border-width:2.3px}.my-login-page .form-group label{width:100%}.my-login-page .btn.btn-block{padding:12px 10px}.my-login-page .margin-top20{margin-top:20px}.my-login-page .no-margin{margin:0}.my-login-page .footer{margin:40px 0;color:#888;text-align:center}
+    </style>
+  </head>
+  <body class="my-login-page">
+    <%- body %>
+
+    <!-- Footer -->
+    <footer id="page-footer">
+      <div class="navbar justify-content-between flex-row-reverse" style=" width: 100%; height: 40px; left: 0px; right: 0px;  ">
+        <div class="nav">
+          <small class="nav-item"><a class="nav-link text-info" href="/contacto">Contacto<span class="d-none d-sm-inline"></span></a></small>
+          <small class="nav-item"><a class="nav-link text-info" href="/legal/terms">Terminos<span class="d-none d-sm-inline"> de uso</span></a></small>
+          <small class="nav-item"><a class="nav-link text-info" href="/legal/privacy">Politicas<span class="d-none d-sm-inline"> de privacidad</span></a></small>
+        </div>
+
+        <small class="copy">
+          <%= typeof(i18n('Copyright')) === 'undefinded' ? 'Copyright &copy; Saúl Navarrov 2018' : i18n('Copyright') %>
+        </small>
+      </div>
+    </footer>
+    <!-- Footer End -->
+
+    <!--TEMPLATES-->
+    
+    <!--TEMPLATES END-->
+
+    <% /* Delete the global `self` to help avoid client-side bugs.
+    (see https://developer.mozilla.org/en-US/docs/Web/API/Window/self) */ %>
+    <script>delete window.self;</script>
+
+    <% /* Auto-injected «script» tags: */ %>
+    <!--SCRIPTS-->
+    <script src="/min/production.min.js"></script>
+    <!--SCRIPTS END-->
+    <script type="text/javascript">
+      $(function () {
+        $("input[type='password'][data-eye]").each(function (i) {
+          let $this = $(this);
+
+          $this.wrap($("<div/>", {
+            style: 'position:relative'
+          }));
+          $this.css({
+            paddingRight: 60
+          });
+          $this.after($("<div/>", {
+            html: 'Show',
+            class: 'btn btn-primary btn-sm',
+            id: 'passeye-toggle-' + i,
+            style: 'position:absolute;right:10px;top:50%;transform:translate(0,-50%);padding: 2px 7px;font-size:12px;cursor:pointer;'
+          }));
+          $this.after($("<input/>", {
+            type: 'hidden',
+            id: 'passeye-' + i
+          }));
+          $this.on("keyup paste", function () {
+            $("#passeye-" + i).val($(this).val());
+          });
+          $("#passeye-toggle-" + i).on("click", function () {
+            if ($this.hasClass("show")) {
+              $this.attr('type', 'password');
+              $this.removeClass("show");
+              $(this).removeClass("btn-outline-primary");
+            } else {
+              $this.attr('type', 'text');
+              $this.val($("#passeye-" + i).val());
+              $this.addClass("show");
+              $(this).addClass("btn-outline-primary");
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

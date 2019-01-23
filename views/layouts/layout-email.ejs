@@ -1,0 +1,36 @@
+<% /* Default layout for email templates */ %>
+<div style=" background-color: #f3f3f3ab;margin: 0px;padding: 20px 0px;display: block;font-family: 'Helvetica Neue', 'Helvetica', sans-serif;width: 100%;height: auto;color: #000;">
+  <div style=" background-color: #FFF;margin: 5px auto;width: 800px;height: auto;padding: 15px;border: 1px #0000002b solid;">
+    <div style=" display: table; height: auto; margin: 15px auto 0px auto; text-align: center; width: auto;">
+      <h3><img src="<%= url.resolve(sails.config.custom.baseUrl[0], 'images/favicons/android-icon-144x144.png') %>"> <br>
+      Administrator & Uniempresas</h3>
+    </div>
+
+    <div style=" width: 100%; height: 1px; background: #00000005; margin: 25px 0px 25px 0px; padding: 0px; border-style: none; "></div>
+
+    <%/* Body contenido del mensaje */%>
+    <%- body %>
+
+  </div>
+  <div style=" background-color: #000;margin: 0px;padding: 20px 0px;display: block;font-family: 'Helvetica Neue', 'Helvetica', sans-serif;width: 100%;height: auto;color: #FFF; text-align: center;">
+    <nav>
+      <a style="color: #0c8da0;" target="_bank" href="https://www.facebook.com/UniempresasSeguridadSocial/"><img src="https://cdn4.iconfinder.com/data/icons/social-media-2146/512/1_social-512.png" width="32"></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a style="color: #0c8da0;" target="_bank" href="https://twitter.com/uniempresas"><img src="https://cdn4.iconfinder.com/data/icons/social-media-2146/512/2_social-512.png" width="32" ></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a style="color: #0c8da0;" target="_bank" href="https://www.instagram.com/uniempresas/"><img src="https://cdn4.iconfinder.com/data/icons/social-media-2146/512/25_social-512.png" width="32"></a>
+    </nav>
+    <br>
+    <nav style="color: #cccccc; font-size: 14px;">
+      <a style="color: #0c8da0;" target="_bank" href="<%= url.resolve(sails.config.custom.baseUrl[0], 'contact') %>">Help</a> &nbsp;|&nbsp;
+      <a style="color: #0c8da0;" target="_bank" href="<%= url.resolve(sails.config.custom.baseUrl[0], 'faq') %>">FAQ</a> &nbsp;|&nbsp;
+      <a style="color: #0c8da0;" target="_bank" href="<%= url.resolve(sails.config.custom.baseUrl[0], 'legal/terms') %>">Terms of Service</a> &nbsp;|&nbsp;
+      <a style="color: #0c8da0;" target="_bank" href="<%= url.resolve(sails.config.custom.baseUrl[0], 'legal/privacy') %>">Privacy Policy</a>
+    </nav>
+    <div style=" margin: 0px auto;width: 720px;height: auto;padding: 10px; text-align: center;">
+      <p style="color: #787878; font-size: 11px;">Por favor no responder a este email. Para ponerse en contacto con nosotros, visite nuestro <a
+          style="color: #0c8da0;" href="<%= url.resolve(sails.config.custom.baseUrl[0], 'contact') %>"> centro de ayuda.</a> <br>Si no se ha
+          registrado en una cuenta con nosotros, ignore este mensaje.</p>
+      <p style="color: #9f9f9f; font-size: 10px; text-align: center;"><em>(Contruido con <a href="https://sailsjs.com">Sails.js</a> y por <a href="mailto:sinavarrov@gmail.com">Saúl Navarrov</a> )</em></p>
+      <p style="color: #9f9f9f; font-size: 12px; text-align: center;">Hecho con amor ❤</p>
+    </div>
+  </div>
+</div>
