@@ -130,3 +130,12 @@ lib-cov
 *.out
 *.pid
 
+#################################################
+# Archivos de Clientes y Usuarios
+#
+#   Esta carpeta se crea automaticamente al momento
+#   de subir archivos o avatars para la app
+#################################################
+uploads
+package-lock.json
+pruebasMath.js
