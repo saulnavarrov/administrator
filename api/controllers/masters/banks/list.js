@@ -105,8 +105,15 @@ module.exports = {
     let banks = await Banks.find()
     .limit(inputs.lim)
     .skip(inputs.lim * inputs.sk)
-    .select(['id', 'nombre', 'nit', 'consecutive', 'status', 'balance'])
+    .select(['id', 'nombre', 'nit', 'consecutive', 'status'])
     .populate('bankAccount');
+
+    // Regresa el numero de los banksAccounts en vez de todos los datos
+    if (banks.length > 0) {
+      banks.forEach(el => {
+        el.bankAccount = el.bankAccount.length;
+      });
+    }
 
     // Retorno de datos
     return exits.success({

@@ -122,7 +122,15 @@ module.exports = {
       })
       .limit(inputs.lim)
       .skip(inputs.lim * inputs.sk)
-      .select(['id', 'nombre', 'nit', 'consecutive', 'status']);
+      .select(['id', 'nombre', 'nit', 'consecutive', 'status'])
+      .populate('bankAccount');
+
+    // Regresa el numero de los banksAccounts en vez de todos los datos
+    if (findBank.length > 0) {
+      findBank.forEach(el => {
+        el.bankAccount = el.bankAccount.length;
+      });
+    }
 
     // Cuenta el numero de resultados
     count = findBank.length;
