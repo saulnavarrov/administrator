@@ -1,0 +1,111 @@
+<%
+/**
+ * views/page/masters/banks/pm-bankAccount-view.ejs
+ * Partial Modal
+ * Para ver los datos completos de los bancos.
+ */%>
+
+<div class="modal modal2 fade" tabindex="-1" role="dialog" id="pm-bankAccount-view" data-backdrop="static" data-keyboard="false" aria-labelledby="pm-bankAccount-view" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <%/* HEADER MODAL */%>
+      <div class="modal-header">
+<h5 class="modal-title" id="exampleModalLongTitle">Cuenta {{ typeof(bankData) === 'undefined' ? '¿Error Cuenta?' : bankData.nombre }}: <em> {{ typeof(bankAccountOne.id) === 'undefined' ? '-' : bankAccountOne.nombrePersonalizado }} </em></h5>
+
+        <div class="card-header-action">
+          <a href="#" class="btn btn-sm" style="color:#FF0000;line-height: normal;" data-dismiss="modal" aria-label="Close" v-on:click="closeModalView('pm-bankAccount-view', 'bankAccount')"><i class="fas fa-times"></i></a>
+        </div>
+      </div>
+
+      <%/* BODY MODAL */%>
+      <div class="modal-body">
+        <div class="container-fluit">
+
+          <%/* ENCABEZADO */%>
+          <section class="row">
+            <div class="col-sm-12 col-lg-4">
+              <p><b>Id:</b> {{ typeof(bankAccountOne.id) === 'undefined' ? '-' : bankAccountOne.id }}</p>
+            </div>
+            <div class="col-sm-12 col-lg-3">
+              <p><b>Estato:</b> {{ typeof(bankAccountOne.id) === 'undefined' ? '-' : bankAccountOne.status === 'A' ? 'Activo' : bankAccountOne.status === 'I' ? 'Desactivado' : 'Indefinido'}}</p>
+            </div>
+            <div class="col-sm-12 col-lg-3">
+              <p><b>Balance:</b> {{ typeof(bankAccountOne.balance) === 'number' ? bankAccountOne.balance : 0 }}</p>
+            </div>
+          </section>
+
+          <%/* DATOS */%>
+          <section class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label for="">Nombre de la Empresa</label>
+                <input type="text" class="form-control form-control-sm" v-bind:value="bankAccountOne.holding" disabled>
+              </div>
+            </div>
+          </section>
+
+          <section class="row">
+            <div class="col-4">
+              <div class="form-group">
+                <label for="">Tipo de cuenta</label>
+                <input type="text" class="form-control form-control-sm" v-bind:value="bankAccountOne.typeAccount + ' - ' + bankAccountOne.nameTypeAccount" disabled>
+              </div>
+            </div>
+            <div class="col-8">
+              <div class="form-group">
+                <label for="">Numero de Cuenta</label>
+                <input type="text" class="form-control form-control-sm" v-bind:value="bankAccountOne.numAccount" disabled>
+              </div>
+            </div>
+          </section>
+
+          <section class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label for="">Fecha de Apertura</label>
+                <input type="text" class="form-control form-control-sm" v-bind:value="bankAccountOne.fechaApertura" disabled>
+              </div>
+            </div>
+          </section>
+
+          <%/* ACCORDION - OTROS DATOS */%>
+          <section class="accordion"  v-show="editTrueData">
+            <div class="accordion-header collapsed" role="button" data-toggle="collapse" data-target="#panel-body-99" aria-expanded="false">
+              <h4>Otros datos</h4>
+            </div>
+            <div class="accordion-body collapse" id="panel-body-99">
+              <section class="row">
+                <div class="col-sm-12 col-lg-4">
+                  <div class="form-group">
+                    <label for="">Creado desde:</label>
+                    <input type="text" class="form-control form-control-sm" v-bind:value="bankAccountOne.createdAt" disabled>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-lg-4">
+                  <div class="form-group">
+                    <label for="">Ultima Edicion</label>
+                    <input type="text" class="form-control form-control-sm" v-bind:value="bankAccountOne.updatedAt" disabled>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-lg-4">
+                  <div class="form-group">
+                    <label for="">Creado por:</label>
+                    <input type="text" class="form-control form-control-sm" v-bind:value="bankAccountOne.userCreated.name + ' ' + bankAccountOne.userCreated.lastName"
+                      disabled>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </section>
+
+        </div>
+      </div>
+
+      <%/* FOOTER MODAL */%>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal" v-on:click="closeModalView('pm-bankAccount-view', 'bankAccount')">{{ btnCerrar }}</button>
+      </div>
+    </div>
+  </div>
+</div>
