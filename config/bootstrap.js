@@ -36,20 +36,43 @@ module.exports.bootstrap = async function(done) {
     }, ]);
   }
 
-  if (await BankAccounts.count() === 0) {
-    await BankAccounts.createEach([
-      {
-        nombrePersonalizado: 'Primera Cuenta',
-        nunCuenta: '00000000000',
-        fechaApertura: 1514782800,
-        fechaVencimiento: 1672462800,
-        saldo: 00,
-        tipoCuenta: 'CA',
-        nameTypeAcount: 'Cuenta Ahorros'
-      },
-    ]);
+  // Cuenta de banco
+  // if (await BankAccounts.count() === 0) {
+  //   await BankAccounts.createEach([
+  //     {
+  //       nombrePersonalizado: 'Primera Cuenta',
+  //       nunCuenta: '00000000000',
+  //       fechaApertura: 1514782800,
+  //       fechaVencimiento: 1672462800,
+  //       saldo: 00,
+  //       tipoCuenta: 'CA',
+  //       nameTypeAcount: 'Cuenta Ahorros'
+  //     },
+  //   ]);
+  // }
 
-  }
+  // Holding 1
+  // if (await Holdings.count() === 0) {
+  //   await Holdings.createEach([
+  //     {
+  //       reasonName: 'UNION EMPRESARIAL COLOMBIANA S.A.S',
+  //       enrollment: 44509712,
+  //       identificación: 900420838,
+  //       consecutive: 0,
+  //       state: 'A',
+  //       renewedDate: '2020',
+  //       createdDate: '2019-01-01',
+  //       acronym: 'UNIEMPRESAS S.A.S',
+  //       location: 'Medellin',
+  //       maxCustomersEps: 200,
+  //       maxCustomersArl: 200,
+  //       maxCustomersCaja: 200,
+  //       maxCustomersAfp: 200,
+  //       balance: 0
+  //     }
+  //   ]);
+  // }
+
   // ```
 
   // Don't forget to trigger `done()` when this bootstrap function's logic is finished.
