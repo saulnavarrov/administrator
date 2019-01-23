@@ -9,6 +9,9 @@
  * https://sailsjs.com/config/session
  */
 
+// Data Local
+const loc = require('./local');
+
 module.exports.session = {
 
   /***************************************************************************
@@ -18,7 +21,7 @@ module.exports.session = {
   * of your users, forcing them to log in again.                             *
   *                                                                          *
   ***************************************************************************/
-  secret: 'fb44352b81f306e9df2b34e7568e5dc9',
+  secret: loc.secretSession,
 
 
   /***************************************************************************

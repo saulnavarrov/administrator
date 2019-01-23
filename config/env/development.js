@@ -1,25 +1,4 @@
-/**
- * Production environment settings
- * (sails.config.*)
- *
- * What you see below is a quick outline of the built-in settings you need
- * to configure your Sails app for production.  The configuration in this file
- * is only used in your production environment, i.e. when you lift your app using:
- *
- * ```
- * NODE_ENV=production node app
- * ```
- *
- * > If you're using git as a version control solution for your Sails app,
- * > this file WILL BE COMMITTED to your repository by default, unless you add
- * > it to your .gitignore file.  If your repository will be publicly viewable,
- * > don't add private/sensitive data (like API secrets / db passwords) to this file!
- *
- * For more best practices and tips, see:
- * https://sailsjs.com/docs/concepts/deployment
- */
-
-// Local Data
+// local data
 const loc = require('./../local');
 
 module.exports = {
@@ -50,8 +29,7 @@ module.exports = {
     *                                                                          *
     ***************************************************************************/
     default: {
-      adapter: loc.db.production.adapter,
-      // url: `mongodb://${loc.db.production.user}:${loc.db.production.pass}@${loc.db.production.url}:${loc.db.production.port}/${loc.db.production.db}`,
+      adapter: loc.db.development.adapter,
       url: `mongodb://${loc.db.development.url}:${loc.db.development.port}/${loc.db.development.db}`,
 
       //--------------------------------------------------------------------------
@@ -75,8 +53,10 @@ module.exports = {
       * https://sailsjs.com/config/datastores                                     *
       *                                                                           *
       ****************************************************************************/
-      ssl: loc.db.production.ssl,
+      ssl: loc.db.development.ssl,
+
     },
+
   },
 
 
@@ -100,7 +80,7 @@ module.exports = {
     * If, in production, this app has access to physical-layer CASCADE         *
     * constraints (e.g. PostgreSQL or MySQL), then set those up in the         *
     * database and uncomment this to disable Waterline's `cascadeOnDestroy`    *
-    * polyfill.  (Otherwise, if you are using a databse like Mongo, you might  *
+    * polyfilloc.  (Otherwise, if you are using a databse like Mongo, you might  *
     * choose to keep this enabled.)                                            *
     *                                                                          *
     ***************************************************************************/
@@ -154,6 +134,7 @@ module.exports = {
       allowOrigins: loc.baseUrl
     },
 
+
     csrf: false
   },
 
@@ -186,8 +167,7 @@ module.exports = {
     * > (For a full list, see https://sailsjs.com/plugins/sessions)            *
     *                                                                          *
     ***************************************************************************/
-    adapter: loc.connect.production.connect,
-    // url: `mongodb://${loc.connect.production.user}:${loc.connect.production.pass}@${loc.connect.production.url}:${loc.connect.production.port}/${loc.connect.production.db}`,
+    adapter: loc.connect.development.connect,
     url: `mongodb://${loc.connect.development.url}:${loc.connect.development.port}/${loc.connect.development.db}`,
 
     //--
@@ -228,8 +208,8 @@ module.exports = {
     *                                                                          *
     ***************************************************************************/
     cookie: {
-      secure: loc.https,
-      maxAge: loc.rememberMeCookieMaxAge,
+      // secure: true,
+      maxAge: 24 * 60 * 60 * 1000,  // 24 hours
     },
 
   },
@@ -258,10 +238,6 @@ module.exports = {
     *                                                                          *
     ***************************************************************************/
     onlyAllowOrigins: loc.baseUrl,
-    // [
-    //   'https://example.com',
-    //   'https://staging.example.com',
-    // ],
 
 
     /***************************************************************************
@@ -294,13 +270,13 @@ module.exports = {
 
   /**************************************************************************
   *                                                                         *
-  * Set the production log level.                                           *
+  * Set the production log leveloc.                                           *
   *                                                                         *
   * (https://sailsjs.com/config/log)                                        *
   *                                                                         *
   ***************************************************************************/
   log: {
-    // level: 'debug'
+    level: 'info'
   },
 
 
@@ -330,7 +306,7 @@ module.exports = {
     * (https://sailsjs.com/config/http)                                        *
     *                                                                          *
     ***************************************************************************/
-    trustProxy: true,
+    trustProxy: false,
 
   },
 
@@ -345,7 +321,7 @@ module.exports = {
   * this, just try deploying without setting it and see if it works.)       *
   *                                                                         *
   ***************************************************************************/
-  // port: 80,
+  port: 1337,
 
 
 
@@ -379,8 +355,8 @@ module.exports = {
   *                                                                         *
   ***************************************************************************/
   custom: {
-    // baseUrl: 'https://example.com',
-    // internalEmailAddress: 'support@example.com',
+    // baseUrl: loc.baseUrl,
+    // internalEmailAddress: loc.internalEmailAddress,
 
     // mailgunDomain: 'mg.example.com',
     // mailgunSecret: 'key-prod_fake_bd32301385130a0bafe030c',
@@ -398,7 +374,4 @@ module.exports = {
     //--------------------------------------------------------------------------
 
   },
-
-
-
 };

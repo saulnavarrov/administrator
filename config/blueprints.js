@@ -17,7 +17,7 @@ module.exports.blueprints = {
   *                                                                          *
   ***************************************************************************/
 
-  // actions: false,
+  actions: false,
 
 
   /***************************************************************************
@@ -26,8 +26,15 @@ module.exports.blueprints = {
   *                                                                          *
   ***************************************************************************/
 
-  // rest: true,
+  rest: true,
 
+  // Prefix App
+  // Example: {{urlApp}}/prefix/{{urls}}
+  prefix: '',
+
+  // Prefix Rest App Models
+  // Example: {{urlApp}}/restPrefix/{{Models}}
+  restPrefix: '/api/v2',
 
   /***************************************************************************
   *                                                                          *
@@ -36,6 +43,6 @@ module.exports.blueprints = {
   *                                                                          *
   ***************************************************************************/
 
-  // shortcuts: true,
+  shortcuts: false,
 
 };

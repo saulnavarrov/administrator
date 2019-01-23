@@ -26,6 +26,17 @@ module.exports.bootstrap = async function(done) {
   //   // etc.
   // ]);
   // ```
+  // if (await Users.count() === 0) {
+  //   await Users.createEach([{
+  //     emailAddress: 'sinavarrov@gmail.com',
+  //     name: 'Saul',
+  //     lastName: 'Navarrov',
+  //     isSuperAdmin: true,
+  //     role: 0,
+  //     identification: '1028004969',
+  //     password: await sails.helpers.passwords.hashPassword('Abcd1234')
+  //   }, ]);
+  // }
 
   // Don't forget to trigger `done()` when this bootstrap function's logic is finished.
   // (otherwise your server will never lift, since it's waiting on the bootstrap)

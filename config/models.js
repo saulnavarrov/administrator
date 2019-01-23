@@ -13,6 +13,9 @@
  * https://sailsjs.com/docs/concepts/models-and-orm/model-settings
  */
 
+// Data Local
+const loc = require('./local');
+
 module.exports.models = {
 
 
@@ -35,7 +38,7 @@ module.exports.models = {
   *                                                                          *
   ***************************************************************************/
 
-  // schema: true,
+  schema: true,
 
 
   /***************************************************************************
@@ -53,7 +56,7 @@ module.exports.models = {
   *                                                                          *
   ***************************************************************************/
 
-  // migrate: 'alter',
+  migrate: 'alter',
 
 
   /***************************************************************************
@@ -69,9 +72,17 @@ module.exports.models = {
   ***************************************************************************/
 
   attributes: {
-    createdAt: { type: 'number', autoCreatedAt: true, },
-    updatedAt: { type: 'number', autoUpdatedAt: true, },
-    id: { type: 'number', autoIncrement: true, },
+    createdAt: {
+      type: 'string',
+      autoCreatedAt: true,
+      columnType: 'datetime',
+    },
+    updatedAt: {
+      type: 'string',
+      autoCreatedAt: true,
+      columnType: 'datetime',
+    },
+    id: loc.db.production.type,
     //--------------------------------------------------------------------------
     //  /\   Using MongoDB?
     //  ||   Replace `id` above with this instead:
@@ -101,7 +112,7 @@ module.exports.models = {
   ******************************************************************************/
 
   dataEncryptionKeys: {
-    default: '8vankOqJZIVUZWXzlj/vC+PoRA1ugmQDfH9YCUNfGCg='
+    default: loc.dataEncryptionKeys.default,
   },
 
 

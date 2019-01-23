@@ -13,6 +13,9 @@
  * https://sailsjs.com/config/datastores
  */
 
+// Data local
+const loc = require('./local');
+
 module.exports.datastores = {
 
 
@@ -51,6 +54,8 @@ module.exports.datastores = {
     // adapter: 'sails-mysql',
     // url: 'mysql://user:password@host:port/database',
 
+    adapter: loc.db.production.adapter,
+    url: `mongodb://${loc.db.production.user}:${loc.db.production.pass}@${loc.db.production.url}:${loc.db.production.port}/${loc.db.production.db}`,
   },
 
 

@@ -17,6 +17,13 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
 
-  // '*': true,
+  '*': true,
+
+  // 'auth/*':         ['debugNavigations'],
+  // 'customers/*':    ['debugNavigations'],
+  // 'files/*':        ['debugNavigations'],
+  // 'masters/*':      ['debugNavigations'],
+  // 'users/*':        ['debugNavigations'],
+  // 'view-pages/*':   ['debugNavigations']
 
 };

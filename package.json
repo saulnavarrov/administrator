@@ -22,7 +22,8 @@
     "sails-hook-orm": "^2.0.0-16",
     "sails-hook-sockets": "^1.4.0",
     "sails-mongo": "^1.0.1",
-    "sinch-sms": "0.0.8"
+    "sinch-sms": "0.0.8",
+    "skipper": "^0.8.7"
   },
   "devDependencies": {
     "@sailshq/eslint": "^4.19.3",
