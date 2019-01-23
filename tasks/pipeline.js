@@ -36,10 +36,22 @@ var cssFilesToInject = [
   // Bring in `.css` files for themes and style guides (e.g. Bootstrap, Foundation)
   'dependencies/**/*.css',
 
+  // Modules
+  'styles/modules/ionicons.css',
+  'styles/modules/fontawesome-all.css',
+  'styles/modules/*.css',
+
+  // Admin Skin
+  'styles/demo.css',
+  'styles/style.css',
+
   // All of the rest of your custom `.css` files will be injected here,
   // in no particular order.  To customize the ordering, add additional
   // items here, _above_ this one.
-  'styles/**/*.css'
+  'styles/**/*.css',
+
+  // Skin Dark
+  'styles/skin/darksidebar.css'
 ];
 
 
@@ -67,7 +79,27 @@ var jsFilesToInject = [
   // Bring in `.js` files for any other client-side JavaScript dependencies.
   // (e.g. Lodash, Vue.js, jQuery, Bootstrap, Ember, Angular, etc.)
   // > Be sure to list dependencies that depend on each other in the right order!
+  'dependencies/lodash.js',
+  'dependencies/jquery.min.js',
+  'dependencies/popper.js',
+  'dependencies/tooltip.js',
+  'dependencies/bowser.js',
+  'dependencies/vue.js',
   'dependencies/**/*.js',
+
+  // Modules admin
+  'js/modules/*.js',
+
+  // First amongst the app-level files, bring in cloud configuration
+  'js/cloud.setup.js',
+
+  // Bring in components & utilities before bringing in the rest (i.e. page scripts)
+  'js/components/**/*.js',
+  'js/utilities/**/*.js',
+
+  // Comportamiento del Admin Stisla
+  'js/stisla/stisla.js',
+  'js/stisla/scripts.js',
 
   // All of the rest of your custom client-side js files will be injected here,
   // in no particular order.  To customize the ordering, add additional items

@@ -11,13 +11,11 @@
     "async": "2.0.1",
     "axios": "^0.18.0",
     "connect-mongo": "^2.0.3",
-    "grunt": "^1.0.3",
     "moment": "^2.24.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
     "sails": "^1.0.2",
     "sails-hook-apianalytics": "^2.0.3",
-    "sails-hook-grunt": "^3.0.2",
     "sails-hook-organics": "^0.15.1",
     "sails-hook-orm": "^2.0.0-16",
     "sails-hook-sockets": "^1.4.0",
@@ -27,7 +25,11 @@
   },
   "devDependencies": {
     "@sailshq/eslint": "^4.19.3",
-    "eslint": "^5.12.1"
+    "@sailshq/htmlhint": "^0.9.16",
+    "@sailshq/lesshint": "^4.6.6",
+    "eslint": "^5.12.1",
+    "grunt": "^1.0.3",
+    "sails-hook-grunt": "^3.0.2"
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon app.js --port=1337",
@@ -45,6 +47,6 @@
   "author": "Saúl Navarrov <sinavarrov@gmail.com> github.com/saulnavarrov",
   "license": "MIT",
   "engines": {
-    "node": ">=8.11"
+    "node": ">=11.4"
   }
 }
