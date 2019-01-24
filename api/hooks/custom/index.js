@@ -30,7 +30,7 @@ module.exports = function defineCustomHook(sails) {
         let suffix = '';
         if (_.contains(['silly'], sails.config.log.level)) {
           suffix =
-`
+            `
 > Tip: To exclude sensitive credentials from source control, use:
 > • config/local.js (for local development)
 > • environment variables (for production)
@@ -62,7 +62,7 @@ module.exports = function defineCustomHook(sails) {
         }
 
         sails.log.verbose(
-`Some optional settings have not been configured yet:
+          `Some optional settings have not been configured yet:
 ---------------------------------------------------------------------
 ${problems.join('\n')}
 
@@ -71,7 +71,7 @@ will be disabled and/or hidden in the UI.
 
  [?] If you're unsure or need advice, come by https://sailsjs.com/support
 ---------------------------------------------------------------------${suffix}`);
-      }//ﬁ
+      } //ﬁ
 
       // Set an additional config keys based on whether Stripe config is available.
       // This will determine whether or not to enable various billing features.
@@ -79,7 +79,7 @@ will be disabled and/or hidden in the UI.
 
       // After "sails-hook-organics" finishes initializing, configure Stripe
       // and Mailgun packs with any available credentials.
-      sails.after('hook:organics:loaded', ()=>{
+      sails.after('hook:organics:loaded', () => {
 
         sails.helpers.stripe.configure({
           secret: sails.config.custom.stripeSecret
@@ -92,7 +92,7 @@ will be disabled and/or hidden in the UI.
           fromName: sails.config.custom.fromName,
         });
 
-      });//_∏_
+      }); //_∏_
 
       // ... Any other app-specific setup code that needs to run on lift,
       // even in production, goes here ...
@@ -114,9 +114,7 @@ will be disabled and/or hidden in the UI.
       before: {
         '/*': {
           skipAssets: true,
-          fn: async function(req, res, next){
-
-            var url = require('url');
+          fn: async function (req, res, next) {
 
             // First, if this is a GET request (and thus potentially a view),
             // attach a couple of guaranteed locals.
@@ -138,33 +136,32 @@ will be disabled and/or hidden in the UI.
                 throw new Error('Cannot attach view local `me`, because this view local already exists!  (Is it being attached somewhere else?)');
               }
               res.locals.me = undefined;
-            }//ﬁ
 
-            // Next, if we're running in our actual "production" or "staging" Sails
-            // environment, check if this is a GET request via some other subdomain,
-            // for example something like `webhooks.` or `click.`.  If so, we'll
-            // automatically go ahead and redirect to the corresponding path under
-            // our base URL, which is environment-specific.
+            } //ﬁ
+
+            // Next, check if this is a GET request to the `webhooks.` or `click.`
+            // subdomains.  If so, we'll automatically go ahead and redirect to the
+            // corresponding path under our base URL, which is environment-specific.
             // > Note that we DO NOT redirect virtual socket requests and we DO NOT
             // > redirect non-GET requests (because it can confuse some 3rd party
             // > platforms that send webhook requests.)
-            var configuredBaseSubdomain;
-            try {
-              configuredBaseSubdomain = url.parse(sails.config.custom.baseUrl).host.match(/^([^\.]+)\./)[1];
-            } catch (unusedErr) { /*…*/}
-            if ((sails.config.environment === 'staging' || sails.config.environment === 'production') && !req.isSocket && req.method === 'GET' && req.subdomains[0] !== configuredBaseSubdomain) {
-              sails.log.info('Redirecting GET request from `'+req.subdomains[0]+'.` subdomain...');
-              return res.redirect(sails.config.custom.baseUrl+req.url);
-            }//•
+            if (!req.isSocket && req.method === 'GET' && (req.subdomains[0] === 'webhooks' || req.subdomains[0] === 'links')) {
+              sails.log.info('Redirecting GET request from `' + req.subdomains[0] + '.` subdomain...');
+              return res.redirect(sails.config.custom.baseUrl + req.url);
+            } //•
 
             // No session? Proceed as usual.
             // (e.g. request for a static asset)
-            if (!req.session) { return next(); }
+            if (!req.session) {
+              return next();
+            }
 
             // Not logged in? Proceed as usual.
-            if (!req.session.userId) { return next(); }
+            if (!req.session.userId) {
+              return next();
+            }
 
-            // Otherwise, look up the logged-in users.
+            // Otherwise, look up the logged-in user.
             var loggedInUser = await Users.findOne({
               id: req.session.userId
             });
@@ -173,15 +170,15 @@ will be disabled and/or hidden in the UI.
             // wipe the user id from the requesting user agent's session,
             // and then send the "unauthorized" response.
             if (!loggedInUser) {
-              sails.log.warn('Somehow, the user record for the logged-in user (`'+req.session.userId+'`) has gone missing....');
+              sails.log.warn('Somehow, the user record for the logged-in user (`' + req.session.userId + '`) has gone missing....');
               delete req.session.userId;
               return res.unauthorized();
             }
 
             // Add additional information for convenience when building top-level navigation.
             // (i.e. whether to display "Dashboard", "My Account", etc.)
-            if (!loggedInUsers.password || loggedInUsers.emailStatus === 'unconfirmed') {
-              loggedInUsers.dontDisplayAccountLinkInNav = true;
+            if (!loggedInUser.password || loggedInUser.emailStatus === 'unconfirmed') {
+              loggedInUser.dontDisplayAccountLinkInNav = true;
             }
 
             // Expose the user record as an extra property on the request object (`req.me`).
@@ -195,20 +192,24 @@ will be disabled and/or hidden in the UI.
             // to the current timestamp.
             //
             // (Note: As an optimization, this is run behind the scenes to avoid adding needless latency.)
-            var MS_TO_BUFFER = 60*1000;
+            var MS_TO_BUFFER = 60 * 1000;
             var now = Date.now();
-            if (loggedInUsers.lastSeenAt < now - MS_TO_BUFFER) {
-              Users.update({id: loggedInUsers.id})
-              .set({ lastSeenAt: now })
-              .exec((err)=>{
-                if (err) {
-                  sails.log.error('Background task failed: Could not update user (`'+loggedInUsers.id+'`) with a new `lastSeenAt` timestamp.  Error details: '+err.stack);
-                  return;
-                }//•
-                sails.log.verbose('Updated the `lastSeenAt` timestamp for user `'+loggedInUsers.id+'`.');
-                // Nothing else to do here.
-              });//_∏_  (Meanwhile...)
-            }//ﬁ
+            if (loggedInUser.lastSeenAt < now - MS_TO_BUFFER) {
+              await Users.update({
+                  id: loggedInUser.id
+                })
+                .set({
+                  lastSeenAt: now
+                })
+                .exec((err) => {
+                  if (err) {
+                    sails.log.error('Background task failed: Could not update user (`' + loggedInUser.id + '`) with a new `lastSeenAt` timestamp.  Error details: ' + err.stack);
+                    return;
+                  } //•
+                  sails.log.verbose('Updated the `lastSeenAt` timestamp for user `' + loggedInUser.id + '`.');
+                  // Nothing else to do here.
+                }); //_∏_  (Meanwhile...)
+            } //ﬁ
 
 
             // If this is a GET request, then also expose an extra view local (`<%= me %>`).
@@ -225,14 +226,14 @@ will be disabled and/or hidden in the UI.
                 if (Users.attributes[attrName].protect) {
                   delete sanitizedUser[attrName];
                 }
-              }//∞
+              } //∞
 
               // If there is still a "password" in sanitized user data, then delete it just to be safe.
               // (But also log a warning so this isn't hopelessly confusing.)
-              if (sanitizedUsers.password) {
+              if (sanitizedUser.password) {
                 sails.log.warn('The logged in user record has a `password` property, but it was still there after pruning off all properties that match `protect: true` attributes in the User model.  So, just to be safe, removing the `password` property anyway...');
-                delete sanitizedUsers.password;
-              }//ﬁ
+                delete sanitizedUser.password;
+              } //ﬁ
 
               res.locals.me = sanitizedUser;
 
@@ -241,7 +242,7 @@ will be disabled and/or hidden in the UI.
               res.locals.isBillingEnabled = sails.config.custom.enableBillingFeatures;
               res.locals.isEmailVerificationRequired = sails.config.custom.verifyEmailAddresses;
 
-            }//ﬁ
+            } //ﬁ
 
             // Prevent the browser from caching logged-in users' pages.
             // (including w/ the Chrome back button)

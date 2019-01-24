@@ -135,7 +135,7 @@ module.exports = {
     },
 
 
-    csrf: false
+    csrf: true
   },
 
 

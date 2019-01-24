@@ -25,6 +25,10 @@ module.exports.routes = {
   ***************************************************************************/
 
   'GET /':                    { action: 'view-pages/view-dashboard', locals:{ layout:'layouts/dashboard' } },
+  // ---
+  'GET /login':               { action: 'view-pages/view-login', locals:{layout:'layouts/login'} },
+  'GET /logout':              { action: 'auth/logout' },
+
 
   /***************************************************************************
   *                                                                          *
@@ -42,7 +46,9 @@ module.exports.routes = {
   //  ╠═╣╠═╝║  ║╣ ║║║ ║║╠═╝║ ║║║║║ ║ ╚═╗
   //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
 
-
+  // USUARIOS Y LOGING
+  'POST /api/v2/login':                         { action: 'auth/login' },
+  'POST /api/v2/logout':                        { action: 'auth/logout' },
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗
@@ -57,7 +63,6 @@ module.exports.routes = {
 };
 
 
-// 'GET /':                    { action: 'view-pages/dashboard', locals:{ layout:'layouts/dashboard' } },
 // // ---
 // // '/faq':                  { action: '', locals:{layout:'layouts/a'} },
 // // '/legal':                { action: '', locals:{layout:'layouts/a'} },

@@ -12,7 +12,7 @@
 // const rps = require('request-promise');
 
 // CONSTANTES
-const loc = require('./../../config/local');
+const loc = require('../../config/local');
 
 // FUNCTIONS
 /**

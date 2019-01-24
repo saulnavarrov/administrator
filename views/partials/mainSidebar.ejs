@@ -1,0 +1,42 @@
+<%
+/**
+ * views/partials/mainSidebar.ejs
+ *
+ */%>
+
+
+<div class="main-sidebar" tabindex="1" style="overflow: hidden; outline: none;">
+  <aside id="sidebar-wrapper">
+
+    <div class="sidebar-brand">
+      <a href="/">Administrator</a>
+    </div>
+    <div class="sidebar-brand sidebar-brand-sm">
+      <a href="/">Adm</a>
+    </div>
+
+    <%/* CONTENT SIDEBAR USER */%>
+    <div class="sidebar-user">
+      <div class="sidebar-user-picture">
+        <img alt="image" src="<%= me.avatar %>" />
+      </div>
+      <div class="sidebar-user-details">
+        <div class="user-name">{{ me.name }} {{ me.lastName }}</div>
+        <div class="user-role">
+          {{ me.roleName }}
+        </div>
+      </div>
+    </div>
+
+    <%/* CONTENIDO DEL SIDEBAR MENU */%>
+    <ul class="sidebar-menu">
+
+      <li class="menu-header">Dashboard</li>
+
+      <li class="<%= menu.l1 === 'dashboard' ? 'active' : '' %>">
+        <a class="nav-link" href="/"><i class="fas fa-fire"></i> <span>Dashboard</span></a>
+      </li>
+
+  </aside>
+</div>
+

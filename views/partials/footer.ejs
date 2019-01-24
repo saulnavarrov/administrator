@@ -1,0 +1,13 @@
+<%
+/**
+ * views/partials/footer.ejs
+ *
+ */%>
+
+<footer class="main-footer">
+  <div class="footer-left">
+    <%= typeof(i18n('Copyright Corto')) === 'undefinded' ? 'Copyright © 2018' : i18n('Copyright Corto') %>
+    <div class="bullet"></div> <%= typeof(i18n('power by Dev')) === 'undefinded' ? 'Power Dev by ' : i18n('power by Dev') %> <a href="https://facebook.com/navarrovsaul" target="_blank"><%= typeof(i18n('Copyright Name')) === 'undefinded' ? 'Saúl Navarrov' : i18n('Copyright Name') %></a>
+  </div>
+  <div class="footer-right"></div>
+</footer>

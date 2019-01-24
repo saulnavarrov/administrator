@@ -17,13 +17,13 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
 
-  '*': ['dbgNavigations'],
+  '*': true,
 
-  // 'auth/*':         ['debugNavigations'],
-  // 'customers/*':    ['debugNavigations'],
-  // 'files/*':        ['debugNavigations'],
-  // 'masters/*':      ['debugNavigations'],
-  // 'users/*':        ['debugNavigations'],
-  // 'view-pages/*':   ['debugNavigations']
+  // 'auth/*':         ['dbgNavigations'],
+  // 'customers/*':    ['dbgNavigations'],
+  // 'files/*':        ['dbgNavigations'],
+  // 'masters/*':      ['dbgNavigations'],
+  // 'users/*':        ['dbgNavigations'],
+  'view-pages/*':   ['dbgNavigations']
 
 };

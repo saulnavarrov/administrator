@@ -1,5 +1,5 @@
 /**
- * view - dashboard.js
+ * view-dashboard.js
  *
  * @description :: Mirar abajo la description ► ↓↓↓
  *
@@ -16,7 +16,8 @@ module.exports = {
 
   exits: {
     success: {
-      viewTemplatePath: 'pages/view-pages/dashboard'
+      viewTemplatePath: 'pages/dashboard',
+      description: 'Ingresando al View Dashboard'
     },
 
     redirect: {
@@ -37,9 +38,9 @@ module.exports = {
     };
 
     // Verificando Inicio de session.
-    // if (!rq.session.userId) {
-    //   throw {redirect:'/login'};
-    // }
+    if (!rq.session.userId) {
+      throw {redirect:'/login'};
+    }
 
     // Respond with view.
     return exits.success({
