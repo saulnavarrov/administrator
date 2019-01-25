@@ -26,7 +26,13 @@ module.exports.routes = {
 
   'GET /':                    { action: 'view-pages/view-dashboard', locals:{ layout:'layouts/dashboard' } },
   // ---
-  'GET /login':               { action: 'view-pages/view-login', locals:{layout:'layouts/login'} },
+  'GET /singup':              { action: 'view-pages/view-registers', locals:{layout:'layouts/login'} },
+  // 'GET /email/confirm':       { action: 'users/confirm-email' },
+  // 'GET /email/confirmed':     { action: 'users/view-confirmed-user-email', locals:{layout:'layouts/login'} },
+  // ---
+  'GET /login':               { action: 'view-pages/view-login',      locals:{layout:'layouts/login'} },
+  'GET /password/forgot':     { action: 'users/view-forgot-password', locals:{layout:'layouts/login'} },
+  'GET /password/new':        { action: 'users/view-new-password',    locals:{layout:'layouts/login'} },
   'GET /logout':              { action: 'auth/logout' },
 
 
@@ -49,6 +55,7 @@ module.exports.routes = {
   // USUARIOS Y LOGING
   'POST /api/v2/login':                         { action: 'auth/login' },
   'POST /api/v2/logout':                        { action: 'auth/logout' },
+  'PATCH /api/v2/users/forgot-passwords':           { action: 'users/forgot-passwords' },
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗

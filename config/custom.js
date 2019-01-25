@@ -76,6 +76,7 @@ module.exports.custom = {
   * Any other custom config this Sails app should use during development.    *
   *                                                                          *
   ***************************************************************************/
+  // Permitir el registro desde la Pagina View sin Restricciones.
   registerView: loc.registerView,
 
   // Pasarela de pagos
