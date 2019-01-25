@@ -32,6 +32,7 @@ module.exports = {
     let rq = this.req; // Request Cliente Page
     let TitlePage = sails.i18n('Login.title');
 
+    // Verificando Inicio de session.
     if (rq.session.userId) {
       throw {redirect:'/'};
     }

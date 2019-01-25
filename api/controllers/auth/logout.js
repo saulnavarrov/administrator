@@ -19,7 +19,6 @@ module.exports = {
 
   inputs: {},
 
-
   exits: {
 
     success: {
