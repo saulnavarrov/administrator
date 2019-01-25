@@ -70,9 +70,6 @@ requests over WebSockets instead of HTTP).`,
     let attemptsTime = sails.config.custom.attemptsTime;
     let emailRegex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
-    sails.log('login');
-    console.log(inputs);
-
     // Solo se aceptan solicitudes atravez de socket.io
     // Reescrito para aceptar solicitudes con Ajax (Axios)
     // if (!rq.isSocket) {
