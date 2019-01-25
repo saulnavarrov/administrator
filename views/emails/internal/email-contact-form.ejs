@@ -1,0 +1,15 @@
+<% /* Note: Unlike other emails, this is NOT intended for use with a layout! */ %>
+
+<div style=" font-size: 1.7em; text-align: left; ">
+  <p>Nuevo mensaje desde el formulario de contacto</p>
+</div>
+
+<div id="contenido">
+  <p>Hola: Grupo Administrator</p>
+  <p>Hemos recibido el siguiente mensaje a través del formulario de contacto:</p>
+  <br>
+  <p><strong>From:</strong> <%= contactName %> &lt;<%= contactEmail %>&gt; <%= phone %></p>
+  <p><strong>Topic:</strong> <%= topic %></p>
+  <p style="margin-bottom: 35px;"><strong>Message:</strong> <%= message %></p>
+  <br>
+</div>
