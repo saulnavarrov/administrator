@@ -1,0 +1,79 @@
+<div id="forgot" v-cloak class="h-100">
+
+  <section class="h-100">
+    <div class="container h-100">
+      <div class="row justify-content-md-center align-items-center h-100">
+        <div class="card-wrapper">
+          <div class="brand">
+            <img src="/images/favicons/apple-icon-114x114.png">
+          </div>
+          <div class="card fat">
+            <div class="card-body" v-if="!success">
+              <h4 class="card-title">
+                <%= typeof(i18n('Forgot.title')) === 'undefinded' ? 'Forgot password' : i18n('Forgot.title') %>
+              </h4>
+
+
+              <div class="form-group">
+                <label for="email">
+                  <%= typeof(i18n('Forgot.form Email')) === 'undefinded' ? 'E-Mail Address' : i18n('Forgot.form Email') %></label>
+                <input type="email" class="form-control" v-bind:class="[formError.emailAddress]" v-model="formData.emailAddress"
+                  required autofocus>
+                <div class="invalid-feedback">
+                  <%= typeof(i18n('Forgot.form Text')) === 'undefinded' ? 'By clicking \"Reset Password\" we will send a password reset links' : i18n('Forgot.form Text') %>
+                </div>
+              </div>
+
+              <div class="form-group no-margin">
+                <button type="submit" class="btn btn-primary btn-block" v-on:click="sendForgotPasswordReset()">
+                  <%= typeof(i18n('Forgot.form btn submit')) === 'undefinded' ? 'Reset Password' : i18n('Forgot.form btn submit') %>
+                </button>
+              </div>
+
+              <div class="margin-top20 text-center">
+                <a href="/login">
+                  <%= typeof(i18n('Forgot.return Login')) === 'undefinded' ? 'Back to login' : i18n('Forgot.return Login') %>
+                </a>
+              </div>
+
+            </div>
+
+            <div class="card-body" v-show="success" style="display:none;">
+              <h4 class="card-title">
+                <%= typeof(i18n('Forgot.title')) === 'undefinded' ? 'Forgot password' : i18n('Forgot.title') %>
+              </h4>
+              <p>Te hemos enviado un enlace para actualizar tu contraseña.</p>
+              <hr />
+              <p>Si el correo electrónico no llega después de unos minutos, intente revisar su carpeta de correo no
+                deseado. Si aún no puede encontrarlo, inténtelo de nuevo o <a href="/contacto">Comuniquese con Soporte</a>.</p>
+              <p class="text-center"><a class="btn btn-outline-primary" href="/login">Volver al Inicio de Sesión</a></p>
+            </div>
+          </div>
+
+
+          <div class="footer">
+            <a class="nav-link text-info" href="/contacto">Contacte<span class="d-none d-sm-inline"> a soporte</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%/* LOADING */%>
+    <div class="container-fluit m-loading-content" v-show="sendForgotModal" style="display: none;">
+      <div class="row m-loading-popup">
+        <div class="col-12 text-center">
+          <h2>Solicitando Recuperación Contraseña...</h2>
+        </div>
+        <div class="form-divider"></div>
+        <div class="col-12">
+          <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75"
+              aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>
