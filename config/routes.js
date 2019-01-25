@@ -56,6 +56,7 @@ module.exports.routes = {
   'POST /api/v2/login':                         { action: 'auth/login' },
   'POST /api/v2/logout':                        { action: 'auth/logout' },
   'PATCH /api/v2/users/forgot-passwords':           { action: 'users/forgot-passwords' },
+  'PATCH /api/v2/users/update-password-and-login':  { action: 'users/update-password-and-login' },
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗
