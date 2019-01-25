@@ -57,6 +57,11 @@ module.exports.custom = {
   mailgunDomain: loc.mailgunDomain,
   sendEmailtestMode: loc.sendEmailtestMode,
 
+  sinch: {
+    key: loc.sinch.key,
+    secret: loc.sinch.secret
+  },
+
   // The sender that all outgoing emails will appear to come from.
   internalEmailAddress: loc.internalEmailAddress,
   fromEmailAddress: loc.fromEmailAddress,
