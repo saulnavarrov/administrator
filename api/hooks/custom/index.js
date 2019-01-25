@@ -196,19 +196,19 @@ will be disabled and/or hidden in the UI.
             var now = Date.now();
             if (loggedInUser.lastSeenAt < now - MS_TO_BUFFER) {
               await Users.update({
-                  id: loggedInUser.id
-                })
-                .set({
-                  lastSeenAt: now
-                })
-                .exec((err) => {
-                  if (err) {
-                    sails.log.error('Background task failed: Could not update user (`' + loggedInUser.id + '`) with a new `lastSeenAt` timestamp.  Error details: ' + err.stack);
-                    return;
-                  } //•
-                  sails.log.verbose('Updated the `lastSeenAt` timestamp for user `' + loggedInUser.id + '`.');
-                  // Nothing else to do here.
-                }); //_∏_  (Meanwhile...)
+                id: loggedInUser.id
+              })
+              .set({
+                lastSeenAt: now
+              })
+              .exec((err) => {
+                if (err) {
+                  sails.log.error('Background task failed: Could not update user (`' + loggedInUser.id + '`) with a new `lastSeenAt` timestamp.  Error details: ' + err.stack);
+                  return;
+                } //•
+                sails.log.verbose('Updated the `lastSeenAt` timestamp for user `' + loggedInUser.id + '`.');
+                // Nothing else to do here.
+              }); //_∏_  (Meanwhile...)
             } //ﬁ
 
 
