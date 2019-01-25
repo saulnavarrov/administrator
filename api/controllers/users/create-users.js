@@ -1,0 +1,27 @@
+module.exports = {
+
+
+  friendlyName: 'Create users',
+
+
+  description: '',
+
+
+  inputs: {
+
+  },
+
+
+  exits: {
+
+  },
+
+
+  fn: async function (inputs, exits) {
+
+    return exits.success();
+
+  }
+
+
+};
