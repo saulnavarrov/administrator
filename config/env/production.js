@@ -154,7 +154,7 @@ module.exports = {
       allowOrigins: loc.baseUrl
     },
 
-    csrf: false
+    csrf: true
   },
 
 
