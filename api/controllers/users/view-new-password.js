@@ -45,6 +45,7 @@ module.exports = {
     let rq = this.req; // Request Cliente Page
     let TitlePage = sails.i18n('Reset Password');
 
+
     /***************************************************************************************
      * BLOQUE DE SEGURIDAD DE USUARIOS HABILITADOS
      ***************************************************************************************/
@@ -52,6 +53,7 @@ module.exports = {
     if (rq.session.userId) {
       throw {redirect:'/'};
     }
+
 
     /***************************************************************************************
      * TRABAJO DEL CONTROLADOR
