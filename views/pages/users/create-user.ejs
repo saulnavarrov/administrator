@@ -10,8 +10,215 @@
       </h1>
 
       <section class="section-body">
+        <div class="row mt-12">
+          <div class="col-12">
+
+            <div class="card">
+              <div class="card-body">
+
+                <%/* Alertas */%>
+                <div class="row" v-show="alert.active">
+                  <div class="col-12">
+                    <div class="alert alert-has-icon alert-dismissible show fade " :class="[alert.type]" >
+                      <div class="alert-icon">
+                        <i class="ion" :class="[alert.icon]"></i>
+                      </div>
+                      <div class="alert-body">
+                        <button class="close" data-dismiss="alert">
+                          <span>×</span>
+                        </button>
+                        <div class="alert-title">{{ alert.title }}</div>
+                        {{ alert.message }}
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                </div>
+
+
+                <%/* Contenido */%>
+                <section class="row">
+                  <div class="col-sm-4">
+                    <div class="form-group row">
+                      <div class="col-sm-4">Estado: </div>
+                      <div class="col-sm-8">
+                        <select class="form-control form-control-sm" v-bind:class="[valForm.status.valid]" style="font-size: 13px;height: 30px;line-height: 30px;padding: 0px 10px 2px 9px;margin: 0px;"
+                          v-model="formNewUser.status">
+                          <option value="N" selected>Nuevo</option>
+                        </select>
+                        <div class="invalid-feedback">{{ valForm.status.message }}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group row">
+                      <div class="col-sm-3">Rol:</div>
+                      <div class="col-sm-9">
+                        <select class="form-control form-control-sm" v-bind:class="[valForm.role.valid]" style="font-size: 13px;height: 30px;line-height: 30px;padding: 0px 10px 2px 9px;margin: 0px;" v-model="formNewUser.role">
+                          <option value="" disabled selected>Seleccione una:</option>
+                          <% if(me.role < 1) { %>
+                          <option value="0">00 - Super Admin</option>
+                          <% }
+                          if (me.role < 2) { %>
+                          <option value="1">01 - Administrador</option>
+                          <% }
+                          if (me.role < 3) { %>
+                          <option value="2">02 - Supervisor</option>
+                          <% }
+                          if (me.role < 4) { %>
+                          <option value="3">03 - Secretario</option>
+                          <option value="4">04 - Vendedores</option>
+                          <option value="5" disabled>05 - </option>
+                          <option value="6" disabled>06 - </option>
+                          <option value="7">07 - Usuario</option
+                          <% } %>
+                          <option value="8">08 - Client</option>
+                          <option value="9">09 - Guest</option>
+                        </select>
+                        <div class="invalid-feedback">{{ valForm.role.message }}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-lg-4">
+                    <% if(me.isSuperAdmin) { %>
+                    <div class="form-group row">
+                      <div class="col-sm-7">Super Admin</div>
+                      <div class="col-sm-5">
+                        <div class="form-check">
+                          <input class="form-check-input" v-bind:class="[valForm.isSuperAdmin.valid]" type="checkbox" id="gridCheck1" v-model="formNewUser.isSuperAdmin">
+                          <label class="form-check-label" for="gridCheck1"></label>
+                          <div class="invalid-feedback">{{ valForm.isSuperAdmin.message }}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <% } %>
+                  </div>
+                </section>
+
+                <div class="form-divider">Datos:</div>
+                <section class="row">
+                  <div class="col-sm-12 col-lg-4">
+                    <div class="form-group">
+                      <label title="Numero de Cedula o Identifiacación">Numero Id.</label>
+                      <input type="text" class="form-control form-control-sm" v-bind:class="[valForm.identification.valid]" v-model="formNewUser.identification" placeholder="Numero de Cedula" v-bind:class="[valForm.identification]">
+                      <div class="invalid-feedback">{{ valForm.identification.message }}</div>
+                    </div>
+                  </div>
+                </section>
+                <section class="row">
+                  <div class="col-sm-12 col-lg-4">
+                    <div class="form-group">
+                      <label>Nombres</label>
+                      <input type="text" class="form-control form-control-sm" v-bind:class="[valForm.name.valid]" v-model="formNewUser.name">
+                      <div class="invalid-feedback">{{ valForm.name.message }}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-lg-4">
+                    <div class="form-group">
+                      <label>Apellidos </label>
+                      <input type="text" class="form-control form-control-sm" v-bind:class="[valForm.lastName.valid]" v-model="formNewUser.lastName">
+                      <div class="invalid-feedback">{{ valForm.lastName.message }}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-lg-4">
+                    <div class="form-group">
+                      <label>E-mail</label>
+                      <input type="text" class="form-control form-control-sm" v-bind:class="[valForm.emailAddress.valid]" v-model="formNewUser.emailAddress" v-bind:class="[valForm.emailAddress]">
+                      <div class="invalid-feedback">{{ valForm.emailAddress.message }}</div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="row">
+                  <div class="col-sm-12 col-lg-4">
+                    <div class="form-group">
+                      <label>Telefono</label>
+                      <input type="text" class="form-control form-control-sm" v-bind:class="[valForm.phone.valid]" v-model="formNewUser.phone" v-bind:class="[valForm.phone]">
+                      <div class="invalid-feedback">{{ valForm.phone.message }}</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-lg-4">
+                    <div class="form-group">
+                      <label>E-mail Status:</label>
+                      <select class="form-control form-control-sm" v-bind:class="[valForm.emailStatus.valid]" v-model="formNewUser.emailStatus" style="font-size: 13px;height: 30px;line-height: 30px;padding: 0px 10px 2px 9px;margin: 0px;">
+                        <option value="" disabled selected>Seleccionar unar:</option>
+                        <option value="unconfirmed">No Confirmado</option>
+                      </select>
+                      <div class="invalid-feedback">{{ valForm.emailStatus.message }}</div>
+                    </div>
+                  </div>
+                </section>
+
+                <div class="form-divider">Contraseña</div>
+                <section class="row">
+                  <div class="col-sm-12 col-lg-4">
+                    <div class="form-group">
+                      <label>Ingrese Contraseña Nueva:</label>
+                      <input type="password" class="form-control form-control-sm" v-on:keyup="validatePassword" v-model="formNewUser.password" v-bind:class="[valForm.password.valid]" v-show="!formNewUser.passwordPowerStyle.password" style="display:none;">
+                      <input type="text" class="form-control form-control-sm" v-on:keyup="validatePassword" v-model="formNewUser.password" v-bind:class="[valForm.password.valid]" v-show="formNewUser.passwordPowerStyle.password">
+                      <div class="invalid-feedback" v-show="valForm.password.mayus">- Introdusca al menos 1 letra Mayuscula.</div>
+                      <div class="invalid-feedback" v-show="valForm.password.minus">- Introdusca al menos 1 letra Minuscula.</div>
+                      <div class="invalid-feedback" v-show="valForm.password.numb">- Introdusca al menos 1 Numero.</div>
+                      <div class="invalid-feedback" v-show="valForm.password.min">- Minimo 8 caracteres</div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-lg-4">
+                    <div class="form-group">
+                      <label>Power Password</label>
+                      <div class="card-progressbar" style="padding-top: 8px;">
+                        <div class="progress" style="height:15px;">
+                          <div class="progress-bar progress-bar-striped" v-bind:class="[formNewUser.passwordPower]" v-bind:style="{width: formNewUser.passwordPowerStyle.width+'%'}" role="progressbar" ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-lg-4">
+                    <div class="form-group">
+                      <label>Generar Contraseña -- Borrar -- Ocultar/Ver</label><br>
+                      <button class="btn btn-sm btn-success" v-on:click="generateNewPassword()">Generar</button>
+                      <button class="btn btn-sm btn-warning" v-on:click="deletePassword()">Borrar</button>
+                      <button class="btn btn-sm btn-info" v-on:click="formNewUser.passwordPowerStyle.password = !formNewUser.passwordPowerStyle.password">{{ !formNewUser.passwordPowerStyle.password ? 'Ver Pass' : 'Ocultar Pass' }}</button>
+                    </div>
+                  </div>
+                </section>
+
+
+                <section class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>Agregar Usuario</label>
+                      <button class="btn btn-primary btn-block btn-sm" v-on:click="createNewUser()">Guardar</button>
+                    </div>
+                  </div>
+                </section>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
       </section>
     </section>
+
+    <%/* MODAL VIEW NEW USER */%>
+    <%- /*partial('./pm-view-new-user-create.ejs') */%>
+
+
+    <%/* LOADING MODAL */%>
+    <div class="container-fluit m-loading-content" v-show="updateProgress" style="display: none;">
+      <div class="row m-loading-popup">
+        <div class="col-12 text-center">
+          <h2>Guardando Usuario...</h2>
+        </div>
+        <div class="form-divider"></div>
+        <div class="col-12">
+          <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <%- partial('../../partials/footer.ejs') %>
