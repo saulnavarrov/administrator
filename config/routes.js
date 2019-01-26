@@ -37,6 +37,10 @@ module.exports.routes = {
   'GET /logout':              { action: 'auth/logout' },
 
 
+  // --- USER CONTROL
+  'GET /users':               { action: 'users/view-list', locals: { layout:'layouts/dashboard' } },
+
+
   /***************************************************************************
   *                                                                          *
   * More custom routes here...                                               *

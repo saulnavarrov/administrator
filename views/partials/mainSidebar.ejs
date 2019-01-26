@@ -37,6 +37,20 @@
         <a class="nav-link" href="/"><i class="fas fa-fire"></i> <span>Dashboard</span></a>
       </li>
 
+
+      <%/* Usuarios */%>
+      <% if(me.role <= 3) { %>
+        <li class="menu-header">Usuarios</li>
+        <li class="dropdown <%= menu.l1 === 'usuarios' ? 'active' : '' %>">
+          <a href="#" class="nav-link has-dropdown"><i class="fas fa-users"></i><span>Users</span></a>
+          <ul class="dropdown-menu">
+            <li class="<%= menu.l2 === 'users' ? 'active' : '' %>"><a class="nav-link" href="/users"><i class="fas fa-users"></i> Users</a></li>
+            <% if(me.role <= 2) { %><li class="<%= menu.l2 === 'new' ? 'active' : '' %>"><a class="nav-link" href="/users/new"><i class="fas fa-user-plus"></i> New Users</a></li><% } %>
+          </ul>
+        </li>
+      <% } %>
+    </ul>
+
   </aside>
 </div>
 
