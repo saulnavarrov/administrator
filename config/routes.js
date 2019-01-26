@@ -39,6 +39,7 @@ module.exports.routes = {
 
   // --- USER CONTROL
   'GET /users':               { action: 'users/view-list', locals: { layout:'layouts/dashboard' } },
+  'GET /users/new':           { action: 'users/view-registers', locals: { layout:'layouts/dashboard' } },
 
 
   /***************************************************************************

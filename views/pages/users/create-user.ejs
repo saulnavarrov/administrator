@@ -1,0 +1,19 @@
+<div id="create-user" v-cloak>
+  <%- partial('../../partials/navbar.ejs') %>
+  <%- partial('../../partials/mainSidebar.ejs') %>
+
+
+  <div class="main-content">
+    <section class="section">
+      <h1 class="section-header">
+        <div><%= i18n('Users.new') %></div>
+      </h1>
+
+      <section class="section-body">
+      </section>
+    </section>
+  </div>
+
+  <%- partial('../../partials/footer.ejs') %>
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>
