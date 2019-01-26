@@ -16,6 +16,24 @@ module.exports.custom = {
   // Urls base de la app
   baseUrl: loc.baseUrl,
 
+  // Datos de Contacto
+  contacto: {
+    whatsapp: {
+      link: loc.contacto.whatsapp.link,
+      vista: loc.contacto.whatsapp.vista
+    },
+    telefonoCelular: {
+      link: loc.contacto.telefonoCelular.link,
+      vista: loc.contacto.telefonoCelular.vista
+    },
+    telefonoFijo: {
+      link: loc.contacto.telefonoFijo.link,
+      vista: loc.contacto.telefonoFijo.vista
+    },
+    ubicacion: loc.contacto.ubicacion,
+    email: loc.contacto.email
+  },
+
   // Intentos de login por persona antes de bloquear la cuenta.
   attemptsLogin: loc.attemptsLogin,
   // Cantidad de tiempo para evaluar los intentos, si se hacen 5 intentos
@@ -62,7 +80,8 @@ module.exports.custom = {
     secret: loc.sinch.secret
   },
 
-  // The sender that all outgoing emails will appear to come from.
+  // Correo hacia donde se enviaran los mensajes que vienen desde
+  // contacto de la pagina.
   internalEmailAddress: loc.internalEmailAddress,
   fromEmailAddress: loc.fromEmailAddress,
   fromName: loc.fromName,

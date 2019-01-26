@@ -25,6 +25,7 @@ module.exports.routes = {
   ***************************************************************************/
 
   'GET /':                    { action: 'view-pages/view-dashboard', locals:{ layout:'layouts/dashboard' } },
+  'GET /contacto':            { action: 'view-pages/view-contact', locals:{layout:'layouts/login'} },
   // ---
   'GET /singup':              { action: 'view-pages/view-registers', locals:{layout:'layouts/login'} },
   // 'GET /email/confirm':       { action: 'users/confirm-email' },
@@ -57,6 +58,10 @@ module.exports.routes = {
   'POST /api/v2/logout':                        { action: 'auth/logout' },
   'PATCH /api/v2/users/forgot-passwords':           { action: 'users/forgot-passwords' },
   'PATCH /api/v2/users/update-password-and-login':  { action: 'users/update-password-and-login' },
+
+
+  // Mensajes de soporte y contactenos
+  'POST /api/v2/deliver-contact-form-message':      { action: 'deliver-contact-form-messages' },
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗
