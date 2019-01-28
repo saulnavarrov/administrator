@@ -61,6 +61,7 @@ module.exports.routes = {
   // USUARIOS Y LOGING
   'POST /api/v2/login':                         { action: 'auth/login' },
   'POST /api/v2/logout':                        { action: 'auth/logout' },
+  'POST /api/v2/users/create':                  { action: 'users/create-user' },
   'PATCH /api/v2/users/forgot-passwords':           { action: 'users/forgot-passwords' },
   'PATCH /api/v2/users/update-password-and-login':  { action: 'users/update-password-and-login' },
 
@@ -80,32 +81,33 @@ module.exports.routes = {
 
 };
 
+/*
+let ro = {
+  // // ---
+  // // '/faq':                  { action: '', locals:{layout:'layouts/a'} },
+  // // '/legal':                { action: '', locals:{layout:'layouts/a'} },
+  // // '/legal/terminos':       { action: '', locals:{layout:'layouts/a'} },
+  // // '/legal/privacidad':     { action: '', locals:{layout:'layouts/a'} },
+  // // '/term':                 { action: '', locals:{layout:'layouts/a'} },
+  // 'GET /contacto':            { action: 'view-pages/contact', locals:{layout:'layouts/login'} },
+  // // ---
+  // 'GET /singup':              { action: 'view-pages/register', locals:{layout:'layouts/login'} },
+  // 'GET /email/confirm':       { action: 'users/confirm-email' },
+  // 'GET /email/confirmed':     { action: 'users/view-confirmed-user-email', locals:{layout:'layouts/login'} },
+  // // ---
+  // 'GET /login':               { action: 'view-pages/login', locals:{layout:'layouts/login'} },
+  // 'GET /password/forgot':     { action: 'users/view-forgot-password', locals:{layout:'layouts/login'} },
+  // 'GET /password/new':        { action: 'users/view-new-password', locals:{layout:'layouts/login'} },
+  // 'GET /logout':              { action: 'auth/logout' },
+  // // ---
+  // // '/acount':               { action: '', locals:{layout:'layouts/a'} },
+  // // '/acount/password':      { action: '', locals:{layout:'layouts/a'} },
+  // // '/acount/profile':       { action: '', locals:{layout:'layouts/a'} },
 
-// // ---
-// // '/faq':                  { action: '', locals:{layout:'layouts/a'} },
-// // '/legal':                { action: '', locals:{layout:'layouts/a'} },
-// // '/legal/terminos':       { action: '', locals:{layout:'layouts/a'} },
-// // '/legal/privacidad':     { action: '', locals:{layout:'layouts/a'} },
-// // '/term':                 { action: '', locals:{layout:'layouts/a'} },
-// 'GET /contacto':            { action: 'view-pages/contact', locals:{layout:'layouts/login'} },
-// // ---
-// 'GET /singup':              { action: 'view-pages/register', locals:{layout:'layouts/login'} },
-// 'GET /email/confirm':       { action: 'users/confirm-email' },
-// 'GET /email/confirmed':     { action: 'users/view-confirmed-user-email', locals:{layout:'layouts/login'} },
-// // ---
-// 'GET /login':               { action: 'view-pages/login', locals:{layout:'layouts/login'} },
-// 'GET /password/forgot':     { action: 'users/view-forgot-password', locals:{layout:'layouts/login'} },
-// 'GET /password/new':        { action: 'users/view-new-password', locals:{layout:'layouts/login'} },
-// 'GET /logout':              { action: 'auth/logout' },
-// // ---
-// // '/acount':               { action: '', locals:{layout:'layouts/a'} },
-// // '/acount/password':      { action: '', locals:{layout:'layouts/a'} },
-// // '/acount/profile':       { action: '', locals:{layout:'layouts/a'} },
-
-// 'GET /users':               { action: 'users/view-list', locals: { layout:'layouts/dashboard' } },
-// 'GET /users/new':           { action: 'users/view-register', locals: { layout:'layouts/dashboard' } },
-
-
+  // 'GET /users':               { action: 'users/view-list', locals: { layout:'layouts/dashboard' } },
+  // 'GET /users/new':           { action: 'users/view-register', locals: { layout:'layouts/dashboard' } },
+}
+*/
 // /***************************************************************************
 // * Archivos Maestros
 // **************************************************************************/

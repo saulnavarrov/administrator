@@ -54,15 +54,6 @@ module.exports = {
 
 
     /***************************************************************************************
-     * BLOQUE DE DATOS OBLIGATORIOS Y REVISION DE DATA.
-     ***************************************************************************************/
-    // Verificando que viene el token
-    if (!inputs.token) {
-      throw 'invalidToken';
-    }
-
-
-    /***************************************************************************************
      * BLOQUE DE SEGURIDAD SOCKET
      ***************************************************************************************/
     // Solo se aceptan solicitudes atravez de socket.io
@@ -71,6 +62,15 @@ module.exports = {
         error: true,
         message: `Solicitud Rechazada.`
       });
+    }
+
+
+    /***************************************************************************************
+     * BLOQUE DE DATOS OBLIGATORIOS Y REVISION DE DATA.
+     ***************************************************************************************/
+    // Verificando que viene el token
+    if (!inputs.token) {
+      throw 'invalidToken';
     }
 
 

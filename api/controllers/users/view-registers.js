@@ -24,6 +24,9 @@ module.exports = {
   },
 
   fn: async function (inputs, exits) {
+    /***************************************************************************************
+     * VARIABLES INICIALES
+     ***************************************************************************************/
     let rq = this.req; // Request Cliente Page
     let userId = rq.session.userId;
     let TitlePage = sails.i18n('Users.new');
@@ -33,6 +36,10 @@ module.exports = {
       'l3': null
     };
 
+
+    /***************************************************************************************
+     * BLOQUE DE TRABAJO
+     ***************************************************************************************/
     // Respond with view.
     return exits.success({
       'titlePage': TitlePage,

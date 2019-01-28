@@ -79,6 +79,21 @@ parasails.registerPage('create-user', {
   },
   mounted: async function () {
     //…
+
+    swal({
+      title: 'Borrar auto carga de datos',
+      text: `Borrar las lineas de autocarga de datos que estan en situadas
+      en el codigo para hacer las pruebas`,
+      type: 'warning'
+    });
+    this.formNewUser.role = 1;
+    this.formNewUser.identification = String(Date.now());
+    this.formNewUser.name = 'saul';
+    this.formNewUser.lastName = 'Pruebas';
+    this.formNewUser.emailAddress = `prueba${String(Date.now()).substring(9)}@example.com`;
+    this.formNewUser.emailStatus = 'unconfirmed';
+    this.formNewUser.phone = `+57${String(Date.now())}`;
+    this.generateNewPassword();
   },
 
   //  ╦╔╗╔╔╦╗╔═╗╦═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
@@ -93,7 +108,66 @@ parasails.registerPage('create-user', {
      * @author Saúl Navarro <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    createNewUser: async function () {},
+    createNewUser: async function () {
+      let csrfToken = window.SAILS_LOCALS._csrf;
+      let urls = '/api/v2/users/create';
+      this.progressBar = true;
+      this.updateProgress = true;
+
+      await io.socket.request({
+        url: urls,
+        method: 'POST',
+        data: {
+          identification: this.formNewUser.identification,
+          emailAddress: this.formNewUser.emailAddress,
+          password: this.formNewUser.password,
+          name: this.formNewUser.name,
+          lastName: this.formNewUser.lastName,
+          phone: this.formNewUser.phone,
+          role: Number(this.formNewUser.role),
+          isSuperAdmin: this.formNewUser.isSuperAdmin,
+          emailStatus: this.formNewUser.emailStatus,
+          status: this.formNewUser.status
+        },
+        headers: {
+          'content-type': 'application/json',
+          'x-csrf-token': csrfToken
+        }
+      }, async (rsData, jsRs) => {
+        // Control de errores
+        if (jsRs.error) {
+
+          // Datos incompletos
+          this.inCompleteData(rsData, _.isUndefined(rsData.form));
+
+          // Datos repetidos
+          this.existingData(rsData, _.isUndefined(rsData.message));
+
+          // Problemas con el servidor
+          // Errores 500
+          if (jsRs.statusCode >= 500 && jsRs.statusCode <= 502) {
+            this.alert = {
+              active: true,
+              type: 'alert-danger',
+              icon: 'ion-ios-close-outline',
+              title: `Error: ${jsRs.statusCode} - ${jsRs.body}`,
+              message: jsRs.error.message
+            };
+          }
+        }
+
+        if (jsRs.statusCode === 200) {
+          // Limpia el los campos en rojo
+          this.inCompleteData(false, true);
+          // Limpia los campos en rojo de validación
+          this.existingData(false, true);
+
+          // Mostrar modal del usuario nuevo
+          this.saveUserComplete(rsData);
+        }
+        this.updateProgress = false;
+      });
+    },
 
 
     /**
