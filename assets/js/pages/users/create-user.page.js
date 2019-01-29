@@ -134,6 +134,8 @@ parasails.registerPage('create-user', {
           'x-csrf-token': csrfToken
         }
       }, async (rsData, jsRs) => {
+        console.log(jsRs);
+
         // Control de errores
         if (jsRs.error) {
 
@@ -178,7 +180,27 @@ parasails.registerPage('create-user', {
      * @author Saúl Navarro <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    saveUserComplete: async function (data, reload) {},
+    saveUserComplete: async function (data, reload) {
+      // let modal = $('#pm-view-new-user-create');
+      if (!reload) {
+        swal({
+          type: 'success',
+          title: 'Usuario Creado con Exito',
+          text: `El usuario ${data.user.name +' '+ data.user.lastName}. Ha sido creado exitosamente.`,
+          confirmButtonText: 'Aceptar',
+          // showCancelButton: false,
+          // cancelButtonColor: '#d33',
+          confirmButtonColor: '#616161',
+        });
+
+        // Open Modal view
+        // modal.modal('show');
+        // Cargando datos nuevos del usuario
+        this.newUserCreate = data.user;
+      } else {
+        window.location.reload();
+      }
+    },
 
 
     /**
@@ -189,7 +211,35 @@ parasails.registerPage('create-user', {
      * @author Saúl Navarro <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    existingData: async function (data, isRepeat) {},
+    existingData: async function (data, isRepeat) {
+      // Mostrar campo en rojo de invalido
+      if (!isRepeat) {
+        swal({
+          type: 'warning',
+          title: 'Los siguientes datos ya existen',
+          text: 'Por favor, revise los campos en rojo, ya que existen para otro usuario'
+        });
+
+        // Pone el box en rojo
+        this.valForm.emailAddress.valid = data.data.email === '' ? '' : data.data.email;
+        this.valForm.identification.valid = data.data.identification === '' ? '' : data.data.identification;
+        this.valForm.phone.valid = data.data.phone === '' ? '' : data.data.phone;
+
+        // Mostrar mensaje
+        this.valForm.emailAddress.message = data.message.email === '' ? '' : data.message.email;
+        this.valForm.identification.message = data.message.identification === '' ? '' : data.message.identification;
+        this.valForm.phone.message = data.message.phone === '' ? '' : data.message.phone;
+      }
+      // Rest data
+      else {
+        this.valForm.emailAddress.valid = '';
+        this.valForm.identification.valid = '';
+        this.valForm.phone.valid = '';
+        this.valForm.emailAddress.message = 'Ingrese Email';
+        this.valForm.identification.message = 'Ingrese Numero de Identificación';
+        this.valForm.phone.message = 'Ingrese Numero Telefonico';
+      }
+    },
 
 
     /**
@@ -200,7 +250,24 @@ parasails.registerPage('create-user', {
      * @author Saúl Navarro <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    inCompleteData: async function (data, isIncomplete) {},
+    inCompleteData: async function (data, isIncomplete) {
+      if (!isIncomplete) {
+        swal({
+          type: 'info',
+          title: 'Datos incompletos',
+          text: 'Por favor, rellene los campos que estan en rojo'
+        });
+      }
+      this.valForm.identification.valid = isIncomplete ? '' : data.form.identification === '' ? '' : data.form.identification;
+      this.valForm.emailAddress.valid = isIncomplete ? '' : data.form.emailAddress === '' ? '' : data.form.emailAddress;
+      this.valForm.password.valid = isIncomplete ? '' : data.form.password === '' ? '' : data.form.password;
+      this.valForm.name.valid = isIncomplete ? '' : data.form.name === '' ? '' : data.form.name;
+      this.valForm.lastName.valid = isIncomplete ? '' : data.form.lastName === '' ? '' : data.form.lastName;
+      this.valForm.phone.valid = isIncomplete ? '' : data.form.phone === '' ? '' : data.form.phone;
+      this.valForm.role.valid = isIncomplete ? '' : data.form.role === '' ? '' : data.form.role;
+      this.valForm.emailStatus.valid = isIncomplete ? '' : data.form.emailStatus === '' ? '' : data.form.emailStatus;
+      this.valForm.status.valid = isIncomplete ? '' : data.form.status === '' ? '' : data.form.status;
+    },
 
 
     /**

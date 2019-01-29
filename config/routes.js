@@ -28,8 +28,8 @@ module.exports.routes = {
   'GET /contacto':            { action: 'view-pages/view-contact', locals:{layout:'layouts/login'} },
   // ---
   'GET /singup':              { action: 'view-pages/view-registers', locals:{layout:'layouts/login'} },
-  // 'GET /email/confirm':       { action: 'users/confirm-email' },
-  // 'GET /email/confirmed':     { action: 'users/view-confirmed-user-email', locals:{layout:'layouts/login'} },
+  'GET /email/confirm':       { action: 'users/confirm-emails' },
+  'GET /email/confirmed':     { action: 'users/view-confirmed-user-email', locals:{layout:'layouts/login'} },
   // ---
   'GET /login':               { action: 'view-pages/view-login',      locals:{layout:'layouts/login'} },
   'GET /password/forgot':     { action: 'users/view-forgot-password', locals:{layout:'layouts/login'} },
@@ -39,7 +39,7 @@ module.exports.routes = {
 
   // --- USER CONTROL
   'GET /users':               { action: 'users/view-list', locals: { layout:'layouts/dashboard' } },
-  'GET /users/new':           { action: 'users/view-registers', locals: { layout:'layouts/dashboard' } },
+  'GET /users/create':        { action: 'users/view-create-users', locals: { layout:'layouts/dashboard' } },
 
 
   /***************************************************************************
@@ -61,7 +61,7 @@ module.exports.routes = {
   // USUARIOS Y LOGING
   'POST /api/v2/login':                         { action: 'auth/login' },
   'POST /api/v2/logout':                        { action: 'auth/logout' },
-  'POST /api/v2/users/create':                  { action: 'users/create-user' },
+  'POST /api/v2/users/create':                  { action: 'users/create-users' },
   'PATCH /api/v2/users/forgot-passwords':           { action: 'users/forgot-passwords' },
   'PATCH /api/v2/users/update-password-and-login':  { action: 'users/update-password-and-login' },
 

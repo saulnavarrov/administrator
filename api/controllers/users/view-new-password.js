@@ -25,6 +25,10 @@ module.exports = {
     success: {
       viewTemplatePath: 'pages/account/reset'
     },
+    redirect: {
+      responseType: 'redirect',
+      description: 'Requesting user is logged in, so redirect to the internal welcome page.'
+    },
     invalidOrExpiredToken: {
       responseType: 'expired',
       description: 'The provided token is expired, invalid, or has already been used.',
@@ -51,7 +55,9 @@ module.exports = {
      ***************************************************************************************/
     // Verificando Inicio de session.
     if (rq.session.userId) {
-      throw {redirect:'/'};
+      throw {
+        redirect:'/'
+      };
     }
 
 

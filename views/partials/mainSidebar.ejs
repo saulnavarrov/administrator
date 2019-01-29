@@ -45,7 +45,7 @@
           <a href="#" class="nav-link has-dropdown"><i class="fas fa-users"></i><span>Users</span></a>
           <ul class="dropdown-menu">
             <li class="<%= menu.l2 === 'users' ? 'active' : '' %>"><a class="nav-link" href="/users"><i class="fas fa-users"></i> Users</a></li>
-            <% if(me.role <= 2) { %><li class="<%= menu.l2 === 'new' ? 'active' : '' %>"><a class="nav-link" href="/users/new"><i class="fas fa-user-plus"></i> New Users</a></li><% } %>
+            <% if(me.role <= 2) { %><li class="<%= menu.l2 === 'new' ? 'active' : '' %>"><a class="nav-link" href="/users/create"><i class="fas fa-user-plus"></i> New Users</a></li><% } %>
           </ul>
         </li>
       <% } %>

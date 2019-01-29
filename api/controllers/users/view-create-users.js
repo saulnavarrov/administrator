@@ -20,6 +20,10 @@ module.exports = {
   exits: {
     success: {
       viewTemplatePath: 'pages/users/create-user'
+    },
+    redirect: {
+      responseType: 'redirect',
+      description: 'Requesting user is logged in, so redirect to the internal welcome page.'
     }
   },
 
@@ -35,6 +39,17 @@ module.exports = {
       'l2': 'new',
       'l3': null
     };
+
+
+    /***************************************************************************************
+     * BLOQUE DE SEGURIDAD DE USUARIOS HABILITADOS
+     ***************************************************************************************/
+    // Verificando Inicio de session.
+    if (!userId) {
+      throw {
+        redirect: '/'
+      };
+    }
 
 
     /***************************************************************************************

@@ -17,6 +17,10 @@ module.exports = {
   exits: {
     success: {
       viewTemplatePath: 'pages/users/list'
+    },
+    redirect: {
+      responseType: 'redirect',
+      description: 'Requesting user is logged in, so redirect to the internal welcome page.'
     }
   },
 
@@ -40,7 +44,9 @@ module.exports = {
      ***************************************************************************************/
     // Si no es usuario registrado no puede acceder a la pagina y se redirecciona
     if (!userId) {
-      throw {redirect:'/login'};
+      throw {
+        redirect:'/login'
+      };
     }
 
     // Busco el usuario para verificar si tiene el roll suficiente para  hacer el procedimiento

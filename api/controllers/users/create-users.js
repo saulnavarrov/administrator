@@ -94,6 +94,7 @@ module.exports = {
     const rq = this.req;
     const _ = require('lodash');
     const moment = require('moment');
+    let userId = rq.session.userId;
     let dateForm = {};
 
 
@@ -180,13 +181,13 @@ module.exports = {
      * BLOQUE DE TRABAJO
      ***************************************************************************************/
     // Evaluando data y que sea unica
-    let evalIdentification = await User.findOne({
+    let evalIdentification = await Users.findOne({
       identification: identification
     }).select(['id']);
-    let evalPhone = await User.findOne({
+    let evalPhone = await Users.findOne({
       phone: phone
     }).select(['id']);
-    let evalEmailAddress = await User.findOne({
+    let evalEmailAddress = await Users.findOne({
       emailAddress: emailAddress
     }).select(['id']);
 
@@ -248,7 +249,7 @@ module.exports = {
 
 
     // CREANDO USUARIO ====
-    let createUser = await User.create(dateForm).fetch();
+    let createUser = await Users.create(dateForm).fetch();
 
     // Enviando Mensaje por Email para Confirmar el correo electronico
     if (sails.config.custom.verifyEmailAddresses) {

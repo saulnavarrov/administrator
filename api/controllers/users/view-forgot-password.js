@@ -17,6 +17,10 @@ module.exports = {
   exits: {
     success: {
       viewTemplatePath: 'pages/account/forgot'
+    },
+    redirect: {
+      responseType: 'redirect',
+      description: 'Requesting user is logged in, so redirect to the internal welcome page.'
     }
   },
 
@@ -25,16 +29,19 @@ module.exports = {
     /***************************************************************************************
      * VARIABLES INICIALES
      ***************************************************************************************/
-    let rq = this.req; // Request Cliente Page
+    const rq = this.req; // Request Cliente Page
     let TitlePage = sails.i18n('Forgot Password');
+    let userId = rq.session.userId;
 
 
     /***************************************************************************************
      * BLOQUE DE SEGURIDAD DE USUARIOS HABILITADOS
      ***************************************************************************************/
     // Verificando Inicio de session.
-    if (rq.session.userId) {
-      throw {redirect:'/'};
+    if (userId) {
+      throw {
+        redirect:'/'
+      };
     }
 
 

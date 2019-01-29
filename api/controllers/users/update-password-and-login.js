@@ -50,7 +50,7 @@ module.exports = {
     const rq = this.req; // Request Cliente Page
     const moment = require('moment');
     let isSocket = rq.isSocket;
-    let updatedAt = moment().format();
+    let updatedAt = moment().toJSON();
 
 
     /***************************************************************************************

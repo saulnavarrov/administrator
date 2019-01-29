@@ -37,7 +37,7 @@ module.exports = {
     const _ = require('lodash');
     const moment = require('moment');
     let emailRegex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-    let updatedAt = moment().format();
+    let updatedAt = moment().toJSON();
     // return regex.test(email) ? true : false;
 
     /***************************************************************************************
