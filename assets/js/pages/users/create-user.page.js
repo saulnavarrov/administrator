@@ -32,27 +32,7 @@ parasails.registerPage('create-user', {
     },
 
     // Datos del nuevo usuario
-    newUserCreate: {
-      id: '',
-      role: '',
-      status: 'N',
-      identification: '',
-      name: '',
-      lastName: '',
-      isSuperAdmin: false,
-      emailAddress: '',
-      emailStatus: '',
-      phone: '+57',
-      lastSeenAt: '',
-      updatedAt: '',
-      createdAt: '',
-      emailProofToken: '',
-      tosAcceptedByIp: '',
-      passwordResetToken: '',
-      passwordResetTokenExpiresAt: '',
-      emailProofTokenExpiresAt: '',
-      emailChangeCandidate: '',
-    },
+    newUserCreate: {},
 
     valForm: { // Validación del formulario
       password: { valid: '', min: false, mayus: false, minus: false, numb: false, },
@@ -165,7 +145,7 @@ parasails.registerPage('create-user', {
           this.existingData(false, true);
 
           // Mostrar modal del usuario nuevo
-          this.saveUserComplete(rsData);
+          this.saveUserComplete(rsData, false);
         }
         this.updateProgress = false;
       });
@@ -181,25 +161,22 @@ parasails.registerPage('create-user', {
      * @version 1.0
      */
     saveUserComplete: async function (data, reload) {
-      // let modal = $('#pm-view-new-user-create');
-      if (!reload) {
-        swal({
-          type: 'success',
-          title: 'Usuario Creado con Exito',
-          text: `El usuario ${data.user.name +' '+ data.user.lastName}. Ha sido creado exitosamente.`,
-          confirmButtonText: 'Aceptar',
-          // showCancelButton: false,
-          // cancelButtonColor: '#d33',
-          confirmButtonColor: '#616161',
-        });
-
-        // Open Modal view
-        // modal.modal('show');
-        // Cargando datos nuevos del usuario
-        this.newUserCreate = data.user;
-      } else {
-        window.location.reload();
-      }
+      Swal.fire({
+        title: 'Usuario Creado con Exito',
+        text: `El usuario ${data.user.name +' '+ data.user.lastName}. Ha sido creado exitosamente.`,
+        type: 'success',
+        showCancelButton: true,
+        confirmButtonColor: '#616161',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Lista Usuarios'
+      }).then((result) => {
+        if (result.value) {
+          window.location.reload();
+        }else{
+          window.location.href = `${window.location.origin}/users`;
+        }
+      });
     },
 
 
