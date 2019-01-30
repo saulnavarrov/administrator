@@ -113,20 +113,65 @@ parasails.registerPage('list-users', {
           'content-type': 'application/json',
           'x-csrf-token': csrfToken
         }
-      }, async (rsData, jsRs) => {
-        console.log(jsRs);
+      }, async (rsData, jwRs) => {
+        // En caso de error
+        if (jwRs.error) {
+          this.jwRsError(jwRs);
+        }
 
-        this.progressBar = false;
+        if (jwRs.statusCode === 200) {
+          this.progressBar = false;
+          this.tableData = this.search = this.footerTable = this.countData = true;
+          this.listCount = rsData.list.length;
+          this.listData = rsData.list;
+          this.listFullCount = rsData.count;
+          if (rsData.count > this.listCount) {
+            this.navegationsData = this.numResult = true;
+          }
+          // Method Pagination()
+          this.paginationCount();
+
+          // cuando se realiza la busqueda
+          if (this.searching && (this.listCount === 0)) {
+            this.tableData = this.footerTable = false;
+            this.alert.title = 'No hay Resultados';
+            this.alert.message = `No se encontraron resultados para la busqueda: ${this.search}`;
+            this.alert.active = true;
+          } else {
+            this.alert.active = false;
+          }
+        }
+
       });
     },
 
     /**
-     * jwresError
-     * @description :: .
+     * jwRsError
+     * @description :: alertas en pantalla en caso de haber un error
+     * @param {json} jwRs Datos del error
      * @author Saúl Navarrov <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    jwresError: async function () {},
+    jwRsError: async function (jwRs) {
+      this.progressBar = false;
+      if (jwRs.statusCode >= 500 && jwRs.statusCode <= 502) {
+        this.alert = {
+          active: true,
+          type: 'alert-danger',
+          icon: 'ion-ios-close-outline',
+          title: `Error: ${jwRs.statusCode} - ${jwRs.body}`,
+          message: jwRs.error.message
+        };
+      } else if (jwRs.statusCode >= 400 && jwRs.statusCode <= 499) {
+        this.alert = {
+          active: true,
+          type: 'alert-warning',
+          icon: 'ion-ios-close-outline',
+          title: `Error: ${jwRs.statusCode} - ${jwRs.body}`,
+          message: jwRs.error.message
+        };
+      }
+    },
 
     /**
      * paginationCount

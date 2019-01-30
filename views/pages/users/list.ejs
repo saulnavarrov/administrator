@@ -30,6 +30,92 @@
               </div>
 
 
+              <%/* Alertas */%>
+              <div class="row" v-show="alert.active">
+                <div class="col-12">
+                  <div class="alert alert-has-icon alert-dismissible show fade " :class="[alert.type]" >
+                    <div class="alert-icon">
+                      <i class="ion" :class="[alert.icon]"></i>
+                    </div>
+                    <div class="alert-body">
+                      <button class="close" data-dismiss="alert">
+                        <span>×</span>
+                      </button>
+                      <div class="alert-title">{{ alert.title }}</div>
+                      {{ alert.message }}
+                    </div>
+                  </div>
+                </div>
+                <br>
+              </div>
+
+
+              <%/* CONTENIDO DE LA TABLA */%>
+              <div class="row" v-show="tableData">
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th class="text-right" width="50">#</th>
+                        <th class="text-center">
+                          <div class="custom-checkbox custom-control">
+                            <input type="checkbox" data-checkboxes="mygroup" data-checkbox-role="dad" class="custom-control-input" id="allSelect"
+                              v-model="allSelect" v-on:click="selectAll()">
+                            <label for="allSelect" class="custom-control-label"></label>
+                          </div>
+                        </th>
+                        <th>Nombre Completo</th>
+                        <th>Email</th>
+                        <th>Rol Name</th>
+                        <th>Estado</th>
+                        <th class="text-center" width="130">Action</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr v-for="(list, i) of listData" v-bind:id="'id-'+list.id">
+                        <td class="text-right" width="50">{{ ((skip * limit) + i) + 1 }}</td>
+                        <td width="40">
+                          <div class="custom-checkbox custom-control">
+                            <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input" v-bind:id="'ch-'+list.id" v-model="list.check">
+                            <label v-bind:for="'ch-'+list.id" class="custom-control-label"></label>
+                          </div>
+                        </td>
+                        <td>{{ list.name }} {{ list.lastName }}</td>
+                        <td>{{ list.emailAddress }}</td>
+                        <td>{{ list.role }} - {{ list.roleName }}</td>
+                        <td>{{ list.emailStatus }}</td>
+                        <td width="130">
+                          <div class="btn-group dropleft float-right">
+                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Detalles
+                            </button>
+                            <div class="dropdown-menu" x-placement="left-start" style="position: absolute; transform: translate3d(-202px, 0px, 0px); top: 0px; left: 0px; will-change: transform;">
+                              <a class="dropdown-item" href="#" v-on:click="findOneUserView(list.id)">Ver Completo</a>
+                              <a class="dropdown-item" href="#" v-on:click="findOneUserEdit(list.id)">Editar</a>
+                              <a class="dropdown-item" href="#" v-on:click="toUnlockUser(list.id)">Desbloquear</a>
+                              <% if( me.role === 0 ) { %>
+                              <div class="dropdown-divider"></div>
+                              <a class="dropdown-item" href="#" title="Hace la petición para cambiar el E-mail">Cambiar su E-mail</a>
+                              <a class="dropdown-item" href="#" title="Reenvia un email para Reconfirmar E-Mail">Reconfirmar E-mail</a>
+                              <a class="dropdown-item" href="#" title="Envia un Email para recuperar contraseña">Reiniciar Contraseña</a>
+                              <div class="dropdown-divider"></div>
+                              <a class="dropdown-item" href="#" v-on:click="deleteUser(list.id)">Eliminar</a>
+                              <% } %>
+                              <div class="dropdown-divider">Nuevos Para organizar</div>
+                              <a class="dropdown-item" href="#">Bloquear/Desbloquear Cuenta</a>
+                              <a class="dropdown-item" href="#">Activar/Desactivar Cuenta</a>
+                              <a class="dropdown-item" href="#">Cambiar Avatar</a>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <%/* FIN DEL CONTENIDO DE LA TABLA */%>
+
             </section>
 
             <section class="card-footer">
