@@ -214,7 +214,7 @@ requests over WebSockets instead of HTTP).`,
           }
         }
 
-        sails.log(intentos);
+        // sails.log(intentos);
         // Evaluacion para bloquear la cuenta
         if (intentos >= attemptsLogin) {
           sails.log.error(new Error(`Se ha bloqueado el usario '${userRecord.name}' por superar el numero de intentos permitidos`));
@@ -286,11 +286,11 @@ requests over WebSockets instead of HTTP).`,
 
 // Guarda los registros de intentos de sessión
 async function attemptsLoginFailSee(dat) {
-  sails.log('Guardando datos de session');
+  // sails.log('Guardando datos de session');
   await AttemptsLogin.create({
     email: dat.em,
     successType: dat.type,
-    users: dat.id,
+    user: dat.id,
     success: dat.s,
     ip: dat.ip,
     port: dat.port

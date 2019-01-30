@@ -39,7 +39,7 @@ module.exports = {
     await AttemptsLogin.create({
       email: this.req.me.emailAddress,
       successType: 'logout',
-      users: this.req.session.userId,
+      user: this.req.session.userId,
       success: 'true',
       ip: this.req.headers['x-forwarded-for'],
       port: this.req.protocol
