@@ -119,28 +119,30 @@ module.exports = {
         '>=': rq.me.role
       }
     })
+    .omit([
+      'avatar',
+      'createdAt',
+      'updatedAt',
+      'password',
+      'passwordResetToken',
+      'passwordResetTokenExpiresAt',
+      'emailProofToken',
+      'emailProofTokenExpiresAt',
+      'emailChangeCandidate',
+      'tosAcceptedByIp',
+      'lastSeenAt',
+      'phone',
+      'status'
+    ])
     .limit(inputs.lim)
     .skip(inputs.lim * inputs.sk); // Todos los usuarios
 
+    sails.log(usersArray);
 
     // Protegiendo el Password para no visualizarlo en Json
     for (user of usersArray) {
-
-      delete user.password;
-      // Organizando data entrega
-      delete user.avatar;
-      delete user.createdAt;
-      delete user.updatedAt;
-      delete user.password;
-      delete user.passwordResetToken;
-      delete user.passwordResetTokenExpiresAt;
-      delete user.emailProofToken;
-      delete user.emailProofTokenExpiresAt;
-      delete user.emailChangeCandidate;
-      delete user.tosAcceptedByIp;
-      delete user.lastSeenAt;
-      delete user.phone;
-      delete user.status;
+      // Agrego un manejador en el FrontEnd
+      user.check = false;
 
       // Entrega por Rol
       if (user.role > 0) {
