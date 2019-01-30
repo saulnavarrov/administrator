@@ -95,20 +95,23 @@ parasails.registerPage('list-users', {
       const urls = '/api/v2/users';
       this.progressBar = true;
 
+      // Data enviada a la API
+      let data = {
+        lim: this.limit,
+        sk: this.skip,
+      };
+
       // Control de urls find or findOne
       if (this.searching) {
-        urls = '/api/v2/users/find-search';
+        urls = '/api/v2/users/search';
+        data.finds = this.searchsText;
       }
 
       // Request list users
       await io.socket.request({
         url: urls,
         method: 'post',
-        data: {
-          lim: this.limit,
-          sk: this.skip,
-          finds: this.searchsText
-        },
+        data: data,
         headers: {
           'content-type': 'application/json',
           'x-csrf-token': csrfToken
@@ -175,43 +178,202 @@ parasails.registerPage('list-users', {
 
     /**
      * paginationCount
-     * @description :: .
+     * @description :: Configuracion y renderizacion de paginacion
+     * para visualizarla en pantalla
      * @author Saúl Navarrov <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    paginationCount: async function () {},
+    paginationCount: async function () {
+      // calcula la paginacion con desimales
+      let a = Number(this.listFullCount) / Number(this.limit);
+      // Calcula y redondea hacia arriba la paginacion
+      let b = this.pagination.c = Math.ceil(a.toFixed(3));
+      // para cuando es menor que 5 devuelva la cantidad de b
+      let s = b > this.pagination.v ? this.pagination.v : b;
+
+      // Nuevos calculos para paginacion
+      // Variables de configuracion del paginador
+      let o = 0; // Arranque del config render
+      let p = 2; // Minimo numero antes de centrar select
+      let q = 3; // Num Maximo para centrar select
+      let r = this.skip; // Skip data
+      let m = b; // Num Maximo de Paginaciones
+      let l = s; // Num Minimo de Paginaciones Itera si es menor a 5
+      let j = r > p ? r - p : 0; // Calculo de centrado
+      let k = r > p ? l + r : l; // Calculo de centrado
+
+      // Limpia la lista para volverla a renderizar
+      this.pagination.list = [];
+
+      // Config Render Page
+      for (o; o < b; o++) {
+        this.pagination.list[o] = {
+          nn: o + 1,
+          aa: '',
+          ss: false
+        };
+      }
+
+      // Renderiza los datos de paginacion activos
+      for (j; j < k; j++) {
+        // Para mantener la paginacion del 1 al 3
+        if (r < q) {
+          this.pagination.list[j] = {
+            nn: j + 1,
+            aa: j === this.pagination.a ? 'active' : '',
+            ss: true
+          };
+        } else if (j < (k - p) && j < m) {
+          // Para dar continuacion de 2 en adelante hasta donde
+          // alcance la variable "b"
+          this.pagination.list[j] = {
+            nn: j + 1,
+            aa: j === this.pagination.a ? 'active' : '',
+            ss: true
+          };
+        }
+      }
+
+      // activate prev
+      if (this.pagination.a > 0 && this.pagination.c > this.pagination.v) {
+        this.pagination.prev = '';
+        this.pagination.pre = true;
+      } else {
+        this.pagination.prev = 'disabled';
+        this.pagination.pre = false;
+      }
+
+      // activate next
+      if ((this.pagination.a + 1) < this.pagination.c && this.pagination.c > this.pagination.v) {
+        this.pagination.next = '';
+        this.pagination.nex = true;
+      } else {
+        this.pagination.next = 'disabled';
+        this.pagination.nex = false;
+      }
+    },
 
     /**
      * paginationClick
-     * @description :: .
+     * @description :: control de la paginacion, esta me permite
+     * omitir una cantidad de datos el modificador es skip
+     * @param {Number} e :: Numero con el que se omitira una cantidad 'x'
+     * de datos para ser visualizados, este funciona mucho con this.limit
      * @author Saúl Navarrov <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    paginationClick: async function () {},
+    paginationClick: async function (e) {
+      // Cuando viene un numero
+      if (typeof (e) === 'number') {
+        // No sobrepase la paginacion
+        if ((this.pagination.a > 0) || ((this.pagination.a + 1) < this.pagination.c)) {
+          this.skip = e;
+          this.pagination.a = e;
+          this.dataDb();
+        }
+      }
+    },
 
     /**
      * skipData
-     * @description :: .
+     * @description :: Calcula, cambia y activa la paginación minima, en caso
+     * de que la paginación este en 10 y se cambie el limite de resultados
+     * para que aparescan mas, esto selecciona en numero maximo que queda
+     * y configura la pagianción para que se pueda ver.
+     * fucniona con el limit y this.paginationCount();
      * @author Saúl Navarrov <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    skipData: async function () {},
+    skipData: async function () {
+      // Calculando Skip
+      let pres = this.listFullCount - (this.limit * this.skip);
+      let p = pres / this.limit;
+      p = Math.ceil(p.toFixed(2));
+
+      // Entrando al bucle
+      if (this.listFullCount !== 0 && p < 1) {
+        let n = p;
+        while (n < 1) {
+          n++;
+          this.skip = this.skip - 1;
+          this.pagination.a = this.skip;
+        }
+      }
+
+      // Ejecicion del request
+      this.dataDb();
+    },
 
     /**
      * selectAll
-     * @description :: .
+     * @description :: Selecciona todos los datos que estan en pantalla
+     * si hay uno seleccionado o varios y selecciona todos, este realiza
+     * una seleccion inversa a los datos seleccionados manualmente.
+     * @param {Number} x :: DEpendiendo de lo que se halla sellecionado
+     * aqui cambiara el tipo de seleccion: todo, nada o inverso
      * @author Saúl Navarrov <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    selectAll: async function () {},
+    selectAll: async function (x) {
+      // Verificando Variable de selección
+      if (typeof(x) === 'string') {
+        // llama la lista y los va seleccionando 1 por 1
+        for (let d of this.listData) {
+          // Seleccionar todo en pantalla
+          if (x === 'a') {
+            console.log(d.check);
+            d.check = true;
+          }
+          // Deseleccionar todo
+          else if (x === 'z') {
+            d.check = false;
+          }
+          // invertir selección
+          else if (x === 'c') {
+            if (!d.check) {
+              d.check = true;
+            } else {
+              d.check = false;
+            }
+          }
+        }
+      }else{
+        console.error(new Error(`Variable no admitida`));
+      }
+    },
 
     /**
      * findOneSearch
-     * @description :: .
+     * @description :: Realiza una busqueda en la base de datos que coincidan
+     * con lo escrito en pantalla
      * @author Saúl Navarrov <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    findOneSearch: async function () {},
+    findOneSearch: async function () {
+      // Reinicia el buscador
+      if (!this.searching) {
+        if (this.skip > 0) {
+          this.skip = 0;
+          this.pagination.a = 0;
+        }
+        if (this.limit > 10) {
+          this.limit = 10;
+        }
+      }
+
+      // Se activa el modo busqueda en la funcion this.dataDB()
+      this.searching = true;
+
+      // realiza la busqueda si searching esta en true y
+      // si hay al menos 3 caracteres en pantalla escrito
+      if (this.searching && this.searchsText.length !== 0) {
+        this.dataDb();
+      } else {
+        this.searching = false;
+        this.alert.active = false;
+        this.dataDb();
+      }
+    },
 
     /**
      * findEndSearch

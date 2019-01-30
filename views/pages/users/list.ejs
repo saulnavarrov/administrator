@@ -18,7 +18,14 @@
             <section class="card-header">
               <h4>Lista de Usuarios</h4>
 
-
+              <div class="card-header-form" v-show="search" >
+                <div class="input-group">
+                  <input type="text" name="search" class="form-control" placeholder="Buscar Usuario" v-model="searchsText" v-on:keyup.enter="findOneSearch()">
+                  <div class="input-group-btn">
+                    <button class="btn btn-primary btn-icon" v-on:click="findEndSearch()"><i class="ion ion-close"></i></button>
+                  </div>
+                </div>
+              </div>
             </section>
 
             <section class="card-body">
@@ -57,17 +64,22 @@
                     <thead>
                       <tr>
                         <th class="text-right" width="50">#</th>
-                        <th class="text-center">
-                          <div class="custom-checkbox custom-control">
-                            <input type="checkbox" data-checkboxes="mygroup" data-checkbox-role="dad" class="custom-control-input" id="allSelect"
-                              v-model="allSelect" v-on:click="selectAll()">
-                            <label for="allSelect" class="custom-control-label"></label>
+                        <th class="text-center" style="padding: 0 7px;">
+                          <div class="btn-group">
+                            <button type="button" class="btn btn-light btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false">
+                            </button>
+                            <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
+                              <div class="dropdown-title">Seleccionar</div>
+                              <a class="dropdown-item" href="#" v-on:click="selectAll('a')"><i class="fas fa-check-square"> </i> Seleccionar Todo</a>
+                              <a class="dropdown-item" href="#" v-on:click="selectAll('z')"><i class="fas fa-window-close"> </i> Deseleccionar Todo</a>
+                              <a class="dropdown-item" href="#" v-on:click="selectAll('c')"><i class="fas fa-sign-in-alt"> </i> Invertir Seleción</a>
+                            </div>
                           </div>
                         </th>
                         <th>Nombre Completo</th>
                         <th>Email</th>
                         <th>Rol Name</th>
-                        <th>Estado</th>
+                        <th>Estado E</th>
                         <th class="text-center" width="130">Action</th>
                       </tr>
                     </thead>
@@ -114,11 +126,61 @@
                   </table>
                 </div>
               </div>
-              <%/* FIN DEL CONTENIDO DE LA TABLA */%>
-
             </section>
 
-            <section class="card-footer">
+            <section class="card-footer row"  v-show="footerTable">
+
+              <%/* CANTIDAD DE RESULTADOS Y VISTA DE RESULTADOS*/%>
+              <div class="col-md-12 col-lg-3 text-center" style="line-height: 33px;" v-show="countData">
+                <p>R: {{ (limit * skip) + 1 }} - {{ listCount + (skip * limit) }} de {{ listFullCount }}</p>
+              </div>
+
+              <%/* NAVEGACION DE LAS PAGINAS */%>
+              <div class="col-md-12 col-lg-5" >
+                <nav aria-label="Page navigation" style="justify-content: center;display: flex;" v-show="navegationsData">
+                  <ul class="pagination">
+                    <li class="page-item" :class="[pagination.prev]">
+                      <p class="page-link" aria-label="Previous" v-on:click="paginationClick(pagination.a - 1)">
+                        <span aria-hidden="true">«</span>
+                        <span class="sr-only">Previous</span>
+                      </p>
+                    </li>
+
+                    <%/* CONTINUACION PREV DE DATOS */%>
+                    <li class="page-item disabled" v-show="pagination.pre">
+                      <p class="page-link">...</p>
+                    </li>
+
+                    <li class="page-item"  v-for="(pin, i) of pagination.list" :class="[pin.aa]" v-show="pin.ss">
+                      <p class="page-link" v-on:click="paginationClick(i)">{{ pin.nn }}</p>
+                    </li>
+
+                    <%/* CONTINUACION NEXT DE DATOS */%>
+                    <li class="page-item disabled" v-show="pagination.nex">
+                      <p class="page-link">...</p>
+                    </li>
+
+                    <li class="page-item" :class="[pagination.next]">
+                      <p class="page-link" aria-label="Next" v-on:click="paginationClick(pagination.a + 1)">
+                        <span aria-hidden="true">»</span>
+                        <span class="sr-only">Next</span>
+                      </p>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+
+              <%/* CAMBIAR LA CANTIDAD DE RESULTADOS */%>
+              <div class="col-12 col-lg-4 row" v-show="numResult" style="display: flex;justify-content: center;">
+                <label for="resultados" class="col-7t" style="line-height: 33px;">Cantidad: </label>
+                <select class="col-5 custom-select custom-select-sm" style="height: fit-content;max-width: 100px;margin-left: 10px;" v-model="limit" v-on:change="skipData()" width="100">
+                  <option value="10" selected>10</option>
+                  <option value="25" v-if="listCount >= 10 ? true : false">25</option>
+                  <option value="50" v-if="listCount >= 25 ? true : false">50</option>
+                  <option value="100" v-if="listCount >= 50 ? true : false">100</option>
+                  <option value="250" v-if="listCount >= 100 ? true : false">250</option>
+                </select>
+              </div>
 
             </section>
 
