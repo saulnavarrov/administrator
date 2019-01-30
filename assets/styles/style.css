@@ -1043,7 +1043,7 @@ select.form-control:not([size]):not([multiple]) {
 
 .table:not(.table-sm):not(.table-md):not(.dataTable) td,
 .table:not(.table-sm):not(.table-md):not(.dataTable) th {
-  padding: 0 25px;
+  padding: 0 15px;
   height: 60px;
   vertical-align: middle;
 }
