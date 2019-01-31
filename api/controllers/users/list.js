@@ -137,8 +137,6 @@ module.exports = {
     .limit(inputs.lim)
     .skip(inputs.lim * inputs.sk); // Todos los usuarios
 
-    sails.log(usersArray);
-
     // Protegiendo el Password para no visualizarlo en Json
     for (user of usersArray) {
       // Agrego un manejador en el FrontEnd

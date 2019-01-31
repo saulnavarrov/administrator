@@ -123,12 +123,12 @@ module.exports = {
 
     // Busco el usuario para verificar si tiene el roll suficiente para  hacer el procedimiento
     let user = await Users.findOne({'id': userId});
-    let autorize = Number(user.role) > 3 ? true : false; // Autorización de usuarios
+    let autorize = user.role <= 2 ? true : false; // Autorización de usuarios
 
     // Verifico que usuario tiene pases de seguridad para crear el nuevo usuario
     // Solo los administradores y supervisores pueden crear nuevos usuarios para trabajar
     //  en uniempresas
-    if(autorize){
+    if(!autorize){
       return exits.noAuthorize({
         error: true,
         message: `No tienes permisos para realizar esta acción.
