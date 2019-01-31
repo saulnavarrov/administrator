@@ -92,7 +92,7 @@ parasails.registerPage('list-users', {
      */
     dataDb: async function () {
       const csrfToken = window.SAILS_LOCALS._csrf;
-      const urls = '/api/v2/users';
+      let urls = '/api/v2/users';
       this.progressBar = true;
 
       // Data enviada a la API
@@ -165,13 +165,21 @@ parasails.registerPage('list-users', {
           title: `Error: ${jwRs.statusCode} - ${jwRs.body}`,
           message: jwRs.error.message
         };
-      } else if (jwRs.statusCode >= 400 && jwRs.statusCode <= 499) {
+      } else if (jwRs.statusCode >= 400 && jwRs.statusCode <= 405) {
         this.alert = {
           active: true,
           type: 'alert-warning',
           icon: 'ion-ios-close-outline',
           title: `Error: ${jwRs.statusCode} - ${jwRs.body}`,
           message: jwRs.error.message
+        };
+      } else if (jwRs.statusCode === 406) {
+        this.alert = {
+          active: true,
+          type: 'alert-warning',
+          icon: 'ion-ios-close-outline',
+          title: `Error: ${jwRs.statusCode} - ${jwRs.body.type}`,
+          message: jwRs.body.data
         };
       }
     },

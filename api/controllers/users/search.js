@@ -64,7 +64,148 @@ module.exports = {
   },
 
   fn: async function (inputs, exits) {
+    /***************************************************************************************
+     * VARIABLES INICIALES
+     ***************************************************************************************/
+    const rq = this.req;
+    const _ = require('lodash');
+    let users = []; // array de usuario nuevo
+    let userId = rq.session.userId;
+    let isSocket = rq.isSocket;
+    let count = 0;
 
-    return exits.success();
+
+    /***************************************************************************************
+     * BLOQUE DE SEGURIDAD SOCKET
+     ***************************************************************************************/
+    // Solo se aceptan solicitudes atravez de socket.io
+    if (!isSocket) {
+      return exits.unauthorized({
+        error: true,
+        message: `Solicitud Rechazada.`
+      });
+    }
+
+
+    /***************************************************************************************
+     * BLOQUE DE SEGURIDAD DE USUARIOS HABILITADOS
+     ***************************************************************************************/
+    // Verificacion de usuario
+    if (!userId) {
+      return exits.unauthorized({
+        error: true,
+        message: 'Unauthorized'
+      });
+    }
+
+    // Busco el usuario para verificar si tiene el roll suficiente para  hacer el procedimiento
+    let user = await Users.findOne({
+      'id': userId
+    });
+    let autorize = user.role <= 2 ? true : false; // Autorización de usuarios
+
+    // Verifico que usuario tiene pases de seguridad para crear el nuevo usuario
+    // Solo los administradores y supervisores pueden crear nuevos usuarios para trabajar
+    //  en uniempresas
+    if (!autorize) {
+      return exits.unauthorized({
+        error: true,
+        message: `No tienes permisos para realizar esta acción.
+        Comunicate con el Administrador para obtener permisos
+        necesarios.`
+      });
+    }
+
+
+    /***************************************************************************************
+     * BLOQUE DE DATOS OBLIGATORIOS Y REVISION DE DATA.
+     ***************************************************************************************/
+    // Organizando data
+    let textSearch = _.isUndefined(inputs.finds) ? false : inputs.finds;
+
+    // Datos necesarios para buscar
+    if (!textSearch) {
+      this.res.status(406);
+      return this.res.badRequest({
+        status: 406,
+        error: true,
+        data: 'Proporcione datos para la busqueda',
+        type: 'find_incomplete_Data',
+      });
+    }
+
+
+    /***************************************************************************************
+     * BLOQUE DE TRABAJO
+     ***************************************************************************************/
+    // formateando datos para busquedas exactas ya que sin camelcase
+    let uid = String(textSearch);
+    let searchEmail = _.lowerCase(String(textSearch));
+    let searchName = _.startCase(_.lowerCase(String(textSearch)));
+    let searchLastName = _.startCase(_.lowerCase(String(textSearch)));
+
+    // Filtro
+    let findContainer = [
+      { 'id':  uid  },
+      // Mayusculas inciales ↓↓↓
+      { 'emailAddress': { 'contains': searchEmail } },
+      { 'name':         { 'contains': searchName } },
+      { 'lastName':     { 'contains': searchLastName } },
+      // Texto Bruto ↓↓↓
+      { 'emailAddress': { 'contains': textSearch } },
+      { 'name':         { 'contains': textSearch } },
+      { 'lastName':     { 'contains': textSearch } },
+      // Todo en mayusculas ↓↓↓
+      { 'emailAddress': { 'contains': _.upperCase(textSearch) } },
+      { 'name':         { 'contains': _.upperCase(textSearch) } },
+      { 'lastName':     { 'contains': _.upperCase(textSearch) } },
+      // { 'role':         { '>=': rq.me.role } }
+    ];
+
+    // funcion de buscador, donde buscara de los 3 la funcion
+    let findUsers = await Users.find()
+      .where({
+        'or': findContainer,
+        'and': [{'role': {'>=':rq.me.role}}]
+      })
+      .omit([
+        'avatar',
+        'createdAt',
+        'updatedAt',
+        'password',
+        'passwordResetToken',
+        'passwordResetTokenExpiresAt',
+        'emailProofToken',
+        'emailProofTokenExpiresAt',
+        'emailChangeCandidate',
+        'tosAcceptedByIp',
+        'lastSeenAt',
+        'phone',
+        'status'
+      ])
+      .limit(inputs.lim)
+      .skip(inputs.lim * inputs.sk);
+
+    // Cuenta el numero de resultados
+    count = findUsers.length;
+
+    // Protegiendo el Password para no visualizarlo en Json
+    for (user of findUsers) {
+      // Agrego un manejador en el FrontEnd
+      user.check = false;
+
+      delete user.password;
+      if (user.role > 1) {
+        delete user.isSuperAdmin;
+      }
+      users.push(user);
+    }
+
+    // Retorna todos los datos si es correcto
+    return exits.success({
+      model: 'users',
+      count: count,
+      list: users
+    });
   }
 };
