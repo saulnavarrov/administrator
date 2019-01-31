@@ -148,6 +148,7 @@ parasails.registerPage('list-users', {
       });
     },
 
+
     /**
      * jwRsError
      * @description :: alertas en pantalla en caso de haber un error
@@ -183,6 +184,7 @@ parasails.registerPage('list-users', {
         };
       }
     },
+
 
     /**
      * paginationCount
@@ -261,6 +263,7 @@ parasails.registerPage('list-users', {
       }
     },
 
+
     /**
      * paginationClick
      * @description :: control de la paginacion, esta me permite
@@ -281,6 +284,7 @@ parasails.registerPage('list-users', {
         }
       }
     },
+
 
     /**
      * skipData
@@ -311,6 +315,7 @@ parasails.registerPage('list-users', {
       // Ejecicion del request
       this.dataDb();
     },
+
 
     /**
      * selectAll
@@ -350,6 +355,7 @@ parasails.registerPage('list-users', {
       }
     },
 
+
     /**
      * findOneSearch
      * @description :: Realiza una busqueda en la base de datos que coincidan
@@ -383,37 +389,130 @@ parasails.registerPage('list-users', {
       }
     },
 
+
     /**
      * findEndSearch
-     * @description :: .
+     * @description :: Reinicia la busqueda y pone en pantalla
+     * el listado original de datos sin busqueda si se presiona la
+     * "X" que esta al lado de la caja de texto.
      * @author Saúl Navarrov <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    findEndSearch: async function () {},
+    findEndSearch: async function () {
+      if (this.searching && this.searchs.length > 0) {
+        this.searchs = '';
+        this.searching = false;
+        this.alert.active = false;
+        // Ejecicion del request
+        this.dataDb();
+      } else {
+        // Blanqueando Caja
+        this.searchs = '';
+      }
+    },
 
-    /**
-     * findOneUserView
-     * @description :: .
-     * @author Saúl Navarrov <Sinavarrov@gmail.com>
-     * @version 1.0
-     */
-    findOneUserView: async function () {},
-
-    /**
-     * findOneUserEdit
-     * @description :: .
-     * @author Saúl Navarrov <Sinavarrov@gmail.com>
-     * @version 1.0
-     */
-    findOneUserEdit: async function () {},
 
     /**
      * closeModalView
-     * @description :: .
+     * @description ::  Cierra el modal que esta abierto y deja los estados
+     * como active modal el false, y editTrueModal false
+     * por si se abre el modal en modo vista no abra en modo edición
+     * @param {string} modal titulo del modal
      * @author Saúl Navarrov <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    closeModalView: async function () {},
+    closeModalView: async function (modal) {
+      this.activeModal = false;
+      this.editTrueData = true;
+      $(`#${modal}`).modal('hide');
+      this.btnCerrar = 'cerrar';
+      this.userData = {}; // Limpia los Datos
+    },
+
+
+    /**
+     * findOneUserView
+     * @description :: Buscara el usuario seleccionado para ver todos los
+     * datos en pantalla, tambien sirve de base para editar el mismo usuario
+     * evitando repetir codigo.
+     * @param {string} id :: identificación del usuario en la base de datos.
+     * @param {string} title :: Titulo del modal, este cambiara si pasa de vista
+     * a edición o si se ponen en modo edición
+     * @author Saúl Navarrov <Sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    findOneUserView: async function (id, title) {
+      let csrfToken = window.SAILS_LOCALS._csrf;
+      let urls = '/api/v2/users/find-one';
+      let modal = $('#pm-view-and-edith-user');
+      this.titleModal = 'Datos de: ';
+      this.progressBar = true;
+
+      // Cambio de titulo de la ventana
+      if (typeof (title) !== 'undefined') {
+        this.titleModal = title;
+      } else {
+        // No permite editar
+        this.editTrueData = true;
+      }
+
+      // request list users
+      await io.socket.request({
+        url: urls,
+        method: 'post',
+        data: {
+          id: id
+        },
+        headers: {
+          'content-type': 'application/json',
+          'x-csrf-token': csrfToken
+        }
+      }, (rsData, jwRs) => {
+        // En caso de error
+        if (jwRs.error) {
+          this.jwRsError(jwRs);
+        }
+
+        if (jwRs.statusCode === 200) {
+          console.log(rsData);
+          // Desactiva el progrees
+          this.progressBar = false;
+          // carga los datos
+          this.userData = rsData.user;
+          // pone el estado del modal en activo
+          this.activeModal = true;
+
+          // Eject Modal
+          modal.modal('show');
+        }
+
+      });
+    },
+
+
+    /**
+     * editUser
+     * @description :: Habilita la edicion del usuario en la ventana del view
+     * para mayor facilidad y trabajo
+     * @param {string} id :: identificación del usuario en la base de datos.
+     * @author Saúl Navarrov <Sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    editUser: async function (id) {
+      // Verifica si el modal esta activo para ejecutar el request
+      if (!this.activeModal) {
+        this.btnCerrar = 'Descartar Cambios';
+        this.editTrueData = false; // Permite editar los datos
+        this.findOneUserView(id, 'Editar datos de: ');
+      } else {
+        // Si el modal esta habierto cambia el titulo habilita
+        // la edicion del usuario
+        this.btnCerrar = 'Descartar Cambios';
+        this.titleModal = 'Editar datos de: '; // Cambia el titulo del modal
+        this.editTrueData = false; // Permite editar los datos
+      }
+    },
+
 
     /**
      * btnUpdateUser
@@ -423,6 +522,7 @@ parasails.registerPage('list-users', {
      */
     btnUpdateUser: async function () {},
 
+
     /**
      * updateUserData
      * @description :: .
@@ -430,6 +530,7 @@ parasails.registerPage('list-users', {
      * @version 1.0
      */
     updateUserData: async function () {},
+
 
     /**
      * onChangeAvatar
@@ -439,6 +540,7 @@ parasails.registerPage('list-users', {
      */
     onChangeAvatar: async function () {},
 
+
     /**
      * updateChangeAvatar
      * @description :: .
@@ -447,6 +549,7 @@ parasails.registerPage('list-users', {
      */
     updateChangeAvatar: async function () {},
 
+
     /**
      * toUnlockUser
      * @description :: .
@@ -454,6 +557,7 @@ parasails.registerPage('list-users', {
      * @version 1.0
      */
     toUnlockUser: async function () {},
+
 
     /**
      * deleteUser

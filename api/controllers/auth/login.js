@@ -60,6 +60,9 @@ requests over WebSockets instead of HTTP).`,
   },
 
   fn: async function (inputs, exits) {
+    /***************************************************************************************
+     * VARIABLES INICIALES
+     ***************************************************************************************/
     const rq = this.req;
     const _ = require('lodash');
     const moment = require('moment');
@@ -70,6 +73,10 @@ requests over WebSockets instead of HTTP).`,
     let attemptsTime = sails.config.custom.attemptsTime;
     let emailRegex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
+
+    /***************************************************************************************
+     * BLOQUE DE SEGURIDAD SOCKET (Desctivado) Usando Ajax
+     ***************************************************************************************/
     // Solo se aceptan solicitudes atravez de socket.io
     // Reescrito para aceptar solicitudes con Ajax (Axios)
     // if (!rq.isSocket) {
@@ -79,6 +86,10 @@ requests over WebSockets instead of HTTP).`,
     //   });
     // }
 
+
+    /***************************************************************************************
+     * BLOQUE DE DATOS OBLIGATORIOS Y REVISION DE DATA.
+     ***************************************************************************************/
     // Evaluando Email
     let email = _.isUndefined(inputs.emailAddress) ? false : true;
     email = _.isNull(inputs.emailAddress) ? false : true;
@@ -106,6 +117,10 @@ requests over WebSockets instead of HTTP).`,
       });
     }
 
+
+    /***************************************************************************************
+     * BLOQUE DE TRABAJO
+     ***************************************************************************************/
     // buscamos el usuario en la base de datos
     let userRecord = await Users.findOne({
       emailAddress: emailAddress.toLowerCase(),

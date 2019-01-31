@@ -1,0 +1,35 @@
+<%
+/**
+ * views/page/users/pm--view-and-edit-user.ejs
+ * Partial Modal
+ * Para ver los datos completos del usuario. y poder editarlo
+ * si queremos en el momento.
+ */%>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="pm-view-and-edith-user" data-backdrop="static" data-keyboard="false" aria-labelledby="pm-view-and-edith-user" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <%/* HEADER MODAL */%>
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">{{ titleModal }} {{ userData.name +' '+ userData.lastName }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" v-on:click="closeModalView('pm-view-and-edith-user')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <%/* BODY MODAL */%>
+      <div class="modal-body container-fluit row">
+        content
+      </div>
+
+      <%/* FOOTER MODAL */%>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-sm" v-on:click="editUser(userData.id)" v-show="editTrueData">Editar</button>
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"  v-on:click="closeModalView('pm-user-view')">{{ btnCerrar }}</button>
+        <button type="button" class="btn btn-primary btn-sm" v-show="!editTrueData" v-on:click="btnUpdateUser(userData.id)">Guardar Cambios</button>
+      </div>
+
+    </div>
+   </div>
+</div>

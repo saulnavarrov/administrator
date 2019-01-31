@@ -69,9 +69,9 @@ module.exports = {
      ***************************************************************************************/
     const rq = this.req;
     const _ = require('lodash');
+    const userId = rq.session.userId;
+    const isSocket = rq.isSocket;
     let users = []; // array de usuario nuevo
-    let userId = rq.session.userId;
-    let isSocket = rq.isSocket;
     let count = 0;
 
 
@@ -104,9 +104,9 @@ module.exports = {
     });
     let autorize = user.role <= 2 ? true : false; // Autorización de usuarios
 
-    // Verifico que usuario tiene pases de seguridad para crear el nuevo usuario
-    // Solo los administradores y supervisores pueden crear nuevos usuarios para trabajar
-    //  en uniempresas
+    // Verifico que usuario tiene pases de seguridad para buscar usuarios
+    // Solo los administradores y supervisores pueden hacer una busqueda de los usuario
+    // de uniempresas
     if (!autorize) {
       return exits.unauthorized({
         error: true,

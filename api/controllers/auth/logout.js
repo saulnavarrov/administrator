@@ -35,7 +35,27 @@ module.exports = {
 
 
   fn: async function (inputs, exits) {
+    /***************************************************************************************
+     * VARIABLES INICIALES
+     ***************************************************************************************/
+    const rq = this.req;
+    const userId = rq.session.userId;
 
+
+    /***************************************************************************************
+     * BLOQUE DE SEGURIDAD DE USUARIOS HABILITADOS
+     ***************************************************************************************/
+    // Verifico si hay una session iniciada, si no es asi
+    // redirija al login
+    if (!userId) {
+      throw {
+        redirect: '/login'
+      };
+    }
+
+
+    // Si se encuentra una sesion iniciada
+    // se realizara el procedimiento adecuado
     await AttemptsLogin.create({
       email: this.req.me.emailAddress,
       successType: 'logout',

@@ -53,8 +53,7 @@ module.exports = {
     let user = await Users.findOne({'id': userId});
     let autorize = user.role <= 3 ? true : false; // Autorización de usuarios
 
-    // Verifico que usuario tiene pases de seguridad para crear el nuevo usuario
-    // para ver esta pagina
+    // Verifico que usuario tiene pases de seguridad para ver la pagina de lista de usuarios
     if(!autorize){
       throw {redirect:'/'};
     }

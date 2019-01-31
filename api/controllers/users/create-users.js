@@ -94,7 +94,7 @@ module.exports = {
     const rq = this.req;
     const _ = require('lodash');
     const moment = require('moment');
-    let userId = rq.session.userId;
+    const userId = rq.session.userId;
     let dateForm = {};
 
 
@@ -114,7 +114,7 @@ module.exports = {
      * BLOQUE DE SEGURIDAD DE USUARIOS HABILITADOS
      ***************************************************************************************/
     // Verificacion de usuario
-    if (!rq.session.userId) {
+    if (!userId) {
       return exits.unauthorized({
         error: true,
         message: 'Unauthorized'

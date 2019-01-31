@@ -78,8 +78,8 @@ module.exports = {
      ***************************************************************************************/
     const rq = this.req; // Request Cliente Page
     const moment = require('moment');
-    let userId = rq.session.userId;
-    let updatedAt = moment().toJSON();
+    const userId = rq.session.userId;
+    const updatedAt = moment().toJSON();
 
 
     /***************************************************************************************
