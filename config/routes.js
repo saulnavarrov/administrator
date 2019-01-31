@@ -64,6 +64,7 @@ module.exports.routes = {
 
   'POST /api/v2/users':                         { action: 'users/list' },
   'POST /api/v2/users/create':                  { action: 'users/create-users' },
+  'POST /api/v2/users/find-one':                { action: 'users/find-one' },
   'POST /api/v2/users/search':                  { action: 'users/search' },
   'PATCH /api/v2/users/forgot-passwords':           { action: 'users/forgot-passwords' },
   'PATCH /api/v2/users/update-password-and-login':  { action: 'users/update-password-and-login' },

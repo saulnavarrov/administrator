@@ -89,8 +89,8 @@ module.exports = {
     });
     let autorize = user.role <= 2 ? true : false; // Autorización de usuarios
 
-    // Verifico que usuario tiene pases de seguridad para crear el nuevo usuario
-    // para ver esta pagina
+    // Verifico que usuario tiene pases de seguridad para ver todos los usuarios creados
+    // de igual rol o hacia abajo.
     if (!autorize) {
       throw 'unauthorized';
     }

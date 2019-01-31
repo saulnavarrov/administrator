@@ -104,7 +104,7 @@
                             </button>
                             <div class="dropdown-menu" x-placement="left-start" style="position: absolute; transform: translate3d(-202px, 0px, 0px); top: 0px; left: 0px; will-change: transform;">
                               <a class="dropdown-item" href="#" v-on:click="findOneUserView(list.id)">Ver Completo</a>
-                              <a class="dropdown-item" href="#" v-on:click="findOneUserEdit(list.id)">Editar</a>
+                              <a class="dropdown-item" href="#" v-on:click="editUser(list.id)">Editar Usuario</a>
                               <a class="dropdown-item" href="#" v-on:click="toUnlockUser(list.id)">Desbloquear</a>
                               <% if( me.role === 0 ) { %>
                               <div class="dropdown-divider"></div>
@@ -192,6 +192,9 @@
     </section>
   </div>
 
+  <%/* PARTIALES DE LA PAGINA */%>
+  <%- partial('./pm-view-and-edith-user.ejs') %>
+  <%/* FIN PARTIALES DE LA PAGINA */%>
 
   <%- partial('../../partials/footer.ejs') %>
 </div>
