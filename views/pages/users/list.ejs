@@ -76,11 +76,11 @@
                             </div>
                           </div>
                         </th>
-                        <th>Nombre Completo</th>
-                        <th>Email</th>
-                        <th>Rol Name</th>
-                        <th>Estado E</th>
-                        <th class="text-center" width="130">Action</th>
+                        <th class="text-center" data-toggle="tooltip" title="" data-original-title="Nombre Completo">Nombre</th>
+                        <th class="text-center" data-toggle="tooltip" title="" data-original-title="Correo Electronico del Usuario">Email</th>
+                        <th class="text-center" data-toggle="tooltip" title="" data-original-title="Estado del usuario - Rol del usuario">St - Rol</th>
+                        <th class="text-center" data-toggle="tooltip" title="" data-original-title="Estado del Email">Estado E</th>
+                        <th class="text-right" data-toggle="tooltip" title="" data-original-title="Acciones que puedes hacer con el usuario" class="text-center" width="130">Action</th>
                       </tr>
                     </thead>
 
@@ -94,8 +94,8 @@
                           </div>
                         </td>
                         <td>{{ list.name }} {{ list.lastName }}</td>
-                        <td>{{ list.emailAddress }}</td>
-                        <td>{{ list.role }} - {{ list.roleName }}</td>
+                        <td :title="list.emailAddress">{{ list.emailAddress.substr(0, 12) }}...</td>
+                        <td :title="list.roleName">{{ list.status }} - {{ list.role }} - {{ list.roleName.substr(0,7) }}... </td>
                         <td>{{ list.emailStatus }}</td>
                         <td width="130">
                           <div class="btn-group dropleft float-right">
