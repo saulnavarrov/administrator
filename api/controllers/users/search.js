@@ -181,7 +181,6 @@ module.exports = {
         'tosAcceptedByIp',
         'lastSeenAt',
         'phone',
-        'status'
       ])
       .limit(inputs.lim)
       .skip(inputs.lim * inputs.sk);

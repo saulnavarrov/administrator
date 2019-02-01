@@ -99,7 +99,11 @@ module.exports = {
      * BLOQUE DE DATOS OBLIGATORIOS Y REVISION DE DATA.
      ***************************************************************************************/
     // Devuelve la cantidad de datos almacenados
-    count = await Users.count();
+    count = await Users.count({
+      role: {
+        '>=': rq.me.role
+      }
+    });
 
     // Enviando Numero complto de registros que hay en la base de datos
     if (inputs.count) {
@@ -132,7 +136,6 @@ module.exports = {
       'tosAcceptedByIp',
       'lastSeenAt',
       'phone',
-      'status'
     ])
     .limit(inputs.lim)
     .skip(inputs.lim * inputs.sk); // Todos los usuarios
