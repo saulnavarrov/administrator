@@ -399,15 +399,15 @@ parasails.registerPage('list-users', {
      * @version 1.0
      */
     findEndSearch: async function () {
-      if (this.searching && this.searchs.length > 0) {
-        this.searchs = '';
+      if (this.searching && this.searchsText.length > 0) {
+        this.searchsText = '';
         this.searching = false;
         this.alert.active = false;
         // Ejecicion del request
         this.dataDb();
       } else {
         // Blanqueando Caja
-        this.searchs = '';
+        this.searchsText = '';
       }
     },
 
