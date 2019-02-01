@@ -45,7 +45,7 @@
     "url": "https://github.com/saulnavarrov/administrator.git"
   },
   "author": "Saúl Navarrov <sinavarrov@gmail.com> github.com/saulnavarrov",
-  "license": "MIT",
+  "license": "GNU General Public License v3.0",
   "engines": {
     "node": ">=11.4"
   }
