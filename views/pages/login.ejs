@@ -10,13 +10,13 @@
           <div class="card fat">
 
             <%/* FORM LOGIN */%>
-						<div class="card-body" v-show="!progressLogin">
+						<div class="card-body" v-if="!progressLogin">
 							<h4 class="card-title"><%= typeof(i18n('Login.title')) === 'undefinded' ? 'Login' : i18n('Login.title') %></h4>
 
 
                 <div class="form-group">
 									<label for="email"><%= typeof(i18n('Login.email')) === 'undefinded' ? 'Email:' : i18n('Login.email') %></label>
-                  <input id="email" type="email" class="form-control" name="email" value="" required :class="[formErrors.emailAddress ? 'is-invalid' : '']" v-model="formData.emailAddress" @change="validateEmail()" focus-first>
+                  <input id="email" type="email" class="form-control" name="email" required :class="[formErrors.emailAddress ? 'is-invalid' : '']" v-model="formData.emailAddress" @change="validateEmail()" focus-first>
                   <div class="invalid-feedback" v-if="formErrors.emailValid" ><%= i18n('Login.email Error') %></div>
                   <div class="invalid-feedback" v-if="formErrors.emailLoginError" >Error al iniciar Sesión</div>
 								</div>
@@ -31,11 +31,15 @@
                   <div class="invalid-feedback" v-if="formErrors.password"></div>
 								</div>
 
-								<div class="form-group">
-									<label>
-										<input type="checkbox" name="remember" v-model="formData.rememberMe"> <%= typeof(i18n('Login.remember')) === 'undefinded' ? 'Remember Me' : i18n('Login.remember') %>
-									</label>
-				  			</div>
+                <div class="form-group row">
+                  <div class="col-2" style="margin: -2px -30px 5px 0;">
+                    <div class="custom-checkbox custom-control">
+                      <input type="checkbox" class="custom-control-input" data-checkboxes="mygroup" name="remember" id="remember" v-model="formData.rememberMe">
+                      <label for="remember" class="custom-control-label"></label>
+                    </div>
+                  </div>
+                  <div class="col-sm-10"><%= typeof(i18n('Login.remember')) === 'undefinded' ? 'Remember Me' : i18n('Login.remember') %></div>
+                </div>
 
 								<div class="form-group no-margin">
 									<button type="button" class="btn btn-primary btn-block" @click="submittedLogin()">
@@ -48,7 +52,7 @@
             </div>
 
             <%/* PROGRESS LOGIN */%>
-            <div class="card-body" v-show="progressLogin">
+            <div class="card-body" v-if="progressLogin">
               <h4 class="card-title"><%= typeof(i18n('Login.title')) === 'undefinded' ? 'Login' : i18n('Login.title') %></h4>
 
               <div class="form-group">
