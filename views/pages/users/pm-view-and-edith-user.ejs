@@ -6,7 +6,7 @@
  * si queremos en el momento.
  */%>
 
-<div class="modal fade" tabindex="-1" role="dialog" id="pm-view-and-edith-user" data-backdrop="static" data-keyboard="false" aria-labelledby="pm-view-and-edith-user" aria-hidden="true">
+<div class="modal fade" tabindex="-1" role="dialog"  id="pm-view-and-edith-user" data-backdrop="static" data-keyboard="false" aria-labelledby="pm-view-and-edith-user" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
 
@@ -18,9 +18,237 @@
         </button>
       </div>
 
+
+<!--
+
+  <a href="#" data-toggle="tooltip" title="" data-original-title="Tooltip, bro!">Hover me!</a>
+
+<button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="left"
+  data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." data-original-title="" title="">
+  On left
+</button> -->
+
       <%/* BODY MODAL */%>
-      <div class="modal-body container-fluit row">
-        content
+      <div class="modal-body container-fluit">
+
+        <%/* Vista: id, rol, status */%>
+        <section class="row" v-if="editTrueData">
+          <div class="col-sm-12 col-lg-3">
+            <p><b>Id: </b> <span :title="userData.id">{{ typeof(userData.id) === 'undefined' ? '' : userData.id.substr(0,10) }}...</span></p>
+          </div>
+          <div class="col-sm-12 col-lg-3">
+            <p><b>Rol: </b> <span :title="userData.roleName">{{ userData.role }} - {{ typeof(userData.id) === 'undefined' ? '' : userData.roleName.substr(0,7) }}</span></p>
+          </div>
+          <div class="col-sm-12 col-lg-2">
+            <p><b>Estatus: </b>{{ userData.status }}</p>
+          </div>
+          <div class="col-sm-12 col-lg-4">
+            <p><b>Identificación: </b>{{ userData.identification }}</p>
+          </div>
+        </section>
+
+        <%/* Edición: id, rol, status */%>
+        <section class="row" v-if="!editTrueData">
+          <div class="col-sm-12 col-lg-3">
+            <div class="form-group">
+              <label for="idUser">Id Usuario:</label>
+              <input type="text" name="idUser" id="idUser" class="form-control form-control-sm" :value="userData.id" disabled>
+            </div>
+          </div>
+          <div class="col-sm-12 col-lg-3">
+            <div class="form-group">
+              <label for="rolUser">Rol del usuario:</label>
+              <select name="rolUser" id="rolUser" class="form-control form-control-sm" style="font-size: 13px;height: 30px;line-height: 30px;padding: 0px 10px 2px 9px;margin: 0px;" v-model="userData.role">
+                <% if (me.role < 1) { %>
+                  <option value="0">00 - Super Admin</option>
+                <% } if (me.role < 2) { %>
+                  <option value="1">01 - Administrador</option>
+                <% } if (me.role < 3) { %>
+                  <option value="2">02 - Supervisor</option>
+                <% } %>
+                  <option value="3">03 - Secretario</option>
+                  <option value="4">04 - Vendedores</option>
+                  <option value="5">05 - </option>
+                  <option value="6">06 - </option>
+                  <option value="7">07 - Usuario</option>
+                  <option value="8">08 - Client</option>
+                  <option value="9">09 - Guest</option>
+                </select>
+            </div>
+          </div>
+          <div class="col-sm-12 col-lg-3">
+            <div class="form-group">
+              <label for="status">Estado Usuario</label>
+              <select class="form-control form-control-sm" style="font-size: 13px;height: 30px;line-height: 30px;padding: 0px 10px 2px 9px;margin: 0px;" v-model="userData.status">
+                <option value="E" title="Cuenta activa funcionando">E - Habilitada</option>
+                <% if(me.role < 1 && me.isSuperAdmin) { %>
+                <option value="I" title="Cuenta se encuentra deshabilitada y solo el admin lo puede activar">I - Deshabilitado</option>
+                <% } %>
+                <option value="B" title="Bloqueas la cuenta y lo obligas a recuperar la contraseña">B - Bloqueada</option>
+                <option value="N" title="Cuenta nueva. El usuario debe habilitarla desde el E-mail - No se usa" disabled>N - Nuevo</option>
+                <option value="ID" title="Cuenta deshabilitada por el usuario Cliente el cual para recuperarla debe seguir unos pasos">ID - Cuenta Desabilitada</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-sm-12 col-lg-3">
+            <div class="form-group">
+              <label for="status">Identificación</label>
+              <input type="text" class="form-control form-control-sm" :value="userData.identification" disabled>
+            </div>
+          </div>
+        </section>
+
+        <%/* Datos Personales */%>
+        <section class="row">
+          <div class="col-sm-12 col-lg-8" v-if="editTrueData">
+            <div class="form-group"><label for="nameComplete">Nombre Completo</label>
+              <input type="text" name="nameComplete" id="nameComplete" class="form-control form-control-sm" :value="userData.name + ' ' + userData.lastName " :disabled="editTrueData">
+            </div>
+          </div>
+          <div class="col-sm-12 col-lg-4" v-if="!editTrueData">
+            <div class="form-group">
+              <label for="name">Nombre</label>
+              <input type="text" name="name" id="name" class="form-control form-control-sm" v-model="userData.name">
+            </div>
+          </div>
+          <div class="col-sm-12 col-lg-4" v-if="!editTrueData">
+            <div class="form-group">
+              <label for="lastName">Apellidos</label>
+              <input type="text" name="lastName" id="lastName" class="form-control form-control-sm" v-model="userData.lastName">
+            </div>
+          </div>
+          <% if (me.isSuperAdmin) { %>
+          <div class="col-sm-12 col-lg-4" v-if="editTrueData">
+            <div class="form-group">
+              <label for="isSuperAdmin">¿Es Super Admin?</label>
+              <input type="text" name="isSuperAdmin" id="isSuperAdmin" class="form-control form-control-sm" :value="userData.isSuperAdmin ? 'Si' : 'No'" :disabled="editTrueData">
+            </div>
+          </div>
+          <div class="col-sm-12 col-lg-4" style="margin-top:32px;" v-if="!editTrueData">
+            <div class="form-group row" >
+              <div class="col-sm-7">Super Admin</div>
+              <div class="col-sm-5">
+                <div class="custom-checkbox custom-control">
+                  <input type="checkbox" data-checkboxes="mygroup" name="isSuperAdminCheck" id="isSuperAdminCheck" class="custom-control-input">
+                  <label for="isSuperAdminCheck" class="custom-control-label"></label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% } %>
+        </section>
+
+
+
+        <%/* Más Datos */%>
+        <section class="row">
+          <div class="col-sm-12 col-lg-4">
+            <div class="form-group">
+              <label for="emailAddress">Dirección E-mail</label>
+              <input type="text" name="emailAddress" id="emailAddress" class="form-control form-control-sm" :value="userData.emailAddress" :disabled="editTrueData" v-if="editTrueData">
+              <input type="text" name="emailAddress" id="emailAddress" class="form-control form-control-sm" :value="userData.emailAddress" v-if="!editTrueData">
+            </div>
+          </div>
+          <div class="col-sm-12 col-lg-4">
+            <div class="form-group">
+              <label for="statusEmail">Estado E-mail</label>
+              <input type="text" name="statusEmail" id="statusEmail" class="form-control form-control-sm" :value="userData.emailStatus" :disabled="editTrueData" v-if="editTrueData">
+              <select class="form-control form-control-sm" style="font-size: 13px;height: 30px;line-height: 30px;padding: 0px 10px 2px 9px;margin: 0px;" v-if="!editTrueData" v-model="userData.emailStatus">
+                  <option value="unconfirmed">No Confirmado</option>
+                  <option value="changeRequested">Cambio Requisito</option>
+                  <option value="confirmed">Confirmado</option>
+                </select>
+            </div>
+          </div>
+          <div class="col-sm-12 col-lg-4">
+            <div class="form-group">
+              <label for="phone">Telefono</label>
+              <input type="text" name="phone" id="phone" class="form-control form-control-sm" :value="userData.phone" :disabled="editTrueData" v-if="editTrueData">
+              <input type="text" name="phone" id="phone" class="form-control form-control-sm" :value="userData.phone" v-if="!editTrueData">
+            </div>
+          </div>
+        </section>
+
+
+        <section class="row" v-if="editTrueData">
+          <div class="col-sm-12 col-lg-4">
+            <div class="form-group">
+              <label for="">Visto por ultima vez:</label>
+              <input type="text" class="form-control form-control-sm" v-model="userData.lastSeenAt" disabled>
+            </div>
+          </div>
+          <div class="col-sm-12 col-lg-4">
+            <div class="form-group">
+              <label for="">Creado desde:</label>
+              <input type="text" class="form-control form-control-sm" v-model="userData.createdAt" disabled>
+            </div>
+          </div>
+          <div class="col-sm-12 col-lg-4">
+            <div class="form-group">
+              <label for="">Ultima Edicion</label>
+              <input type="text" class="form-control form-control-sm" v-model="userData.updatedAt" disabled>
+            </div>
+          </div>
+        </section>
+
+
+        <section class="row" v-if="editTrueData">
+          <div class="col-sm-12 col-lg-4">
+            <h5>Miselanea</h5>
+          </div>
+        </section>
+
+        <%/* ACCORDION - OTROS DATOS */%>
+          <section class="accordion"  v-show="editTrueData">
+            <div class="accordion-header collapsed" role="button" data-toggle="collapse" data-target="#panel-body-9" aria-expanded="false">
+              <h4>Otros datos</h4>
+            </div>
+            <div class="accordion-body collapse" id="panel-body-9">
+              <section class="row">
+                <div class="col-sm-12 col-lg-4">
+                  <div class="form-group">
+                    <label for="">Ultima Ip:</label>
+                    <input type="text" class="form-control form-control-sm" v-model="userData.tosAcceptedByIp" disabled>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-lg-4">
+                  <div class="form-group">
+                    <label for="">Password Rest Token</label>
+                    <input type="text" class="form-control form-control-sm" v-model="userData.passwordResetToken" disabled>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-lg-4">
+                  <div class="form-group">
+                    <label for="">Password Reset Token Exp</label>
+                    <input type="text" class="form-control form-control-sm" v-model="userData.passwordResetTokenExpiresAt" disabled>
+                  </div>
+                </div>
+              </section>
+              <section class="row">
+                <div class="col-sm-12 col-lg-4">
+                  <div class="form-group">
+                    <label for="">Email Change Candidate</label>
+                    <input type="text" class="form-control form-control-sm" v-model="userData.emailChangeCandidate" disabled>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-lg-4">
+                  <div class="form-group">
+                    <label for="">Email Proof Token</label>
+                    <input type="text" class="form-control form-control-sm" v-model="userData.emailProofToken" disabled>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-lg-4">
+                  <div class="form-group">
+                    <label for="">Email Proof Token Exp</label>
+                    <input type="text" class="form-control form-control-sm" v-model="userData.emailProofTokenExpiresAt" disabled>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </section>
+
+
       </div>
 
       <%/* FOOTER MODAL */%>
