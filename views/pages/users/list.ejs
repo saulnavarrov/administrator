@@ -31,16 +31,15 @@
             <section class="card-body">
 
               <%/* Progresive bar */%>
-              <div class="progress" v-show="progressBar">
+              <div class="progress animated" :class="[progressBar.animated]" v-if="progressBar.active" style="margin-bottom: 15px">
                 <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-                <br><br>
               </div>
 
 
               <%/* Alertas */%>
-              <div class="row" v-show="alert.active">
+              <div class="row animated" :class="[alert.animated]" v-if="alert.active">
                 <div class="col-12">
-                  <div class="alert alert-has-icon alert-dismissible show fade " :class="[alert.type]" >
+                  <div class="alert alert-has-icon alert-dismissible" :class="[alert.type]" >
                     <div class="alert-icon">
                       <i class="ion" :class="[alert.icon]"></i>
                     </div>
