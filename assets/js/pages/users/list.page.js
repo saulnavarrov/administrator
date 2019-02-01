@@ -34,7 +34,10 @@ parasails.registerPage('list-users', {
     },
 
     // Config display
-    progressBar: true,
+    progressBar: {
+      active: true,
+      animated: ''
+    },
     tableData: false,
     footerTable: false,
     search: false,
@@ -48,7 +51,8 @@ parasails.registerPage('list-users', {
       icon: 'ion-ios-information-outline',
       title: 'Titulo de la alerta',
       message: 'Mensaje de la alerta content',
-      type: 'alert-info'
+      type: 'alert-info',
+      animated: '',
     },
 
     // Change Image
@@ -82,6 +86,29 @@ parasails.registerPage('list-users', {
     //…
 
     /**
+     * progressBarD
+     * @description :: Control de la barra de carga en pantalla, la cual
+     * tendra un efecto y un control de entrada y salida.
+     * @param {Boolean} act :: Activar o desactivar
+     * @param {String} ani :: Animación que se vera en pantalla
+     * @author Saúl Navarrov <Sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    progressBarD: async function (act,ani) {
+      // Activar
+      if (act) {
+        this.progressBar.active = true;
+        this.progressBar.animated = ani;
+      } else {
+        this.progressBar.animated = 'fadeOut faster';
+        setTimeout(() => {
+          this.progressBar.active = false;
+          this.progressBar.animated = '';
+        }, 505);
+      }
+    },
+
+    /**
      * dataDb
      * @description :: Esta funcion llama a la base de datos y trae 10 primeros
      * resultados, el usuario puede tambien cambiar la cantidad de resultados
@@ -93,7 +120,7 @@ parasails.registerPage('list-users', {
     dataDb: async function () {
       const csrfToken = window.SAILS_LOCALS._csrf;
       let urls = '/api/v2/users';
-      this.progressBar = true;
+      this.progressBarD(true, 'fadeInRight faster');
 
       // Data enviada a la API
       let data = {
@@ -122,8 +149,18 @@ parasails.registerPage('list-users', {
           this.jwRsError(jwRs);
         }
 
+        // Borrar alerta en caso de estar activa warning
+        if (this.alert.active === true && this.alert.animated === 'zoomIn') {
+          this.alert.animated = 'zoomOut faster';
+          setTimeout(() => {
+            this.alert.active = false;
+            this.alert.animated = '';
+          }, 505);
+        }
+
+        // Success
         if (jwRs.statusCode === 200) {
-          this.progressBar = false;
+          this.progressBarD(false);
           this.tableData = this.search = this.footerTable = this.countData = true;
           this.listCount = rsData.list.length;
           this.listData = rsData.list;
@@ -139,9 +176,11 @@ parasails.registerPage('list-users', {
             this.tableData = this.footerTable = false;
             this.alert.title = 'No hay Resultados';
             this.alert.message = `No se encontraron resultados para la busqueda: ${this.search}`;
-            this.alert.active = true;
+            // Animación de entrada
+            this.searchAnimated(true, 'bounceIn');
           } else {
-            this.alert.active = false;
+            // Animación de salida.
+            this.searchAnimated(false);
           }
         }
 
@@ -157,10 +196,11 @@ parasails.registerPage('list-users', {
      * @version 1.0
      */
     jwRsError: async function (jwRs) {
-      this.progressBar = false;
+      this.progressBarD(false);
       if (jwRs.statusCode >= 500 && jwRs.statusCode <= 502) {
         this.alert = {
           active: true,
+          animated: 'zoomIn',
           type: 'alert-danger',
           icon: 'ion-ios-close-outline',
           title: `Error: ${jwRs.statusCode} - ${jwRs.body}`,
@@ -169,6 +209,7 @@ parasails.registerPage('list-users', {
       } else if (jwRs.statusCode >= 400 && jwRs.statusCode <= 405) {
         this.alert = {
           active: true,
+          animated: 'zoomIn',
           type: 'alert-warning',
           icon: 'ion-ios-close-outline',
           title: `Error: ${jwRs.statusCode} - ${jwRs.body}`,
@@ -178,6 +219,7 @@ parasails.registerPage('list-users', {
         this.alert = {
           active: true,
           type: 'alert-warning',
+          animated: 'zoomIn',
           icon: 'ion-ios-close-outline',
           title: `Error: ${jwRs.statusCode} - ${jwRs.body.type}`,
           message: jwRs.body.data
@@ -384,7 +426,9 @@ parasails.registerPage('list-users', {
         this.dataDb();
       } else {
         this.searching = false;
-        this.alert.active = false;
+        // Animación de salida.
+        this.searchAnimated(false);
+        // Reactivar lista
         this.dataDb();
       }
     },
@@ -400,14 +444,40 @@ parasails.registerPage('list-users', {
      */
     findEndSearch: async function () {
       if (this.searching && this.searchsText.length > 0) {
-        this.searchsText = '';
         this.searching = false;
-        this.alert.active = false;
+        this.searchsText = '';
+        // Animación de salida.
+        this.searchAnimated(false);
         // Ejecicion del request
         this.dataDb();
       } else {
         // Blanqueando Caja
         this.searchsText = '';
+        // Animación de salida.
+        this.searchAnimated(false);
+      }
+    },
+
+
+    /**
+     *
+     * @param {Boolean} act
+     * @param {String} ani :: Animación que se ejecutara
+     * @author Saúl Navarrov <Sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    searchAnimated: async function (act,ani) {
+      if (act) {
+        this.alert.type = 'alert-info';
+        this.alert.active = act;
+        this.alert.animated = ani;
+      } else {
+        // Animación Salida
+        this.alert.animated = 'fadeOut faster';
+        setTimeout(() => {
+          this.alert.active = act;
+          this.alert.animated = '';
+        }, 505);
       }
     },
 
@@ -446,7 +516,7 @@ parasails.registerPage('list-users', {
       let urls = '/api/v2/users/find-one';
       let modal = $('#pm-view-and-edith-user');
       this.titleModal = 'Datos de: ';
-      this.progressBar = true;
+      this.progressBarD(true, 'fadeInRight faster');
 
       // Cambio de titulo de la ventana
       if (typeof (title) !== 'undefined') {
@@ -476,7 +546,7 @@ parasails.registerPage('list-users', {
         if (jwRs.statusCode === 200) {
           console.log(rsData);
           // Desactiva el progrees
-          this.progressBar = false;
+          this.progressBarD(false);
           // carga los datos
           this.userData = rsData.user;
           // pone el estado del modal en activo
