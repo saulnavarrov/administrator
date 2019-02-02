@@ -130,7 +130,7 @@
               <div class="col-sm-7">Super Admin</div>
               <div class="col-sm-5">
                 <div class="custom-checkbox custom-control">
-                  <input type="checkbox" data-checkboxes="mygroup" name="isSuperAdminCheck" id="isSuperAdminCheck" class="custom-control-input">
+                  <input type="checkbox" data-checkboxes="mygroup" name="isSuperAdminCheck" id="isSuperAdminCheck" class="custom-control-input" v-model="userData.isSuperAdmin">
                   <label for="isSuperAdminCheck" class="custom-control-label"></label>
                 </div>
               </div>
@@ -169,7 +169,6 @@
             </div>
           </div>
         </section>
-
 
         <section class="row" v-if="editTrueData">
           <div class="col-sm-12 col-lg-4">
@@ -256,6 +255,30 @@
         </section>
 
 
+        <hr>
+        <section class="row">
+          <div class="col-sm-12 col-lg-4">
+            <h5>Imagen de Perfil</h5>
+          </div>
+        </section>
+        <section class="row">
+          <div class="col-sm-12 col-lg-4 text-center">
+            <img v-bind:src=" userData.avatar " v-bind:id="'avatar-'+this.userData.id" alt="" class="responsive image rounded-circle border border-dark" style="max-width: 124px;background-color: black;">
+          </div>
+          <div class="col-sm-12 col-lg-8 row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label>Cambiar Imagen</label>
+                <input type="file" class="form-control .form-control-file" v-bind:disabled="editTrueData" v-on:change="onChangeAvatar" accept="image/*">
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <button class="btn btn-primary btn-sm" v-bind:disabled="updateAvatar.uploadBtn" v-on:click="updateChangeAvatar()">Cambiar Imagen</button>
+              <button class="btn btn-danger btn-sm" v-bind:disabled="editTrueData">Eliminar Imagen</button>
+            </div>
+          </div>
+        </section>
+        <hr>
       </div>
 
       <%/* FOOTER MODAL */%>
@@ -266,5 +289,35 @@
       </div>
 
     </div>
-   </div>
+  </div>
+</div>
+
+<%/* ACTUALIZANDO DATOS */%>
+<div class="container-fluit m-loading-content" v-show="updateProgress" style="display:none;">
+  <div class="row m-loading-popup">
+    <div class="col-12 text-center">
+      <h1>Actualizando...</h1>
+    </div>
+    <div class="col-12">
+      <div class="progress">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75"
+          aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%/* ACTUALIZANDO AVATAR */%>
+<div class="container-fluit m-loading-content" v-show="updateAvatar.progress" style="display:none;">
+  <div class="row m-loading-popup">
+    <div class="col-12 text-center">
+      <h1>Actualizando Avatar...</h1>
+    </div>
+    <div class="col-12">
+      <div class="progress">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75"
+          aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+      </div>
+    </div>
+  </div>
 </div>
