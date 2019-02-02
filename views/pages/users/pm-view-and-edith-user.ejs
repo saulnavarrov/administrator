@@ -86,7 +86,7 @@
                 <% } %>
                 <option value="B" title="Bloqueas la cuenta y lo obligas a recuperar la contraseña">B - Bloqueada</option>
                 <option value="N" title="Cuenta nueva. El usuario debe habilitarla desde el E-mail - No se usa" disabled>N - Nuevo</option>
-                <option value="ID" title="Cuenta deshabilitada por el usuario Cliente el cual para recuperarla debe seguir unos pasos">ID - Cuenta Desabilitada</option>
+                <option value="ID" title="Cuenta deshabilitada por el usuario Cliente el cual para recuperarla debe seguir unos pasos" disabled>ID - Cuenta Desabilitada</option>
               </select>
             </div>
           </div>
@@ -173,86 +173,93 @@
 
         <section class="row" v-if="editTrueData">
           <div class="col-sm-12 col-lg-4">
-            <div class="form-group">
-              <label for="">Visto por ultima vez:</label>
-              <input type="text" class="form-control form-control-sm" v-model="userData.lastSeenAt" disabled>
-            </div>
-          </div>
-          <div class="col-sm-12 col-lg-4">
-            <div class="form-group">
-              <label for="">Creado desde:</label>
-              <input type="text" class="form-control form-control-sm" v-model="userData.createdAt" disabled>
-            </div>
-          </div>
-          <div class="col-sm-12 col-lg-4">
-            <div class="form-group">
-              <label for="">Ultima Edicion</label>
-              <input type="text" class="form-control form-control-sm" v-model="userData.updatedAt" disabled>
-            </div>
-          </div>
-        </section>
-
-
-        <section class="row" v-if="editTrueData">
-          <div class="col-sm-12 col-lg-4">
             <h5>Miselanea</h5>
           </div>
         </section>
 
+
         <%/* ACCORDION - OTROS DATOS */%>
-          <section class="accordion"  v-show="editTrueData">
-            <div class="accordion-header collapsed" role="button" data-toggle="collapse" data-target="#panel-body-9" aria-expanded="false">
-              <h4>Otros datos</h4>
-            </div>
-            <div class="accordion-body collapse" id="panel-body-9">
-              <section class="row">
-                <div class="col-sm-12 col-lg-4">
-                  <div class="form-group">
-                    <label for="">Ultima Ip:</label>
-                    <input type="text" class="form-control form-control-sm" v-model="userData.tosAcceptedByIp" disabled>
-                  </div>
+        <section class="accordion" v-show="editTrueData">
+          <div class="accordion-header collapsed" role="button" data-toggle="collapse" data-target="#panel-body-9" aria-expanded="false">
+            <h4>Otros datos</h4>
+          </div>
+          <div class="accordion-body collapse" id="panel-body-9">
+            <section class="row">
+              <div class="col-sm-12 col-lg-4">
+                <div class="form-group">
+                  <label for="">Ultima Ip:</label>
+                  <input type="text" class="form-control form-control-sm" v-model="userData.tosAcceptedByIp" disabled>
                 </div>
-                <div class="col-sm-12 col-lg-4">
-                  <div class="form-group">
-                    <label for="">Password Rest Token</label>
-                    <input type="text" class="form-control form-control-sm" v-model="userData.passwordResetToken" disabled>
-                  </div>
+              </div>
+              <div class="col-sm-12 col-lg-4">
+                <div class="form-group">
+                  <label for="">Password Rest Token</label>
+                  <input type="text" class="form-control form-control-sm" v-model="userData.passwordResetToken" disabled>
                 </div>
-                <div class="col-sm-12 col-lg-4">
-                  <div class="form-group">
-                    <label for="">Password Reset Token Exp</label>
-                    <input type="text" class="form-control form-control-sm" v-model="userData.passwordResetTokenExpiresAt" disabled>
-                  </div>
+              </div>
+              <div class="col-sm-12 col-lg-4">
+                <div class="form-group">
+                  <label for="">Password Reset Token Exp</label>
+                  <input type="text" class="form-control form-control-sm" v-model="userData.passwordResetTokenExpiresAt" disabled>
                 </div>
-              </section>
-              <section class="row">
-                <div class="col-sm-12 col-lg-4">
-                  <div class="form-group">
-                    <label for="">Email Change Candidate</label>
-                    <input type="text" class="form-control form-control-sm" v-model="userData.emailChangeCandidate" disabled>
-                  </div>
+              </div>
+            </section>
+            <section class="row">
+              <div class="col-sm-12 col-lg-4">
+                <div class="form-group">
+                  <label for="">Email Change Candidate</label>
+                  <input type="text" class="form-control form-control-sm" v-model="userData.emailChangeCandidate" disabled>
                 </div>
-                <div class="col-sm-12 col-lg-4">
-                  <div class="form-group">
-                    <label for="">Email Proof Token</label>
-                    <input type="text" class="form-control form-control-sm" v-model="userData.emailProofToken" disabled>
-                  </div>
+              </div>
+              <div class="col-sm-12 col-lg-4">
+                <div class="form-group">
+                  <label for="">Email Proof Token</label>
+                  <input type="text" class="form-control form-control-sm" v-model="userData.emailProofToken" disabled>
                 </div>
-                <div class="col-sm-12 col-lg-4">
-                  <div class="form-group">
-                    <label for="">Email Proof Token Exp</label>
-                    <input type="text" class="form-control form-control-sm" v-model="userData.emailProofTokenExpiresAt" disabled>
-                  </div>
+              </div>
+              <div class="col-sm-12 col-lg-4">
+                <div class="form-group">
+                  <label for="">Email Proof Token Exp</label>
+                  <input type="text" class="form-control form-control-sm" v-model="userData.emailProofTokenExpiresAt" disabled>
                 </div>
-              </section>
-            </div>
-          </section>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <%/* ACCORDION - FECHAS EXTRAS */%>
+        <section class="accordion"  v-show="editTrueData">
+          <div class="accordion-header collapsed" role="button" data-toggle="collapse" data-target="#panel-body-z" aria-expanded="false">
+            <h4>Fechas (Activo por ultima vez, Creado, Actualización)</h4>
+          </div>
+          <div class="accordion-body collapse" id="panel-body-z">
+            <section class="row">
+              <div class="col-sm-12 col-lg-4">
+                <div class="form-group">
+                  <label for="">Visto por ultima vez:</label>
+                  <input type="text" class="form-control form-control-sm" v-model="userData.lastSeenAt" disabled>
+                </div>
+              </div>
+              <div class="col-sm-12 col-lg-4">
+                <div class="form-group">
+                  <label for="">Creado desde:</label>
+                  <input type="text" class="form-control form-control-sm" v-model="userData.createdAt" disabled>
+                </div>
+              </div>
+              <div class="col-sm-12 col-lg-4">
+                <div class="form-group">
+                  <label for="">Ultima Edicion</label>
+                  <input type="text" class="form-control form-control-sm" v-model="userData.updatedAt" disabled>
+                </div>
+              </div>
+          </div>
+        </section>
 
 
       </div>
 
       <%/* FOOTER MODAL */%>
-      <div class="modal-footer">
+      <div class="modal-footer bg-whitesmoke">
         <button type="button" class="btn btn-primary btn-sm" v-on:click="editUser(userData.id)" v-show="editTrueData">Editar</button>
         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"  v-on:click="closeModalView('pm-user-view')">{{ btnCerrar }}</button>
         <button type="button" class="btn btn-primary btn-sm" v-show="!editTrueData" v-on:click="btnUpdateUser(userData.id)">Guardar Cambios</button>
