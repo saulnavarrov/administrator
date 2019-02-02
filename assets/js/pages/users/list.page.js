@@ -370,27 +370,83 @@ parasails.registerPage('list-users', {
      * @version 1.0
      */
     selectAll: async function (x) {
+      // Activar Selección
+      let selectActive = false;
+      // Contador
+      let cont = 0;
+      // Cuenta la cantidad de repeticiones
+      let verifica = 0;
+
       // Verificando Variable de selección
       if (typeof(x) === 'string') {
-        // llama la lista y los va seleccionando 1 por 1
-        for (let d of this.listData) {
-          // Seleccionar todo en pantalla
+        // Evaluación de pantalla
+        for (cont; cont < this.listData.length; cont++) {
           if (x === 'a') {
-            console.log(d.check);
-            d.check = true;
+            verifica = !this.listData[cont].check ? verifica + 1 : verifica;
+            console.log(verifica)
+            if (verifica === 0 && cont === (this.listData.length - 1)) {
+              selectActive = false;
+              iziToast.error({
+                title: 'Ok! Ya todo está seleccionado.',
+                position: 'bottomCenter'
+              });
+            }else{
+              selectActive = true;
+            }
+          } else if (x === 'z') {
+            verifica = this.listData[cont].check ? verifica + 1 : verifica;
+            if (verifica === 0 && cont === (this.listData.length - 1)) {
+              selectActive = false;
+              iziToast.error({
+                title: 'Error! No hay nada Seleccionado.',
+                position: 'bottomCenter'
+              });
+            } else {
+              selectActive = true;
+            }
+          } else if (x === 'c') {
+            selectActive = true;
+          }
+        }
+
+        // Se activa la selección
+        if (selectActive) {
+          // llama la lista y los va seleccionando 1 por 1
+          if (x === 'a' ) {
+            for (let d of this.listData) {
+              d.check = true;
+            }
+            iziToast.success({
+              title: 'Se ha seleccionado todo.',
+              position: 'bottomCenter'
+            });
           }
           // Deseleccionar todo
           else if (x === 'z') {
-            d.check = false;
+            for (let d of this.listData) {
+              d.check = false;
+            }
+            iziToast.success({
+              title: 'Se ha deseleccionado todo.',
+              position: 'bottomCenter'
+            });
           }
           // invertir selección
           else if (x === 'c') {
-            if (!d.check) {
-              d.check = true;
-            } else {
-              d.check = false;
+            for (let d of this.listData) {
+              if (!d.check) {
+                d.check = true;
+              } else {
+                d.check = false;
+              }
             }
+            iziToast.success({
+              title: 'Se ha Invertido la Selección.',
+              position: 'bottomCenter'
+            });
           }
+          selectActive = false;
+          verifica = 0;
         }
       }else{
         console.error(new Error(`Variable no admitida`));
