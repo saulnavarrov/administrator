@@ -13,7 +13,8 @@ parasails.registerPage('list-users', {
     titleModal: 'Datos de: ', // Titulo del modal que se abrira
     editTrueData: true, // Habilitar las casillas para editar el usuario
     btnCerrar: 'Cerrar', // Nombre del Btn de cerrar o descartar cambios
-    updateProgress: false, // Loading Progress ajax Modal
+    updateProgress: false, // Loading Progress ajax Modal Actualización de datos
+    modalProgress: false, // Progreso para nuevos modales
 
     limit: 10, // Limite por reques
     skip: 0, // Omision de datos * limit
@@ -59,7 +60,7 @@ parasails.registerPage('list-users', {
     updateAvatar: {
       avatarFile: '',
       uploadBtn: true,
-      progrees: false
+      progress: false
     }
   },
 
@@ -73,6 +74,8 @@ parasails.registerPage('list-users', {
 
     // trae toda la base de datos de usuarios
     await this.dataDb();
+    // Activa el ProgressBar de cargando usuarios
+    // this.progressBarD(true, 'fadeInRight faster');
   },
   mounted: async function () {
     //…
@@ -120,7 +123,9 @@ parasails.registerPage('list-users', {
     dataDb: async function () {
       const csrfToken = window.SAILS_LOCALS._csrf;
       let urls = '/api/v2/users';
-      this.progressBarD(true, 'fadeInRight faster');
+
+      // Activa el ProgressBar de cargando usuarios
+      !this.progressBar.active ? this.progressBarD(true, 'fadeInRight faster') : '';
 
       // Data enviada a la API
       let data = {
