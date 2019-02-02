@@ -18,8 +18,8 @@
             <section class="card-header">
               <h4>Lista de Usuarios</h4>
 
-              <div class="card-header-form" v-show="search" >
-                <div class="input-group">
+              <div class="card-header-form" v-show="search" style="display:none;">
+                <div class="input-group" v-if="search">
                   <input type="text" name="search" class="form-control" placeholder="Buscar Usuario" v-model="searchsText" v-on:keyup.enter="findOneSearch()">
                   <div class="input-group-btn">
                     <button class="btn btn-primary btn-icon" v-on:click="findEndSearch()"><i class="ion ion-close"></i></button>
@@ -31,14 +31,14 @@
             <section class="card-body">
 
               <%/* Progresive bar */%>
-              <div class="progress animated fadeIn" :class="[progressBar.animated]" v-if="progressBar.active" style="margin-bottom: 15px">
+              <div class="progress animated" :class="[progressBar.animated]" v-show="progressBar.active" style="margin-bottom: 15px;">
                 <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
               </div>
 
 
               <%/* Alertas */%>
-              <div class="row animated" :class="[alert.animated]" v-if="alert.active">
-                <div class="col-12">
+              <div class="row animated" :class="[alert.animated]" v-show="alert.active" style="display:none;">
+                <div class="col-12" v-if="alert.active">
                   <div class="alert alert-has-icon alert-dismissible" :class="[alert.type]" >
                     <div class="alert-icon">
                       <i class="ion" :class="[alert.icon]"></i>
@@ -57,8 +57,8 @@
 
 
               <%/* CONTENIDO DE LA TABLA */%>
-              <div class="row" v-show="tableData">
-                <div class="table-responsive">
+              <div class="row" v-show="tableData" style="display:none;">
+                <div class="table-responsive" v-if="tableData">
                   <table class="table table-striped">
                     <thead>
                       <tr>
@@ -127,7 +127,7 @@
               </div>
             </section>
 
-            <section class="card-footer row"  v-show="footerTable">
+            <section class="card-footer row"  v-show="footerTable" style="display:none;">
 
               <%/* CANTIDAD DE RESULTADOS Y VISTA DE RESULTADOS*/%>
               <div class="col-md-12 col-lg-3 text-center" style="line-height: 33px;" v-show="countData">
