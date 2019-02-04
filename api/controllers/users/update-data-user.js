@@ -192,6 +192,11 @@ module.exports = {
       upData.isSuperAdmin = inputs.superAdmin;
     }
 
+    // Adjuntando status
+    if (rv.status === 'B' && rv.status === 'I' && rv.status === 'E') {
+      upData.status = rev.status;
+    }
+
     // Adjuntado Rol.
     if (rev.role >= rq.me.role) {
       upData.role = rev.role;
@@ -203,7 +208,6 @@ module.exports = {
     upData.emailAddress = rev.emailAddress;
     upData.emailStatus = rev.emailStatus;
     upData.phone = rev.phone;
-    upData.status = rev.status;
     upData.updatedAt = updatedAt;
 
 
