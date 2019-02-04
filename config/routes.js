@@ -74,12 +74,18 @@ module.exports.routes = {
   'PATCH /api/v2/users/update-reconfirm-email':     { action: 'users/updated-reconfirm-email' },
   'PATCH /api/v2/users/forgot-passwords':           { action: 'users/forgot-passwords' },
   'PATCH /api/v2/users/update-password-and-login':  { action: 'users/update-password-and-login' },
-  'DELETE /api/v2/users/delete-users':              { action: 'users/delete' },
+  'DELETE /api/v2/users/delete-users':              { action: 'users/deletes' },
 
 
 
   // Mensajes de soporte y contactenos
   'POST /api/v2/deliver-contact-form-message':      { action: 'deliver-contact-form-messages' },
+
+  //  ╔═╗╔═╗╦  ╔═╗╦ ╦ ╔═╗ ╔═╗
+  //  ╠═╣╠═╝║  ╠╣ ║ ║ ╠╣  ╚═╗
+  //  ╩ ╩╩  ╩  ╩  ╩ ╚═╚═╝ ╚═╝
+  'GET /v/upld/imgs/vtrs/*':          { action: 'files/avatars', skipAssets: false},
+  'GET /v/upld/files/:idClient/*':    { action: 'files/files-clients', skipAssets: false},
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗
