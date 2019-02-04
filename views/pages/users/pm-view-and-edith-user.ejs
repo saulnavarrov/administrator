@@ -147,7 +147,7 @@
             <div class="form-group">
               <label for="emailAddress">Dirección E-mail</label>
               <input type="text" name="emailAddress" id="emailAddress" class="form-control form-control-sm" :value="userData.emailAddress" :disabled="editTrueData" v-if="editTrueData">
-              <input type="text" name="emailAddress" id="emailAddress" class="form-control form-control-sm" :value="userData.emailAddress" v-if="!editTrueData">
+              <input type="text" name="emailAddress" id="emailAddress" class="form-control form-control-sm" v-model="userData.emailAddress" v-if="!editTrueData">
             </div>
           </div>
           <div class="col-sm-12 col-lg-4">
@@ -165,7 +165,7 @@
             <div class="form-group">
               <label for="phone">Telefono</label>
               <input type="text" name="phone" id="phone" class="form-control form-control-sm" :value="userData.phone" :disabled="editTrueData" v-if="editTrueData">
-              <input type="text" name="phone" id="phone" class="form-control form-control-sm" :value="userData.phone" v-if="!editTrueData">
+              <input type="text" name="phone" id="phone" class="form-control form-control-sm" v-model="userData.phone" v-if="!editTrueData">
             </div>
           </div>
         </section>
