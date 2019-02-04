@@ -66,8 +66,16 @@ module.exports.routes = {
   'POST /api/v2/users/create':                  { action: 'users/create-users' },
   'POST /api/v2/users/find-one':                { action: 'users/find-one' },
   'POST /api/v2/users/search':                  { action: 'users/search' },
+  'PATCH /api/v2/users/update-avatar':          { action: 'users/update-avatar' },
+  'PATCH /api/v2/users/update-data-user':       { action: 'users/update-data-user' },
+  'PATCH /api/v2/users/update-unblock':             { action: 'users/updated-unblock' },
+  'PATCH /api/v2/users/update-active-account':      { action: 'users/updated-active-account' },
+  'PATCH /api/v2/users/update-change-email':        { action: 'users/updated-change-email' },
+  'PATCH /api/v2/users/update-reconfirm-email':     { action: 'users/updated-reconfirm-email' },
   'PATCH /api/v2/users/forgot-passwords':           { action: 'users/forgot-passwords' },
   'PATCH /api/v2/users/update-password-and-login':  { action: 'users/update-password-and-login' },
+  'DELETE /api/v2/users/delete-users':              { action: 'users/delete' },
+
 
 
   // Mensajes de soporte y contactenos
@@ -85,33 +93,33 @@ module.exports.routes = {
 
 };
 
-/*
-let ro = {
-  // // ---
-  // // '/faq':                  { action: '', locals:{layout:'layouts/a'} },
-  // // '/legal':                { action: '', locals:{layout:'layouts/a'} },
-  // // '/legal/terminos':       { action: '', locals:{layout:'layouts/a'} },
-  // // '/legal/privacidad':     { action: '', locals:{layout:'layouts/a'} },
-  // // '/term':                 { action: '', locals:{layout:'layouts/a'} },
-  // 'GET /contacto':            { action: 'view-pages/contact', locals:{layout:'layouts/login'} },
-  // // ---
-  // 'GET /singup':              { action: 'view-pages/register', locals:{layout:'layouts/login'} },
-  // 'GET /email/confirm':       { action: 'users/confirm-email' },
-  // 'GET /email/confirmed':     { action: 'users/view-confirmed-user-email', locals:{layout:'layouts/login'} },
-  // // ---
-  // 'GET /login':               { action: 'view-pages/login', locals:{layout:'layouts/login'} },
-  // 'GET /password/forgot':     { action: 'users/view-forgot-password', locals:{layout:'layouts/login'} },
-  // 'GET /password/new':        { action: 'users/view-new-password', locals:{layout:'layouts/login'} },
-  // 'GET /logout':              { action: 'auth/logout' },
-  // // ---
-  // // '/acount':               { action: '', locals:{layout:'layouts/a'} },
-  // // '/acount/password':      { action: '', locals:{layout:'layouts/a'} },
-  // // '/acount/profile':       { action: '', locals:{layout:'layouts/a'} },
 
-  // 'GET /users':               { action: 'users/view-list', locals: { layout:'layouts/dashboard' } },
-  // 'GET /users/new':           { action: 'users/view-register', locals: { layout:'layouts/dashboard' } },
-}
-*/
+let ro = {
+  // ---
+  // '/faq':                  { action: '', locals:{layout:'layouts/a'} },
+  // '/legal':                { action: '', locals:{layout:'layouts/a'} },
+  // '/legal/terminos':       { action: '', locals:{layout:'layouts/a'} },
+  // '/legal/privacidad':     { action: '', locals:{layout:'layouts/a'} },
+  // '/term':                 { action: '', locals:{layout:'layouts/a'} },
+  'GET /contacto':            { action: 'view-pages/contact', locals:{layout:'layouts/login'} },
+  // ---
+  'GET /singup':              { action: 'view-pages/register', locals:{layout:'layouts/login'} },
+  'GET /email/confirm':       { action: 'users/confirm-email' },
+  'GET /email/confirmed':     { action: 'users/view-confirmed-user-email', locals:{layout:'layouts/login'} },
+  // ---
+  'GET /login':               { action: 'view-pages/login', locals:{layout:'layouts/login'} },
+  'GET /password/forgot':     { action: 'users/view-forgot-password', locals:{layout:'layouts/login'} },
+  'GET /password/new':        { action: 'users/view-new-password', locals:{layout:'layouts/login'} },
+  'GET /logout':              { action: 'auth/logout' },
+  // ---
+  // '/acount':               { action: '', locals:{layout:'layouts/a'} },
+  // '/acount/password':      { action: '', locals:{layout:'layouts/a'} },
+  // '/acount/profile':       { action: '', locals:{layout:'layouts/a'} },
+
+  'GET /users':               { action: 'users/view-list', locals: { layout:'layouts/dashboard' } },
+  'GET /users/new':           { action: 'users/view-register', locals: { layout:'layouts/dashboard' } },
+
+
 // /***************************************************************************
 // * Archivos Maestros
 // **************************************************************************/
@@ -136,7 +144,7 @@ let ro = {
 // 'GET /masterFul/ccf':             { action: 'masters/ccf/view-list', locals: { layout: 'layouts/dashboard'} },
 // // EPS
 // 'GET /masterFul/eps':             { action: 'masters/eps/view-list', locals: { layout: 'layouts/dashboard'} },
-
+};
 
 // /***************************************************************************
 // *                                                                          *
