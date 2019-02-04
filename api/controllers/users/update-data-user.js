@@ -64,7 +64,7 @@ module.exports = {
     status: {
       type: 'string',
       example: 'E',
-      isIn: ['E', 'I', 'B'],
+      isIn: ['E', 'I', 'B', 'N', 'ID'],
       description: `Estado del usuario actual:
       E: Enable, funcional para trabajar.
       I: Inabled, Deshabilitado por el administrador.
@@ -99,6 +99,7 @@ module.exports = {
     const userId = rq.session.userId;
     const isSocket = rq.isSocket;
     let updatedAt = moment().toJSON();
+    let upData = {}; // Datos de los usuarios que se actualizara
 
     // Configurando Moment
     moment.locale(sails.config.custom.localeMoment);
@@ -151,7 +152,7 @@ module.exports = {
      ***************************************************************************************/
     let rev = {
       id:             _.isUndefined(inputs.id) ? false : inputs.id,
-      role:           _.isUndefined(inputs.role) ? false : inputs.role,
+      role:           _.isUndefined(inputs.role) ? false : Number(inputs.role),
       name:           _.isUndefined(inputs.name) ? false : _.startCase(_.toLower(inputs.name)),
       lastName:       _.isUndefined(inputs.lastName) ? false : _.startCase(_.toLower(inputs.lastName)),
       emailAddress:   _.isUndefined(inputs.emailAddress) ? false : _.toLower(inputs.emailAddress),
@@ -186,9 +187,38 @@ module.exports = {
     /***************************************************************************************
      * BLOQUE DE TRABAJO
      ***************************************************************************************/
+    // adjuntando el cambio para Supers Admins
+    if (rq.me.isSuperAdmin) {
+      upData.isSuperAdmin = inputs.superAdmin;
+    }
+
+    // Adjuntado Rol.
+    if (rev.role >= rq.me.role) {
+      upData.role = rev.role;
+    }
+
+    // Datas
+    upData.name = rev.name;
+    upData.lastName = rev.lastName;
+    upData.emailAddress = rev.emailAddress;
+    upData.emailStatus = rev.emailStatus;
+    upData.phone = rev.phone;
+    upData.status = rev.status;
+    upData.updatedAt = updatedAt;
 
 
+    // Actualización de datos
+    await Users.update({
+      id: inputs.id
+    })
+    .set(upData);
 
-    return exits.success();
+
+    // Response
+    return exits.success({
+      success: true,
+      message: `El usuario: ${inputs.name} ha sido actualizado con Exito.`,
+      user: upData
+    });
   }
 };

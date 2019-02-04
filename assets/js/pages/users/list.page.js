@@ -219,8 +219,8 @@ parasails.registerPage('list-users', {
           animated: 'zoomIn',
           type: 'alert-warning',
           icon: 'ion-ios-close-outline',
-          title: `Error: ${jwRs.statusCode} - ${jwRs.body}`,
-          message: jwRs.body.data
+          title: `Error: ${jwRs.statusCode} - ${jwRs.body.code}`,
+          message: jwRs.body.message
         };
       } else if (jwRs.statusCode === 404) {
         if(display) {
@@ -627,7 +627,6 @@ parasails.registerPage('list-users', {
         }
 
         if (jwRs.statusCode === 200) {
-          console.log(rsData);
           // Desactiva el progrees
           this.progressBarD(false);
           // carga los datos
@@ -730,6 +729,40 @@ parasails.registerPage('list-users', {
         // En caso de error
         if (jwRs.error) {
           this.jwRsError(jwRs, true);
+        }
+
+        if (jwRs.statusCode === 200) {
+          swal({
+            type: 'success',
+            title: 'Actualización Correcta',
+            text: `Se ha actualizado de manera correcta el Usuario.`,
+            showCancelButton: false,
+            confirmButtonColor: '#616161',
+            confirmButtonText: 'Ok'
+          }).then((r) => {
+            if (r.value) {
+              // Ejecuta el Actualizador de Datos
+              // Me muestra en pantalla la actualización
+              this.findOneUserView(id);
+
+              // Actualización de pagina en caso de que sea el mismo
+              if (window.SAILS_LOCALS.me.id === id) {
+                window.location.reload();
+              }
+            }
+          });
+
+          // Actualiza los datos en la lista de la pantalla
+          this.listData.forEach((el, ix) => {
+            if (el.id === id) {
+              this.listData[ix].role = rsData.user.role;
+              this.listData[ix].roleName = rsData.user.roleName;
+              this.listData[ix].name = rsData.user.name;
+              this.listData[ix].lastName = rsData.user.lastName;
+              this.listData[ix].emailAddress = rsData.user.emailAddress;
+              this.listData[ix].emailStatus = rsData.user.emailStatus;
+            }
+          });
         }
       });
     },
