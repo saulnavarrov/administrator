@@ -89,6 +89,22 @@ parasails.registerPage('list-users', {
     //…
 
     /**
+     * closeAlertD
+     * @description :: Cierra el alerta en pantalla.
+     * @param {Boolean} act :: Activa o desactiva la alerta
+     * @param {String} ani :: Tipo de animación
+     * @author Saúl Navarrov <Sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    closeAlertD: async function (act, ani) {
+      this.alert.animated = 'fadeOut faster';
+      setTimeout(() => {
+        this.alert.active = false;
+        this.alert.animated = '';
+      }, 505);
+    },
+
+    /**
      * progressBarD
      * @description :: Control de la barra de carga en pantalla, la cual
      * tendra un efecto y un control de entrada y salida.
@@ -725,7 +741,6 @@ parasails.registerPage('list-users', {
         }
       }, (rsData, jwRs) => {
         this.updateProgress = false;
-        console.log(jwRs);
         // En caso de error
         if (jwRs.error) {
           this.jwRsError(jwRs, true);
@@ -753,16 +768,7 @@ parasails.registerPage('list-users', {
           });
 
           // Actualiza los datos en la lista de la pantalla
-          this.listData.forEach((el, ix) => {
-            if (el.id === id) {
-              this.listData[ix].role = rsData.user.role;
-              this.listData[ix].roleName = rsData.user.roleName;
-              this.listData[ix].name = rsData.user.name;
-              this.listData[ix].lastName = rsData.user.lastName;
-              this.listData[ix].emailAddress = rsData.user.emailAddress;
-              this.listData[ix].emailStatus = rsData.user.emailStatus;
-            }
-          });
+          this.dataDb();
         }
       });
     },
@@ -770,37 +776,190 @@ parasails.registerPage('list-users', {
 
     /**
      * onChangeAvatar
-     * @description :: .
+     * @description ::  Guardas los datos del archivo en la variable
+     * para que el Method: updatechangeAvatar lo use
+     * @param {array} evt Eventos de que ocurren
      * @author Saúl Navarrov <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    onChangeAvatar: async function () {},
+    onChangeAvatar: async function (evt) {
+      let file = evt.target.files[0];
+      this.updateAvatar.avatarFile = file;
+      this.updateAvatar.uploadBtn = false;
+    },
 
 
     /**
      * updateChangeAvatar
-     * @description :: .
+     * @description :: Actualiza la imagen avatar de un usuario en concreto
+     * mamipulandolo desde el administrador
      * @author Saúl Navarrov <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    updateChangeAvatar: async function () {},
+    updateChangeAvatar: async function () {
+      let csrfToken = window.SAILS_LOCALS._csrf;
+      let urls = '/api/v2/users/update-avatar';
+      let formD = new FormData();
+
+      // Headers
+
+
+      // Deshabilito el Boton de Upload
+      this.updateAvatar.uploadBtn = true;
+      // active progress
+      this.updateProgress = true;
+      // Se crean los datos para enviar
+      formD.append('uid', this.userData.id);
+      formD.append('type', this.updateAvatar.avatarFile.type);
+      formD.append('nameFile', this.updateAvatar.avatarFile.name);
+      formD.append('sizeFile', this.updateAvatar.avatarFile.size);
+      formD.append('avatar', this.updateAvatar.avatarFile);
+
+      // Si el archivo no corresponde a una imagen
+      if (!(/\.(jpg|png|gif)$/i).test(this.updateAvatar.avatarFile.name)) {
+        swal({
+          type: 'error',
+          title: 'Arhivo no Compatible',
+          text: `El archivo de nombre: ${this.updateAvatar.avatarFile.name}
+          No es una IMAGEN.
+          Corríjalo y vuelva a intentarlo.`,
+        });
+      } else {
+
+        // Envia la información por Axios/Ajax
+        axios.patch(
+          urls,
+          formD,
+          {
+            headers: {
+              'content-type': 'application/json',
+              'x-csrf-token': csrfToken
+            }
+          })
+          .then(response => {
+            return response;
+          })
+          .then(respons => {
+            let dat = respons.data;
+            // ocultar el progres
+            this.updateProgress = false;
+
+            // En caso de que el usuario coincida con la del mismo
+            // Perfil del usuario
+            if (this.me.id === this.userData.id) {
+              swal({
+                type: 'success',
+                title: 'Avatar Actualizado',
+                text: `Mi Avatar se actualizo con Exito`,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+              }).then((result) => {
+                if (result.value) {
+                  location.reload();
+                }
+              });
+            } else {
+              swal({
+                type: 'success',
+                title: 'Avatar Actualizado',
+                text: `Se ha actualizado el Avatar de: ${this.userData.name}`,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+              }).then((result) => {
+                if (result.value) {
+                  // Reabro el modal de vista en modo view
+                  this.findOneUserView(dat.aid);
+                }
+              });
+            }
+          })
+          .catch(err => {
+            // ocultar el progres
+            this.updateProgress = false;
+            let data = err.response.data;
+            swal({
+              type: 'error',
+              title: 'Error al Subir',
+              text: data.message
+            });
+            console.error('Fail Upload Avatar');
+          });
+
+        // Reset data input file
+        this.updateAvatar.avatarFile = '';
+      }
+    },
 
 
     /**
      * toUnlockUser
-     * @description :: .
+     * @description ::
+     * @param {string} id Del usuario que se va actualizar los datos
      * @author Saúl Navarrov <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    toUnlockUser: async function () {},
+    toUnlockUser: async function (id) {
+      swal({
+        title: 'Funcion no terminada',
+        text: `Terminar la funcion para desbloquear usuarios,
+        esta se encargara de hacer lo mismo como forgot, pero la accion
+        la podra hacer el mismo administrador ${id}`
+      });
+    },
 
 
     /**
      * deleteUser
-     * @description :: .
+     * @description ::
+     * @param {string} id Del usuario que se va actualizar los datos
      * @author Saúl Navarrov <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    deleteUser: async function () {},
+    deleteUser: async function (id) {
+      let csrfToken = window.SAILS_LOCALS._csrf;
+      let urls = '/api/v2/users/delete-users';
+
+      swal({
+        type: 'warning',
+        title: '¿Eliminar usuario?',
+        text: `Para eliminar este usuario presione DELETE`,
+        confirmButtonColor: 'red',
+        showCancelButton: true,
+        cancelButtonColor: 'grey',
+        confirmButtonText: 'DELETE'
+      }).then(async (e) => {
+        if (e) {
+          // request list update user
+          await io.socket.request({
+            url: urls,
+            method: 'DELETE',
+            data: {
+              id: id,
+            },
+            headers: {
+              'content-type': 'application/json',
+              'x-csrf-token': csrfToken
+            }
+          }, async (resData, jwRs) => {
+            // En caso de error
+            if (jwRs.error) {
+              this.jwRsError(jwRs, true);
+            }
+
+
+            if (jwRs.statusCode === 200) {
+              swal({
+                type: 'success',
+                title: 'Usuario eliminado',
+                text: 'Se ha eliminado el usuario con exito'
+              });
+
+              // Reinicial la pantalla
+              this.dataDb();
+            }
+          });
+        }
+      });
+    },
   }
 });
