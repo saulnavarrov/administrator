@@ -71,6 +71,7 @@ requests over WebSockets instead of HTTP).`,
     let rememberMe = inputs.rememberMe;
     let attemptsLogin = sails.config.custom.attemptsLogin;
     let attemptsTime = sails.config.custom.attemptsTime;
+    let updatedAt = moment().toJSON();
     let emailRegex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
 
@@ -238,6 +239,7 @@ requests over WebSockets instead of HTTP).`,
           })
           .set({
             status: 'B',
+            updatedAt: updatedAt
           });
 
           // retorno que la cuenta fue bloqueada
@@ -288,7 +290,7 @@ requests over WebSockets instead of HTTP).`,
       id: userRecord.id
     })
     .set({
-      tosAcceptedByIp: this.req.headers['x-real-ip'] || this.req.ip
+      tosAcceptedByIp: this.req.headers['x-real-ip'] || this.req.ip,
     });
 
     delete userRecord.password;

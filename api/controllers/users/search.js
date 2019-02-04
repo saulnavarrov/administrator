@@ -53,7 +53,7 @@ module.exports = {
       description: 'Entrega de usuarios Exitosa.'
     },
     notFound: {
-      responseType: 'notFound',
+      responseType: 'notFoundData',
       description: 'Datos no encontrados de los usuario o no existe ninguno'
     },
     unauthorized: {

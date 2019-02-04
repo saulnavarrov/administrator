@@ -30,7 +30,7 @@ module.exports = {
       description: 'Entrega de usuarios Exitosa.'
     },
     notFound: {
-      responseType: 'notFound',
+      responseType: 'notFoundData',
       description: 'Datos no encontrados de los usuario o no existe ninguno'
     },
     unauthorized: {
@@ -45,11 +45,9 @@ module.exports = {
      * VARIABLES INICIALES
      ***************************************************************************************/
     const rq = this.req;
-    const _ = require('lodash');
     const moment = require('moment');
     const userId = rq.session.userId;
     const isSocket = rq.isSocket;
-    let users = []; // array de usuario nuevo
     let count = 0;
 
     // Configurando Moment
@@ -60,7 +58,7 @@ module.exports = {
      * BLOQUE DE SEGURIDAD SOCKET
      ***************************************************************************************/
     // Solo se aceptan solicitudes atravez de socket.io
-    if (!rq.isSocket) {
+    if (!isSocket) {
       return exits.noAuthorize({
         error: true,
         message: `Solicitud Rechazada.`
@@ -72,7 +70,7 @@ module.exports = {
      * BLOQUE DE SEGURIDAD DE USUARIOS HABILITADOS
      ***************************************************************************************/
     // Verificacion de usuario
-    if (!rq.session.userId) {
+    if (!userId) {
       return exits.unauthorized({
         error: true,
         message: 'Unauthorized'
