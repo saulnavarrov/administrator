@@ -197,10 +197,12 @@ parasails.registerPage('list-users', {
      * jwRsError
      * @description :: alertas en pantalla en caso de haber un error
      * @param {json} jwRs Datos del error
+     * @param {Boolean} display :: Usado solo para el Error 404 en caso de
+     * querer ver el error 'NotFound' en ventana emergente. y no como una alerta
      * @author Saúl Navarrov <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    jwRsError: async function (jwRs) {
+    jwRsError: async function (jwRs, display) {
       this.progressBarD(false);
       if (jwRs.statusCode >= 500 && jwRs.statusCode <= 502) {
         this.alert = {
@@ -211,15 +213,35 @@ parasails.registerPage('list-users', {
           title: `Error: ${jwRs.statusCode} - ${jwRs.body}`,
           message: jwRs.error.message
         };
-      } else if (jwRs.statusCode >= 400 && jwRs.statusCode <= 405) {
+      } else if (jwRs.statusCode >= 400 && jwRs.statusCode <= 403) {
         this.alert = {
           active: true,
           animated: 'zoomIn',
           type: 'alert-warning',
           icon: 'ion-ios-close-outline',
           title: `Error: ${jwRs.statusCode} - ${jwRs.body}`,
-          message: jwRs.error.message
+          message: jwRs.body.data
         };
+      } else if (jwRs.statusCode === 404) {
+        if(display) {
+          swal({
+            type: 'warning',
+            title: `${jwRs.statusCode} - ${jwRs.body.title}`,
+            text: `${jwRs.body.message}`,
+            showCancelButton: false,
+            confirmButtonColor: '#616161',
+            confirmButtonText: 'Aceptar'
+          });
+        } else {
+          this.alert = {
+            active: true,
+            animated: 'zoomIn',
+            type: 'alert-warning',
+            icon: 'ion-ios-close-outline',
+            title: `Error: ${jwRs.statusCode} - ${jwRs.body}`,
+            message: jwRs.body.data
+          };
+        }
       } else if (jwRs.statusCode === 406) {
         this.alert = {
           active: true,
@@ -647,20 +669,70 @@ parasails.registerPage('list-users', {
 
     /**
      * btnUpdateUser
-     * @description :: .
+     * @description :: hace que el usuario confirme que se va actualizar los datos
+     * mostrando una ventana emergente.
+     * @param {string} id :: identificación del usuario en la base de datos.
      * @author Saúl Navarrov <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    btnUpdateUser: async function () {},
+    btnUpdateUser: async function (id) {
+      swal({
+        type: 'warning',
+        title: '¿Actualizar Datos?',
+        text: `Confirme si desea Actualizar los datos del usuario: ${this.userData.name}`,
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
+        confirmButtonColor: '#616161',
+        confirmButtonText: 'Actualizar'
+      }).then((r) => {
+        if (r.value) {
+          // Ejecuta el Actualizador de Datos
+          this.updateUserData(id);
+        }
+      });
+    },
 
 
     /**
      * updateUserData
-     * @description :: .
+     * @description :: Enviara los datos del usuario para ser actualizados en la base de datos
+     * @param {string} id Del usuario que se va actualizar los datos
      * @author Saúl Navarrov <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    updateUserData: async function () {},
+    updateUserData: async function (id) {
+      let csrfToken = window.SAILS_LOCALS._csrf;
+      let urls = '/api/v2/users/update-data-user';
+      this.updateProgress = true;
+
+      // request list update user
+      await io.socket.request({
+        url: urls,
+        method: 'patch',
+        data: {
+          id: id,
+          role: this.userData.role,
+          name: this.userData.name,
+          lastName: this.userData.lastName,
+          superAdmin: this.userData.isSuperAdmin,
+          emailAddress: this.userData.emailAddress,
+          emailStatus: this.userData.emailStatus,
+          phone: this.userData.phone,
+          status: this.userData.status
+        },
+        headers: {
+          'content-type': 'application/json',
+          'x-csrf-token': csrfToken
+        }
+      }, (rsData, jwRs) => {
+        this.updateProgress = false;
+        console.log(jwRs);
+        // En caso de error
+        if (jwRs.error) {
+          this.jwRsError(jwRs, true);
+        }
+      });
+    },
 
 
     /**
