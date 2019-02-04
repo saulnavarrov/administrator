@@ -44,9 +44,9 @@
                       <i class="ion" :class="[alert.icon]"></i>
                     </div>
                     <div class="alert-body">
-                      <!-- <button class="close" data-dismiss="alert">
+                      <button class="close" v-on:click="closeAlertD()">
                         <span>×</span>
-                      </button> -->
+                      </button>
                       <div class="alert-title">{{ alert.title }}</div>
                       {{ alert.message }}
                     </div>
@@ -110,9 +110,11 @@
                               <a class="dropdown-item" href="#" title="Hace la petición para cambiar el E-mail">Cambiar su E-mail</a>
                               <a class="dropdown-item" href="#" title="Reenvia un email para Reconfirmar E-Mail">Reconfirmar E-mail</a>
                               <a class="dropdown-item" href="#" title="Envia un Email para recuperar contraseña">Reiniciar Contraseña</a>
-                              <div class="dropdown-divider"></div>
-                              <a class="dropdown-item" href="#" v-on:click="deleteUser(list.id)">Eliminar</a>
-                              <% } %>
+                                <% if( me.isSuperAdmin ) { %>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" v-on:click="deleteUser(list.id)">Eliminar</a>
+                              <% }
+                              } %>
                               <div class="dropdown-divider">Nuevos Para organizar</div>
                               <a class="dropdown-item" href="#">Bloquear/Desbloquear Cuenta</a>
                               <a class="dropdown-item" href="#">Activar/Desactivar Cuenta</a>
@@ -174,10 +176,10 @@
                 <label for="resultados" class="col-7t" style="line-height: 33px;">Cantidad: </label>
                 <select class="col-5 custom-select custom-select-sm" style="height: fit-content;max-width: 100px;margin-left: 10px;" v-model="limit" v-on:change="skipData()" width="100">
                   <option value="10" selected>10</option>
-                  <option value="25" v-if="listCount >= 10 ? true : false">25</option>
-                  <option value="50" v-if="listCount >= 25 ? true : false">50</option>
-                  <option value="100" v-if="listCount >= 50 ? true : false">100</option>
-                  <option value="250" v-if="listCount >= 100 ? true : false">250</option>
+                  <option value="25" v-if="listFullCount >= 10 ? true : false">25</option>
+                  <option value="50" v-if="listFullCount >= 25 ? true : false">50</option>
+                  <option value="100" v-if="listFullCount >= 50 ? true : false">100</option>
+                  <option value="250" v-if="listFullCount >= 100 ? true : false">250</option>
                 </select>
               </div>
 
