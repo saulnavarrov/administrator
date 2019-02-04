@@ -21,23 +21,24 @@ password attempt.`,
 
   inputs: {
     emailAddress: {
-      description: 'The email to try in this attempt, e.g. "irl@example.com".',
       type: 'string',
+      description: 'The email to try in this attempt, e.g. "irl@example.com".',
       // required: true
     },
 
     password: {
-      description: 'The unencrypted password to try in this attempt, e.g. "passwordlol".',
       type: 'string',
+      description: 'The unencrypted password to try in this attempt, e.g. "passwordlol".',
       // required: true
     },
 
     rememberMe: {
+      type: 'boolean',
+      defaultsTo: false,
       description: 'Whether to extend the lifetime of the user\'s session.',
       extendedDescription:
 `Note that this is NOT SUPPORTED when using virtual requests (e.g. sending
 requests over WebSockets instead of HTTP).`,
-      type: 'boolean'
     }
   },
 
