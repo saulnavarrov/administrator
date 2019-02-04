@@ -193,7 +193,7 @@ module.exports = {
     }
 
     // Adjuntando status
-    if (rv.status === 'B' && rv.status === 'I' && rv.status === 'E') {
+    if (rev.status === 'B' || rev.status === 'I' || rev.status === 'E') {
       upData.status = rev.status;
     }
 
