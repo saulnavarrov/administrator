@@ -93,7 +93,7 @@
                           </div>
                         </td>
                         <td>{{ list.name }} {{ list.lastName }}</td>
-                        <td :title="list.emailAddress">{{ list.emailAddress.substr(0, 12) }}...</td>
+                        <td :title="list.emailAddress">{{ list.emailAddress.substr(0, list.emailAddress.indexOf('@')+5) }}...</td>
                         <td :title="list.roleName">{{ list.status }} - {{ list.role }} - {{ list.roleName.substr(0,7) }}... </td>
                         <td>{{ list.emailStatus }}</td>
                         <td width="130">
