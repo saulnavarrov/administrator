@@ -26,6 +26,11 @@ module.exports.routes = {
 
   'GET /':                    { action: 'view-pages/view-dashboard', locals:{ layout:'layouts/dashboard' } },
   'GET /contacto':            { action: 'view-pages/view-contact', locals:{layout:'layouts/login'} },
+
+
+  /**************************************************************************************************
+   * CONTROL DE USUARIOS
+   *************************************************************************************************/
   // ---
   'GET /singup':              { action: 'view-pages/view-registers', locals:{layout:'layouts/login'} },
   'GET /email/confirm':       { action: 'users/confirm-emails' },
@@ -40,6 +45,13 @@ module.exports.routes = {
   // --- USER CONTROL
   'GET /users':               { action: 'users/view-list', locals: { layout:'layouts/dashboard' } },
   'GET /users/create':        { action: 'users/view-create-users', locals: { layout:'layouts/dashboard' } },
+
+
+  /**************************************************************************************************
+   * CONTROL DE LISTAS MAESTRAS
+   *************************************************************************************************/
+  // Empresas Asociadas
+  'GET /masterFul/holdings':        { action: 'masters/holding/view-list', locals: { layout:'layouts/dashboard' } },
 
 
   /***************************************************************************
@@ -100,57 +112,57 @@ module.exports.routes = {
 };
 
 
-let ro = {
-  // ---
-  // '/faq':                  { action: '', locals:{layout:'layouts/a'} },
-  // '/legal':                { action: '', locals:{layout:'layouts/a'} },
-  // '/legal/terminos':       { action: '', locals:{layout:'layouts/a'} },
-  // '/legal/privacidad':     { action: '', locals:{layout:'layouts/a'} },
-  // '/term':                 { action: '', locals:{layout:'layouts/a'} },
-  'GET /contacto':            { action: 'view-pages/contact', locals:{layout:'layouts/login'} },
-  // ---
-  'GET /singup':              { action: 'view-pages/register', locals:{layout:'layouts/login'} },
-  'GET /email/confirm':       { action: 'users/confirm-email' },
-  'GET /email/confirmed':     { action: 'users/view-confirmed-user-email', locals:{layout:'layouts/login'} },
-  // ---
-  'GET /login':               { action: 'view-pages/login', locals:{layout:'layouts/login'} },
-  'GET /password/forgot':     { action: 'users/view-forgot-password', locals:{layout:'layouts/login'} },
-  'GET /password/new':        { action: 'users/view-new-password', locals:{layout:'layouts/login'} },
-  'GET /logout':              { action: 'auth/logout' },
-  // ---
-  // '/acount':               { action: '', locals:{layout:'layouts/a'} },
-  // '/acount/password':      { action: '', locals:{layout:'layouts/a'} },
-  // '/acount/profile':       { action: '', locals:{layout:'layouts/a'} },
+// let ro = {
+//   // ---
+//   // '/faq':                  { action: '', locals:{layout:'layouts/a'} },
+//   // '/legal':                { action: '', locals:{layout:'layouts/a'} },
+//   // '/legal/terminos':       { action: '', locals:{layout:'layouts/a'} },
+//   // '/legal/privacidad':     { action: '', locals:{layout:'layouts/a'} },
+//   // '/term':                 { action: '', locals:{layout:'layouts/a'} },
+//   'GET /contacto':            { action: 'view-pages/contact', locals:{layout:'layouts/login'} },
+//   // ---
+//   'GET /singup':              { action: 'view-pages/register', locals:{layout:'layouts/login'} },
+//   'GET /email/confirm':       { action: 'users/confirm-email' },
+//   'GET /email/confirmed':     { action: 'users/view-confirmed-user-email', locals:{layout:'layouts/login'} },
+//   // ---
+//   'GET /login':               { action: 'view-pages/login', locals:{layout:'layouts/login'} },
+//   'GET /password/forgot':     { action: 'users/view-forgot-password', locals:{layout:'layouts/login'} },
+//   'GET /password/new':        { action: 'users/view-new-password', locals:{layout:'layouts/login'} },
+//   'GET /logout':              { action: 'auth/logout' },
+//   // ---
+//   // '/acount':               { action: '', locals:{layout:'layouts/a'} },
+//   // '/acount/password':      { action: '', locals:{layout:'layouts/a'} },
+//   // '/acount/profile':       { action: '', locals:{layout:'layouts/a'} },
 
-  'GET /users':               { action: 'users/view-list', locals: { layout:'layouts/dashboard' } },
-  'GET /users/new':           { action: 'users/view-register', locals: { layout:'layouts/dashboard' } },
+//   'GET /users':               { action: 'users/view-list', locals: { layout:'layouts/dashboard' } },
+//   'GET /users/new':           { action: 'users/view-register', locals: { layout:'layouts/dashboard' } },
 
 
-// /***************************************************************************
-// * Archivos Maestros
-// **************************************************************************/
+// // /***************************************************************************
+// // * Archivos Maestros
+// // **************************************************************************/
 
-// // Clientes de la empresa
-// 'GET /customers':                 { action: 'customers/view-list', locals: { layout:'layouts/dashboard' } },
+// // // Clientes de la empresa
+// // 'GET /customers':                 { action: 'customers/view-list', locals: { layout:'layouts/dashboard' } },
 
-// // Cuentas de bancos
-// 'GET /masterFul/bankAccounts':    { action: 'masters/bank-accounts/view-list', locals: { layout:'layouts/dashboard' } },
+// // // Cuentas de bancos
+// // 'GET /masterFul/bankAccounts':    { action: 'masters/bank-accounts/view-list', locals: { layout:'layouts/dashboard' } },
 
-// // BANCOS
-// 'GET /masterFul/banks':           { action: 'masters/banks/view-list', locals: { layout: 'layouts/dashboard'} },
+// // // BANCOS
+// // 'GET /masterFul/banks':           { action: 'masters/banks/view-list', locals: { layout: 'layouts/dashboard'} },
 
-// // Empresas Asociadas
-// 'GET /masterFul/holdings':        { action: 'masters/holding/view-list', locals: { layout:'layouts/dashboard' } },
+// // // Empresas Asociadas
+// // 'GET /masterFul/holdings':        { action: 'masters/holding/view-list', locals: { layout:'layouts/dashboard' } },
 
-// // AFP
-// 'GET /masterFul/afp':             { action: 'masters/afp/view-list', locals: { layout: 'layouts/dashboard'} },
-// // ARL
-// 'GET /masterFul/arl':             { action: 'masters/arl/view-list', locals: { layout: 'layouts/dashboard'} },
-// // CCF
-// 'GET /masterFul/ccf':             { action: 'masters/ccf/view-list', locals: { layout: 'layouts/dashboard'} },
-// // EPS
-// 'GET /masterFul/eps':             { action: 'masters/eps/view-list', locals: { layout: 'layouts/dashboard'} },
-};
+// // // AFP
+// // 'GET /masterFul/afp':             { action: 'masters/afp/view-list', locals: { layout: 'layouts/dashboard'} },
+// // // ARL
+// // 'GET /masterFul/arl':             { action: 'masters/arl/view-list', locals: { layout: 'layouts/dashboard'} },
+// // // CCF
+// // 'GET /masterFul/ccf':             { action: 'masters/ccf/view-list', locals: { layout: 'layouts/dashboard'} },
+// // // EPS
+// // 'GET /masterFul/eps':             { action: 'masters/eps/view-list', locals: { layout: 'layouts/dashboard'} },
+// };
 
 // /***************************************************************************
 // *                                                                          *
