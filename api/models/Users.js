@@ -187,23 +187,23 @@ module.exports = {
       via: 'user'
     },
 
-    // // Asociación con Bancos
-    // createBanks: {
-    //   collection: 'banks',
-    //   via: 'userCreated'
-    // },
+    // Asociación con Bancos
+    createBanks: {
+      collection: 'banks',
+      via: 'userCreated'
+    },
 
-    // // Cuentas de bancos
-    // createAccountBanks: {
-    //   collection: 'bankAccounts',
-    //   via: 'userCreated'
-    // },
+    // Cuentas de bancos
+    createAccountBanks: {
+      collection: 'bankAccounts',
+      via: 'userCreated'
+    },
 
-    // // Holdings
-    // createHoldings: {
-    //   collection: 'holdings',
-    //   via: 'userCreated'
-    // }
+    // Holdings
+    createHoldings: {
+      collection: 'holdings',
+      via: 'userCreated'
+    }
 
 
   },
