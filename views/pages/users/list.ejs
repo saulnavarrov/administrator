@@ -107,18 +107,18 @@
                               <a class="dropdown-item" href="#" v-on:click="toUnlockUser(list.id)">Desbloquear</a>
                               <% if( me.role === 0 ) { %>
                               <div class="dropdown-divider"></div>
-                              <a class="dropdown-item" href="#" title="Hace la petición para cambiar el E-mail">Cambiar su E-mail</a>
-                              <a class="dropdown-item" href="#" title="Reenvia un email para Reconfirmar E-Mail">Reconfirmar E-mail</a>
-                              <a class="dropdown-item" href="#" title="Envia un Email para recuperar contraseña">Reiniciar Contraseña</a>
+                              <a class="dropdown-item" href="#" v-on:click="updatedChangeEmail(list.id)" title="Hace la petición para cambiar el E-mail">Cambiar su E-mail</a>
+                              <a class="dropdown-item" href="#" v-on:click="updatedReconfirmEmail(list.id)" title="Reenvia un email para Reconfirmar E-Mail">Reconfirmar E-mail</a>
+                              <a class="dropdown-item" href="#" v-on:click="updatedChangePassword(list.id)" title="Envia un Email para recuperar contraseña">Reiniciar Contraseña</a>
                                 <% if( me.isSuperAdmin ) { %>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" v-on:click="deleteUser(list.id)">Eliminar</a>
                               <% }
                               } %>
                               <div class="dropdown-divider">Nuevos Para organizar</div>
-                              <a class="dropdown-item" href="#">Bloquear/Desbloquear Cuenta</a>
-                              <a class="dropdown-item" href="#">Activar/Desactivar Cuenta</a>
-                              <a class="dropdown-item" href="#">Cambiar Avatar</a>
+                              <a class="dropdown-item" href="#" disabled>Bloquear/Desbloquear Cuenta</a>
+                              <a class="dropdown-item" href="#" disabled>Activar/Desactivar Cuenta</a>
+                              <a class="dropdown-item" href="#" disabled>Cambiar Avatar</a>
                             </div>
                           </div>
                         </td>

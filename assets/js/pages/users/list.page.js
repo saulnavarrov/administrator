@@ -961,5 +961,68 @@ parasails.registerPage('list-users', {
         }
       });
     },
+
+
+    /**
+     * updatedActiveAccount
+     * @description
+     * @param {String} id :: Id del usuario
+     * @author SaulNavarrov <sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    updatedActiveAccount:  async function (id) {
+      swal({
+        type: 'warning',
+        title: 'Acción Usuario',
+        text: `Esta acción aun no se ha terminado.`
+      })
+    },
+
+
+    /**
+     * updatedChangeEmail
+     * @description
+     * @param {String} id :: Id del usuario
+     * @author SaulNavarrov <sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    updatedChangeEmail: async function (id) {
+      swal({
+        type: 'warning',
+        title: 'Acción Usuario',
+        text: `Esta acción aun no se ha terminado.`
+      })
+    },
+
+
+    /**
+     * updatedReconfirmEmail
+     * @description
+     * @param {String} id :: Id del usuario
+     * @author SaulNavarrov <sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    updatedReconfirmEmail: async function (id) {
+      swal({
+        type: 'warning',
+        title: 'Acción Usuario',
+        text: `Esta acción aun no se ha terminado.`
+      })
+    },
+
+    /**
+     * updatedChangePassword
+     * @description
+     * @param {String} id :: Id del usuario
+     * @author SaulNavarrov <sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    updatedChangePassword: async function (id) {
+      swal({
+        type: 'warning',
+        title: 'Acción Usuario',
+        text: `Esta acción aun no se ha terminado.`
+      })
+    },
   }
 });
