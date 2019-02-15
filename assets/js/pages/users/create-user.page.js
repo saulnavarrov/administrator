@@ -59,21 +59,6 @@ parasails.registerPage('create-user', {
   },
   mounted: async function () {
     //…
-
-    swal({
-      title: 'Borrar auto carga de datos',
-      text: `Borrar las lineas de autocarga de datos que estan en situadas
-      en el codigo para hacer las pruebas`,
-      type: 'warning'
-    });
-    this.formNewUser.role = 1;
-    this.formNewUser.identification = String(Date.now());
-    this.formNewUser.name = 'saul';
-    this.formNewUser.lastName = 'Pruebas';
-    this.formNewUser.emailAddress = `prueba${String(Date.now()).substring(9)}@example.com`;
-    this.formNewUser.emailStatus = 'unconfirmed';
-    this.formNewUser.phone = `+57${String(Date.now())}`;
-    this.generateNewPassword();
   },
 
   //  ╦╔╗╔╔╦╗╔═╗╦═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
@@ -114,7 +99,6 @@ parasails.registerPage('create-user', {
           'x-csrf-token': csrfToken
         }
       }, async (rsData, jsRs) => {
-        console.log(jsRs);
 
         // Control de errores
         if (jsRs.error) {
