@@ -171,8 +171,22 @@ parasails.registerPage('holdings-list', {
       this.activeModal = false;
       this.editTrueData = true;
       $(`#${modal}`).modal('hide');
-      this.btnCerrar = 'cerrar';
-      this.userData = {}; // Limpia los Datos
+      this.btnCerrar = 'Cerrar';
+
+      // Rest validate
+      this.validateData.reasonName = {valid: '', mss: '* Campo necesario.'};
+      this.validateData.enrollment = {valid: '', mss: '* Campo necesario.'};
+      this.validateData.identification = {valid: '', mss: '* Campo necesario.'};
+      this.validateData.consecutive = {valid: '', mss: '* Obligatorio'};
+      this.validateData.state = {valid: '', mss: '* Campo necesario.'};
+      this.validateData.renewedDate = {valid: '', mss: '* Campo necesario.'};
+      this.validateData.createdDate = {valid: '', mss: '* Campo necesario.'};
+      this.validateData.acronym = {valid: '', mss: '* Campo necesario.'};
+      this.validateData.location = {valid: '', mss: '* Campo necesario.'};
+      this.validateData.maxCustomersEps = {valid: '', mss: '* Campo necesario.'};
+      this.validateData.maxCustomersArl = {valid: '', mss: '* Campo necesario.'};
+      this.validateData.maxCustomersCaja = {valid: '', mss: '* Campo necesario.'};
+      this.validateData.maxCustomersAfp = {valid: '', mss: '* Campo necesario.'};
     },
 
 
@@ -282,6 +296,21 @@ parasails.registerPage('holdings-list', {
             this.dataCreated.maxCustomersCaja = 200;
             this.dataCreated.maxCustomersAfp = 200;
 
+            // Rest validate
+            this.validateData.reasonName = {valid: '', mss: '* Campo necesario.'};
+            this.validateData.enrollment = {valid: '', mss: '* Campo necesario.'};
+            this.validateData.identification = {valid: '', mss: '* Campo necesario.'};
+            this.validateData.consecutive = {valid: '', mss: '* Obligatorio'};
+            this.validateData.state = {valid: '', mss: '* Campo necesario.'};
+            this.validateData.renewedDate = {valid: '', mss: '* Campo necesario.'};
+            this.validateData.createdDate = {valid: '', mss: '* Campo necesario.'};
+            this.validateData.acronym = {valid: '', mss: '* Campo necesario.'};
+            this.validateData.location = {valid: '', mss: '* Campo necesario.'};
+            this.validateData.maxCustomersEps = {valid: '', mss: '* Campo necesario.'};
+            this.validateData.maxCustomersArl = {valid: '', mss: '* Campo necesario.'};
+            this.validateData.maxCustomersCaja = {valid: '', mss: '* Campo necesario.'};
+            this.validateData.maxCustomersAfp = {valid: '', mss: '* Campo necesario.'},
+
             // Cerrando Modal
             $(`#pm-create`).modal('hide');
           }
@@ -352,7 +381,7 @@ parasails.registerPage('holdings-list', {
           this.createdDataExisting(false, true);
 
           // Mostrar datos de la nueva empresa
-          this.createAssociatedCompanyOk(rsData)
+          this.createAssociatedCompanyOk(rsData);
         }
         this.modalCreatedProgress = false;
       });
