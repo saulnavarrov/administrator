@@ -1,0 +1,33 @@
+<%
+/**
+ * views/page/masters/holdings/pm-view-and-edit.ejs
+ * Partial Modal
+ * Crear nuevas empresas, que hacen parte del holding de uniempresas
+ * y de las cuales brinda servicios.
+ */%>
+
+<section class="modal fade modal-primary" tabindex="-1" role="dialog" id="pm-view-and-edit" data-backdrop="static" data-keyboard="false" aria-labelledby="pm-view-and-edit" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+
+    <%/* CONTENT MODAL */%>
+    <div class="modal-content" style="border-top: 2px solid #343c78">
+      <%/* HEADER MODAL */%>
+      <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLongTitle">Crear Nueva Empresa Asociada</h4>
+        <button type="button" class="close" v-on:click="closeModalView('pm-view-and-edit')">
+          <span>&times;</span>
+        </button>
+      </div>
+
+      <%/* CONTENT MODAL */%>
+      <div class="modal-body">
+        <h3>Contenidos</h3>
+      </div>
+
+      <%/* FOOTER MODAL */%>
+      <div class="modal-footer bg-whitesmoke">
+        <button type="button" class="btn btn-warning btn-sm" v-on:click="closeModalView('pm-view-and-edit')">{{ btnCerrar }}</button>
+      </div>
+    </div>
+  </div>
+</section>
