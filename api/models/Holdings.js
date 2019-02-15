@@ -29,7 +29,7 @@ module.exports = {
       min: 1000000,
       description: `Numero de la matricula inscrita en camara de comercio`
     },
-    identificación: {
+    identification: {
       type: 'number',
       example: 123456789,
       required:true,
@@ -56,7 +56,7 @@ module.exports = {
       C = Cancelada`,
     },
     renewedDate: {
-      type: 'string',
+      type: 'number',
       example: '2019',
       description: `Ultima fecha de renovación de la matricula`
     },

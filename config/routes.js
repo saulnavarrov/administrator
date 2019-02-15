@@ -54,6 +54,7 @@ module.exports.routes = {
   'GET /masterFul/holdings':        { action: 'masters/holding/view-list', locals: { layout:'layouts/dashboard' } },
 
 
+
   /***************************************************************************
   *                                                                          *
   * More custom routes here...                                               *
@@ -70,7 +71,19 @@ module.exports.routes = {
   //  ╠═╣╠═╝║  ║╣ ║║║ ║║╠═╝║ ║║║║║ ║ ╚═╗
   //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
 
-  // USUARIOS Y LOGING
+  /**************************************************************************************************
+   * CONTROL DE LISTAS MAESTRAS
+   *************************************************************************************************/
+  // Empresas Asociadas
+  'POST /api/v2/masters/holding/list':          { action: 'masters/holding/list' },
+  'POST /api/v2/masters/holding/create':        { action: 'masters/holding/create' },
+
+
+
+
+  /**************************************************************************************************
+   * USUARIOS Y LOGING
+   *************************************************************************************************/
   'POST /api/v2/login':                         { action: 'auth/login' },
   'POST /api/v2/logout':                        { action: 'auth/logout' },
 
