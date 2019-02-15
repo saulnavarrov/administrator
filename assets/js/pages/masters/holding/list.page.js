@@ -369,7 +369,9 @@ parasails.registerPage('holdings-list', {
      * @version 1.0
      */
     createAssociatedCompanyOk: async function (js) {
-
+      console.log('Se ha creado por completo la nueva empresa');
+      console.log(js);
+      console.log('a trabajar en el resto de la app');
     },
 
 

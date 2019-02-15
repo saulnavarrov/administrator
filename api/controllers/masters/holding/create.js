@@ -231,10 +231,10 @@ module.exports = {
     }).select(['id']);
 
     if (
-      !_.isUndefined(enrollment) ||
-      !_.isUndefined(identification) ||
-      !_.isUndefined(reasonName) ||
-      !_.isUndefined(acronym)
+      !_.isUndefined(evalEnrollment) ||
+      !_.isUndefined(evalIdentification) ||
+      !_.isUndefined(evalReasonName) ||
+      !_.isUndefined(evalAcronym)
     ) {
       rs.status(409);
       return rs.badRequest({
@@ -263,7 +263,7 @@ module.exports = {
     dataForm.reasonName = _.startCase(_.toLower(dataForm.reasonName));
     dataForm.state = _.startCase(_.toLower(dataForm.state));
     dataForm.renewedDate = _.toNumber(dataForm.renewedDate);
-    dataForm.createdDate = _.startCase(_.toLower(dataForm.createdDate));
+    dataForm.createdDate = moment(dataForm.createdDate).format();
     dataForm.acronym = _.startCase(_.toLower(dataForm.acronym));
     dataForm.location = _.startCase(_.toLower(dataForm.location));
     dataForm.userCreated = userId;
