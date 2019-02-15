@@ -559,8 +559,10 @@ parasails.registerPage('list-users', {
 
 
     /**
-     *
-     * @param {Boolean} act
+     * searchAnimated
+     * @description :: Crea una animación para la alerta cuando no hay
+     * resultados esperados, puede cerrar o abrir la alerta con la animación
+     * @param {Boolean} act :: Activa o desactiva la animación
      * @param {String} ani :: Animación que se ejecutara
      * @author Saúl Navarrov <Sinavarrov@gmail.com>
      * @version 1.0
@@ -928,7 +930,7 @@ parasails.registerPage('list-users', {
         cancelButtonColor: 'grey',
         confirmButtonText: 'DELETE'
       }).then(async (e) => {
-        if (e) {
+        if (e.value) {
           // request list update user
           await io.socket.request({
             url: urls,
