@@ -56,7 +56,7 @@
           <div class="col-sm-12 col-lg-9">
             <div class="form-group">
               <label for="reasonName">Nombre o Razón Social (completa)</label>
-              <input type="text" v-model="dataCreated.reasonName" id="reasonName" class="form-control form-control-sm" v-bind:class="[validateData.reasonName.valid]" required>
+              <input type="text" v-model="dataCreated.reasonName" id="reasonName" class="form-control form-control-sm" placeholder="Nombre de la empresa completa" v-bind:class="[validateData.reasonName.valid]" required>
               <div class="invalid-feedback">{{ validateData.reasonName.mss }}</div>
             </div>
           </div>
@@ -111,7 +111,7 @@
           <div class="col-sm-12 col-lg-3">
             <div class="from-group">
               <label for="maxCustomersEps">EPS</label>
-              <input type="text" v-model="dataCreated.maxCustomersEps" id="maxCustomersEps" class="form-control form-control-sm" v-bind:class="[validateData.maxCustomersEps.valid]" required>
+              <input type="number" v-model="dataCreated.maxCustomersEps" id="maxCustomersEps" class="form-control form-control-sm" v-bind:class="[validateData.maxCustomersEps.valid]" required>
               <div class="invalid-feedback">{{ validateData.maxCustomersEps.mss }}</div>
             </div>
           </div>
@@ -119,7 +119,7 @@
           <div class="col-sm-12 col-lg-3">
             <div class="from-group">
               <label for="maxCustomersArl">Arl</label>
-              <input type="text" v-model="dataCreated.maxCustomersArl" id="maxCustomersArl" class="form-control form-control-sm" v-bind:class="[validateData.maxCustomersArl.valid]" required>
+              <input type="number" v-model="dataCreated.maxCustomersArl" id="maxCustomersArl" class="form-control form-control-sm" v-bind:class="[validateData.maxCustomersArl.valid]" required>
               <div class="invalid-feedback">{{ validateData.maxCustomersArl.mss }}</div>
             </div>
           </div>
@@ -127,7 +127,7 @@
           <div class="col-sm-12 col-lg-3">
             <div class="from-group">
               <label for="maxCustomersCaja">Caja</label>
-              <input type="text" v-model="dataCreated.maxCustomersCaja" id="maxCustomersCaja" class="form-control form-control-sm" v-bind:class="[validateData.maxCustomersCaja.valid]" required>
+              <input type="number" v-model="dataCreated.maxCustomersCaja" id="maxCustomersCaja" class="form-control form-control-sm" v-bind:class="[validateData.maxCustomersCaja.valid]" required>
               <div class="invalid-feedback">{{ validateData.maxCustomersCaja.mss }}</div>
             </div>
           </div>
@@ -135,7 +135,7 @@
           <div class="col-sm-12 col-lg-3">
             <div class="from-group">
               <label for="maxCustomersAfp">Afp</label>
-              <input type="text" v-model="dataCreated.maxCustomersAfp" id="maxCustomersAfp" class="form-control form-control-sm" v-bind:class="[validateData.maxCustomersAfp.valid]" required>
+              <input type="number" v-model="dataCreated.maxCustomersAfp" id="maxCustomersAfp" class="form-control form-control-sm" v-bind:class="[validateData.maxCustomersAfp.valid]" required>
               <div class="invalid-feedback">{{ validateData.maxCustomersAfp.mss }}</div>
             </div>
           </div>
