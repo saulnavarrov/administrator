@@ -1,11 +1,18 @@
+/**
+ * create.js
+ *
+ * @description :: Todas las funciones de la pagina.
+ *
+ * @src {{proyect}}/api/controllers/masters/holdings/create.js
+ * @author Saul Navarrov <Sinavarrov@gmail.com>
+ * @created 2019/02/16
+ * @version 1.0
+ */
 module.exports = {
-
 
   friendlyName: 'Create',
 
-
   description: 'Create holding.',
-
 
   inputs: {
     reasonName: {
@@ -13,89 +20,73 @@ module.exports = {
       maxLength: 256,
       description: `nombre completa de la razon social`
     },
-
     enrollment: {
       type: 'number',
       description: `numero de registro de camara de comercio`
     },
-
     identification: {
       type: 'number',
       description: `numero de identificación tributaria (NIT), que expide la camara de comercio`
     },
-
     consecutive: {
       type: 'number',
       max: 10,
       min: 0,
       description: `consecutivo del nit`
     },
-
     state: {
       type: 'string',
       defaultsTo: 'A',
       isIn: ['A', 'I', 'S', 'C'],
       description: `Estado en el que se encuntra la empresa ante camara de comercio`
     },
-
     renewedDate: {
       type: 'number',
       description: `Ultimo año de renovación`
     },
-
     createdDate: {
       type: 'string',
       description: `Fecha de creación por lo general solo el Año-Mes`
     },
-
     acronym: {
       type: 'string',
       description: `nombre corto de la empresa o siglas de esta`
     },
-
     location: {
       type: 'string',
       description: `Ubicación o ciudad donde se registro esta empresa`
     },
-
     maxCustomersEps: {
       type: 'number',
       defaultsTo: 200,
       description: `numero maximo de personas que podran ser afiliados a EPS`
     },
-
     maxCustomersArl: {
       type: 'number',
       defaultsTo: 200,
       description: `numero maximo de personas que podran ser afiliados a ARL`
     },
-
     maxCustomersCaja: {
       type: 'number',
       defaultsTo: 200,
       description: `numero maximo de personas que podran ser afiliados a CAJA`
     },
-
     maxCustomersAfp: {
       type: 'number',
       defaultsTo: 200,
       description: `numero maximo de personas que podran ser afiliados a AFP`
     },
-
   },
-
 
   exits: {
     success: {
       statusCode: 200
     },
-
     noAuthorize: {
       responseType: 'unauthorized',
       description: 'No autorizado para acer esta acción'
     },
   },
-
 
   fn: async function (inputs, exits) {
     /***************************************************************************************
@@ -158,14 +149,14 @@ module.exports = {
      * BLOQUE DE DATOS OBLIGATORIOS Y REVISION DE DATA.
      ***************************************************************************************/
     let ev = dataForm = {
-      reasonName: _.isUndefined(inputs.reasonName) ? false : inputs.reasonName,
-      enrollment: _.isUndefined(inputs.enrollment) ? false : inputs.enrollment,
-      identification: _.isUndefined(inputs.identification) ? false : inputs.identification,
-      consecutive: _.isUndefined(inputs.consecutive) ? false : inputs.consecutive,
+      reasonName: _.isUndefined(inputs.reasonName) ? false : inputs.reasonName.length < 5 ? false : inputs.reasonName,
+      acronym: _.isUndefined(inputs.acronym) ? false : inputs.acronym.length < 4 ? false : inputs.acronym,
+      enrollment: _.isUndefined(inputs.enrollment) ? false : inputs.enrollment < 1000 ? false : inputs.enrollment,
+      identification: _.isUndefined(inputs.identification) ? false : inputs.identification < 1000 ? false : inputs.identification,
+      consecutive: inputs.consecutive,
       state: _.isUndefined(inputs.state) ? false : inputs.state,
       renewedDate: _.isUndefined(inputs.renewedDate) ? false : inputs.renewedDate,
       createdDate: _.isUndefined(inputs.createdDate) ? false : inputs.createdDate,
-      acronym: _.isUndefined(inputs.acronym) ? false : inputs.acronym,
       location: _.isUndefined(inputs.location) ? false : inputs.location,
       maxCustomersEps: _.isUndefined(inputs.maxCustomersEps) ? false : inputs.maxCustomersEps,
       maxCustomersArl: _.isUndefined(inputs.maxCustomersArl) ? false : inputs.maxCustomersArl,
@@ -177,7 +168,7 @@ module.exports = {
       !ev.reasonName ||
       !ev.enrollment ||
       !ev.identification ||
-      !ev.consecutive ||
+      //  ev.consecutive > -1 ||
       !ev.state ||
       !ev.renewedDate ||
       !ev.createdDate ||
@@ -198,7 +189,7 @@ module.exports = {
           reasonName: !ev.reasonName ? 'is-invalid' : '',
           enrollment: !ev.enrollment ? 'is-invalid' : '',
           identification: !ev.identification ? 'is-invalid' : '',
-          consecutive: !ev.consecutive ? 'is-invalid' : '',
+          // consecutive: ev.consecutive > -1 ? 'is-invalid' : '',
           state: !ev.state ? 'is-invalid' : '',
           renewedDate: !ev.renewedDate ? 'is-invalid' : '',
           createdDate: !ev.createdDate ? 'is-invalid' : '',
@@ -256,6 +247,8 @@ module.exports = {
       });
     }
 
+
+
     /***************************************************************************************
      * BLOQUE DE TRABAJO
      ***************************************************************************************/
@@ -276,8 +269,5 @@ module.exports = {
       message: 'Se ha creado correctamente.',
       one: saveCompany
     });
-
   }
-
-
 };
