@@ -107,7 +107,7 @@ module.exports = {
     count = companys.length;
 
     // agregando selectores
-    companys.forEach((el,ds idx) => {
+    companys.forEach((el, idx) => {
       companys[idx].check = false;
     });
 
