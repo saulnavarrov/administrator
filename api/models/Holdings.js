@@ -45,15 +45,21 @@ module.exports = {
       example: 2,
       description: `Numero consecutivo del Nit este va despues del guion`
     },
-    state: {
+    status: {
       type: 'string',
       isIn: ['A', 'I', 'S', 'C'],
-      example: 'activo',
+      example: 'A',
       description: `Estado de la empresa actualemnte
       A = Activo
       I = Inactivo
       S = Suspendido
       C = Cancelada`,
+    },
+    statusName: {
+      type: 'string',
+      isIn: ['Activo', 'Inactivo', 'Suspendido', 'Cancelada'],
+      example: 'Activo',
+      description: 'Nombre del estado'
     },
     renewedDate: {
       type: 'number',
@@ -149,5 +155,49 @@ module.exports = {
     },
   },
 
+
+  //  ╦  ╦╔═╗╔═╗╔═╗╦ ╦╔═╗╦  ╔═╗╔═╗  ╔═╗╦  ╔═╗╔═╗╔╦╗╔═╗╔═╗
+  //  ║  ║╠═ ╠╣ ║  ╚╦╝║  ║  ╠╣ ╚═╗  ║  ║  ╠╣ ╠═╣ ║ ╠╣ ╚═╗
+  //  ╚═╝╩╚  ╚═╝╚═╝ ╩ ╚═╝╚═╝╚═╝╚═╝  ╚═╝╚═╝╚═╝╩ ╩ ╩ ╚═╝╚═╝
+  beforeCreate: async (valueToCreate, proceed) => {
+    const _ = require('@sailshq/lodash');
+    let statusName = {
+      'A': 'Activo',
+      'I': 'Inactivo',
+      'S': 'Suspendido',
+      'C': 'Cancelada'
+    };
+
+    // Antes de crear los datos, este Agergara y rellena el nombre del
+    // nombre del estado
+    if (!_.isUndefined(statusName[valueToCreate.status])) {
+      valueToCreate.statusName = statusName[valueToCreate.status];
+    }
+
+    // Retorno de datos.
+    return proceed();
+  },
+
+  //  ╦  ╦╔═╗╔═╗╔═╗╦ ╦╔═╗╦  ╔═╗╔═╗  ╦ ╦╔═╗╔╦═╗╔═╗╔╦╗╔═╗╔═╗
+  //  ║  ║╠═ ╠╣ ║  ╚╦╝║  ║  ╠╣ ╚═╗  ║ ║╠═╝ ║ ║╠═╣ ║ ╠╣ ╚═╗
+  //  ╚═╝╩╚  ╚═╝╚═╝ ╩ ╚═╝╚═╝╚═╝╚═╝  ╚═╝╩  ═╩═╝╩ ╩ ╩ ╚═╝╚═╝
+  beforeUpdate: async function (valuesToSet, proceed) {
+    const _ = require('@sailshq/lodash');
+    let statusName = {
+      'A': 'Activo',
+      'I': 'Inactivo',
+      'S': 'Suspendido',
+      'C': 'Cancelada'
+    };
+
+    // Antes cuando se actualiza los datos de una compañia, este actualizra de
+    // manera automatica el nombre del estado
+    if (!_.isUndefined(statusName[valuesToSet.status])) {
+      valuesToSet.statusName = statusName[valuesToSet.status];
+    }
+
+    // Retorno de datos.
+    return proceed();
+  }
 };
 
