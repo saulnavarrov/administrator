@@ -106,6 +106,12 @@ module.exports = {
     // contador
     count = companys.length;
 
+    // agregando selectores
+    companys.forEach((el,ds idx) => {
+      companys[idx].check = false;
+    });
+
+
     // Retorno de datos
     return exits.success({
       model: 'holding',
