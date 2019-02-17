@@ -825,7 +825,7 @@ parasails.registerPage('holdings-list', {
     OneViewCompany: async function (id, title) {
       const csrfToken = window.SAILS_LOCALS._csrf;
       const urls = '/api/v2/masters/holding/find-one';
-      const modal = $('#pm-view-and-edith');
+      let modal = $('#pm-view-and-edit');
       this.titleModal = 'Datos de: ';
       this.progressBarD(true, 'fadeInRight faster');
 
@@ -860,12 +860,12 @@ parasails.registerPage('holdings-list', {
           // carga los datos
           // this.userData = rsData.user;
 
-          console.log(rsData);
           // pone el estado del modal en activo
           this.activeModal = true;
 
           // Eject Modal
           modal.modal('show');
+          console.log(rsData);
         }
 
       });
