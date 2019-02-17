@@ -813,5 +813,86 @@ parasails.registerPage('holdings-list', {
         console.error(new Error(`Variable no admitida`));
       }
     },
+
+
+    /**
+     * OneViewCompany
+     * @description ::
+     * @param {String} id ::
+     * @author Saúl Navarrov <Sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    OneViewCompany: async function (id, title) {
+      const csrfToken = window.SAILS_LOCALS._csrf;
+      const urls = '/api/v2/masters/holding/find-one';
+      const modal = $('#pm-view-and-edith');
+      this.titleModal = 'Datos de: ';
+      this.progressBarD(true, 'fadeInRight faster');
+
+      // Cambio de titulo de la ventana
+      if (typeof (title) !== 'undefined') {
+        this.titleModal = title;
+      } else {
+        // No permite editar
+        this.editTrueData = true;
+      }
+
+      // request list users
+      await io.socket.request({
+        url: urls,
+        method: 'post',
+        data: {
+          id: id
+        },
+        headers: {
+          'content-type': 'application/json',
+          'x-csrf-token': csrfToken
+        }
+      }, (rsData, jwRs) => {
+        // En caso de error
+        if (jwRs.error) {
+          this.jwRsError(jwRs);
+        }
+
+        if (jwRs.statusCode === 200) {
+          // Desactiva el progrees
+          this.progressBarD(false);
+          // carga los datos
+          // this.userData = rsData.user;
+
+          console.log(rsData);
+          // pone el estado del modal en activo
+          this.activeModal = true;
+
+          // Eject Modal
+          modal.modal('show');
+        }
+
+      });
+    },
+
+
+    /**
+     * editOneCompany
+     * @description ::
+     * @param {String} id ::
+     * @author Saúl Navarrov <Sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    editOneCompany: async function (id) {
+
+    },
+
+
+    /**
+     * deleteCompany
+     * @description ::
+     * @param {String} id ::
+     * @author Saúl Navarrov <Sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    deleteCompany: async function (id) {
+
+    },
   }
 });
