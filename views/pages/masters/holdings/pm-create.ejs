@@ -62,15 +62,15 @@
           </div>
           <div class="col-sm-12 col-lg-3">
             <div class="from-group">
-              <label for="state">Estado</label>
-              <select class="form-control form-control-sm" style="font-size: 13px;height: 30px;line-height: 30px;padding: 0px 10px 2px 9px;margin: 0px;" v-model="dataCreated.state" id="state" v-bind:class="[validateData.state.valid]" required>
+              <label for="status">Estado</label>
+              <select class="form-control form-control-sm" style="font-size: 13px;height: 30px;line-height: 30px;padding: 0px 10px 2px 9px;margin: 0px;" v-model="dataCreated.status" id="status" v-bind:class="[validateData.status.valid]" required>
                 <option selected disabled>Seleccionar</option>
                 <option value="A">Activa</option>
                 <option value="I">Inactiva</option>
                 <option value="S">Suspendida</option>
                 <option value="C">Cancelada</option>
               </select>
-              <div class="invalid-feedback">{{ validateData.state.mss }}</div>
+              <div class="invalid-feedback">{{ validateData.status.mss }}</div>
             </div>
           </div>
         </section>

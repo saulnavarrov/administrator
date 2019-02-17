@@ -99,7 +99,7 @@ module.exports = {
     // Ejecucion luego entregar el contador y saber que esta autorizado
     // para visualizar estos datos
     companys = await Holdings.find()
-    .select(['id', 'acronym', 'balance', 'identification', 'consecutive', 'state', 'renewedDate'])
+    .select(['id', 'acronym', 'balance', 'identification', 'consecutive', 'status', 'statusName', 'renewedDate'])
     .limit(inputs.lim)
     .skip(inputs.lim * inputs.sk); // Todos los usuarios
 

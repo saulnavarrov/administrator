@@ -154,7 +154,7 @@ module.exports = {
       enrollment: _.isUndefined(inputs.enrollment) ? false : inputs.enrollment < 1000 ? false : inputs.enrollment,
       identification: _.isUndefined(inputs.identification) ? false : inputs.identification < 1000 ? false : inputs.identification,
       consecutive: inputs.consecutive,
-      state: _.isUndefined(inputs.state) ? false : inputs.state,
+      state: _.isUndefined(inputs.status) ? false : inputs.status,
       renewedDate: _.isUndefined(inputs.renewedDate) ? false : inputs.renewedDate,
       createdDate: _.isUndefined(inputs.createdDate) ? false : inputs.createdDate,
       location: _.isUndefined(inputs.location) ? false : inputs.location,
@@ -169,7 +169,7 @@ module.exports = {
       !ev.enrollment ||
       !ev.identification ||
       //  ev.consecutive > -1 ||
-      !ev.state ||
+      !ev.status ||
       !ev.renewedDate ||
       !ev.createdDate ||
       !ev.acronym ||
@@ -190,7 +190,7 @@ module.exports = {
           enrollment: !ev.enrollment ? 'is-invalid' : '',
           identification: !ev.identification ? 'is-invalid' : '',
           // consecutive: ev.consecutive > -1 ? 'is-invalid' : '',
-          state: !ev.state ? 'is-invalid' : '',
+          state: !ev.status ? 'is-invalid' : '',
           renewedDate: !ev.renewedDate ? 'is-invalid' : '',
           createdDate: !ev.createdDate ? 'is-invalid' : '',
           acronym: !ev.acronym ? 'is-invalid' : '',
@@ -254,7 +254,7 @@ module.exports = {
      ***************************************************************************************/
     // Organizando Datos
     dataForm.reasonName = _.startCase(_.toLower(dataForm.reasonName));
-    dataForm.state = _.startCase(_.toLower(dataForm.state));
+    dataForm.status = _.startCase(_.toLower(dataForm.status));
     dataForm.renewedDate = _.toNumber(dataForm.renewedDate);
     dataForm.createdDate = moment(dataForm.createdDate).format();
     dataForm.acronym = _.startCase(_.toLower(dataForm.acronym));

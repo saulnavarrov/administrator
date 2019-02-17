@@ -117,6 +117,14 @@ module.exports = {
     let oneCompany = await Holdings.findOne({
       'id': inputs.id
     });
+    // .populate('userCreated')
+    // .populate('bankAccount');
+
+    // quien creo esta empresa
+    let userCreated = await Users.findOne({
+      'id': oneCompany.userCreated
+    })
+    .select(['id', 'name', 'lastName']);
 
     // Numero de resultados
     count = 1;
@@ -125,6 +133,12 @@ module.exports = {
     oneCompany.createdDate = moment(oneCompany.createdDate).format('llll');
     oneCompany.createdAt = moment(oneCompany.createdAt).format('llll');
     oneCompany.updatedAt = moment(oneCompany.updatedAt).format('llll');
+
+    // Agregando usuario
+    oneCompany.userCreated = userCreated;
+
+    // agregando cuentas de bancos
+
 
     // Devolviendo resultados.
     return exits.success({

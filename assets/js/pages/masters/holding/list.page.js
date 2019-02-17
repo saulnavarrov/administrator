@@ -72,7 +72,7 @@ parasails.registerPage('holdings-list', {
       enrollment: 0,
       identification: 0,
       consecutive: 0,
-      state: 'A',
+      status: 'A',
       renewedDate: 0,
       createdDate: '',
       acronym: '',
@@ -89,7 +89,7 @@ parasails.registerPage('holdings-list', {
       enrollment: {valid: '', mss: '* Campo necesario.'},
       identification: {valid: '', mss: '* Campo necesario.'},
       consecutive: {valid: '', mss: '* Obligatorio'},
-      state: {valid: '', mss: '* Campo necesario.'},
+      status: {valid: '', mss: '* Campo necesario.'},
       renewedDate: {valid: '', mss: '* Campo necesario.'},
       createdDate: {valid: '', mss: '* Campo necesario.'},
       acronym: {valid: '', mss: '* Campo necesario.'},
@@ -304,7 +304,7 @@ parasails.registerPage('holdings-list', {
             this.dataCreated.enrollment = 0;
             this.dataCreated.identification = 0;
             this.dataCreated.consecutive = 0;
-            this.dataCreated.state = 'A';
+            this.dataCreated.status = 'A';
             this.dataCreated.renewedDate = 0;
             this.dataCreated.createdDate = '';
             this.dataCreated.acronym = '';
@@ -337,7 +337,7 @@ parasails.registerPage('holdings-list', {
       this.validateData.enrollment = {valid: '', mss: '* Campo necesario.'};
       this.validateData.identification = {valid: '', mss: '* Campo necesario.'};
       this.validateData.consecutive = {valid: '', mss: '* Obligatorio'};
-      this.validateData.state = {valid: '', mss: '* Campo necesario.'};
+      this.validateData.status = {valid: '', mss: '* Campo necesario.'};
       this.validateData.renewedDate = {valid: '', mss: '* Campo necesario.'};
       this.validateData.createdDate = {valid: '', mss: '* Campo necesario.'};
       this.validateData.acronym = {valid: '', mss: '* Campo necesario.'};
@@ -460,7 +460,7 @@ parasails.registerPage('holdings-list', {
       this.validateData.enrollment.valid = isIncomplete ? '' : data.form.enrollment === '' ? '' : data.form.enrollment;
       this.validateData.identification.valid = isIncomplete ? '' : data.form.identification === '' ? '' : data.form.identification;
       this.validateData.consecutive.valid = isIncomplete ? '' : data.form.consecutive === '' ? '' : data.form.consecutive;
-      this.validateData.state.valid = isIncomplete ? '' : data.form.state === '' ? '' : data.form.state;
+      this.validateData.status.valid = isIncomplete ? '' : data.form.status === '' ? '' : data.form.status;
       this.validateData.renewedDate.valid = isIncomplete ? '' : data.form.renewedDate === '' ? '' : data.form.renewedDate;
       this.validateData.createdDate.valid = isIncomplete ? '' : data.form.createdDate === '' ? '' : data.form.createdDate;
       this.validateData.acronym.valid = isIncomplete ? '' : data.form.acronym === '' ? '' : data.form.acronym;
