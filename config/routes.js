@@ -77,6 +77,7 @@ module.exports.routes = {
   // Empresas Asociadas
   'POST /api/v2/masters/holding/list':          { action: 'masters/holding/list' },
   'POST /api/v2/masters/holding/create':        { action: 'masters/holding/create' },
+  'POST /api/v2/masters/holding/find-one':                { action: 'masters/holding/find-one' },
   'POST /api/v2/masters/holding/search':                  { action: 'masters/holding/search' },
 
 
