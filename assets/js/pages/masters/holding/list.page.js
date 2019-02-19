@@ -15,7 +15,9 @@ parasails.registerPage('holdings-list', {
   data: {
     //…
     listData: {}, // Listado de empresas
-    oneData: {}, // Datos de la Empresa individuales
+    oneData: {
+      userCreated: { name: '', lastName: '', id: ''}
+    }, // Datos de la Empresa individuales
     listCount: 0, // cantidad de resultados en pantalla
     listFullCount: 0, // Total de resultados
     activeModal: false, // Si el modal de Edicion o edicion esta activo
@@ -113,6 +115,8 @@ parasails.registerPage('holdings-list', {
   },
   mounted: async function() {
     //…
+    this.oneViewCompany('5c662da6fc4d830ca1107318');
+    swal({type: 'error', title:'falta', text:'falta la configuración de edición y guardar esa configuración, la de eliminar'});
   },
 
   //  ╦╔╗╔╔╦╗╔═╗╦═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
@@ -816,13 +820,13 @@ parasails.registerPage('holdings-list', {
 
 
     /**
-     * OneViewCompany
+     * oneViewCompany
      * @description ::
      * @param {String} id ::
      * @author Saúl Navarrov <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    OneViewCompany: async function (id, title) {
+    oneViewCompany: async function (id, title) {
       const csrfToken = window.SAILS_LOCALS._csrf;
       const urls = '/api/v2/masters/holding/find-one';
       let modal = $('#pm-view-and-edit');
@@ -858,7 +862,7 @@ parasails.registerPage('holdings-list', {
           // Desactiva el progrees
           this.progressBarD(false);
           // carga los datos
-          // this.userData = rsData.user;
+          this.oneData = rsData.one;
 
           // pone el estado del modal en activo
           this.activeModal = true;

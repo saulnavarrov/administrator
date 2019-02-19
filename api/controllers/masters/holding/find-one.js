@@ -139,6 +139,8 @@ module.exports = {
 
     // agregando cuentas de bancos
 
+    sails.log(oneCompany)
+
 
     // Devolviendo resultados.
     return exits.success({

@@ -13,7 +13,7 @@
     <div class="modal-content" style="border-top: 2px solid #343c78">
       <%/* HEADER MODAL */%>
       <div class="modal-header">
-        <h4 class="modal-title" id="exampleModalLongTitle">Crear Nueva Empresa Asociada</h4>
+        <h5 class="modal-title" id="exampleModalLongTitle">{{ titleModal }} {{ oneData.acronym }}</h5>
         <button type="button" class="close" v-on:click="closeModalView('pm-view-and-edit')">
           <span>&times;</span>
         </button>
@@ -23,23 +23,170 @@
       <div class="modal-body">
         <%/* Vista: id, rol, status */%>
         <section class="row" v-if="editTrueData">
-          <div class="col-sm-12 col-lg-3">
-            <p><b>Id: </b> <span :title="oneData.id">{{ typeof(oneData.id) === 'undefined' ? '' : oneData.id.substr(0,10) }}...</span></p>
-          </div>
-          <div class="col-sm-12 col-lg-2">
-            <p><b>Estatus: </b>{{ oneData.status }} - {{ oneData.statusName }}</p>
+          <div class="col-sm-12 col-lg-4">
+            <p><b>Id: </b> <span :title="oneData.id">{{ typeof(oneData.id) === 'undefined' ? '' : oneData.id.substr(0,15) }}...</span></p>
           </div>
           <div class="col-sm-12 col-lg-4">
-            <p><b>Identificación: </b>{{ oneData.identification }}</p>
+            <p><b>Estatus: </b>{{ oneData.status }} - {{ oneData.statusName }}</p>
           </div>
         </section>
 
-        <h3>Contenidos</h3>
+        <section class="row" >
+          <div class="col-sm-12 col-lg-6">
+            <div class="form-group">
+              <label for="acronym">Nombre (Siglas)</label>
+              <input type="text" id="acronym" name="acronym" class="form-control form-control-sm" v-model="oneData.acronym" :disabled="editTrueData">
+            </div>
+          </div>
+
+          <div class="col-sm-12 col-lg-3">
+            <div class="form-group">
+              <label for="identification">Nit:</label>
+              <input type="text" id="identification" name="identification" class="form-control form-control-sm text-right" :value="oneData.identification + '-' + oneData.consecutive" disabled>
+            </div>
+          </div>
+
+          <div class="col-sm-12 col-lg-3">
+            <div class="form-group">
+              <label for="enrollment">N Inscripción</label>
+              <input type="text" id="enrollment" name="enrollment" class="form-control form-control-sm text-right" :value="oneData.enrollment" disabled>
+            </div>
+          </div>
+        </section>
+
+        <section class="row">
+          <div class="col-sm-12 col-lg-9">
+            <div class="form-group">
+              <label for="reazonSocial">Nombre & Razón Social</label>
+              <input type="text" id="reazonSocial" name="reazonSocial" class="form-control form-control-sm" v-model="oneData.reasonName" :disabled="editTrueData">
+            </div>
+          </div>
+
+          <div class="col-sm-12 col-lg-3" v-if="!editTrueData">
+            <div class="form-group">
+              <label for="status">Estado</label>
+              <select class="form-control form-control-sm" style="font-size: 13px;height: 30px;line-height: 30px;padding: 0px 10px 2px 9px;margin: 0px;" v-model="dataCreated.status" id="status" v-bind:class="[validateData.status.valid]" required>
+                <option selected disabled>Seleccionar</option>
+                <option value="A">Activa</option>
+                <option value="I">Inactiva</option>
+                <option value="S">Suspendida</option>
+                <option value="C">Cancelada</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <section class="row">
+          <div class="col-sm-12 col-lg-4">
+            <div class="form-group">
+              <label for="location">Cuidad De Registro</label>
+              <input type="text" name="location" id="location" class="form-control form-control-sm" v-model="oneData.location" :disabled="editTrueData">
+            </div>
+          </div>
+          <div class="col-sm-12 col-lg-4">
+            <div class="form-group">
+              <label for="renewedDate">Ultima Renovación</label>
+              <input type="text" name="renewedDate" id="renewedDate" class="form-control form-control-sm" v-model="oneData.renewedDate" :disabled="editTrueData">
+            </div>
+          </div>
+          <div class="col-sm-12 col-lg-4">
+            <div class="form-group">
+              <label for="createdDate">Fecha de creación</label>
+              <input type="text" name="createdDate" id="createdDate" class="form-control form-control-sm" v-model="oneData.createdDate" :disabled="editTrueData">
+            </div>
+          </div>
+        </section>
+
+        <hr>
+        <section class="row">
+          <div class="col-sm-12 col-lg-4">
+            <h5>Balance</h5>
+          </div>
+        </section>
+        <section class="row">
+          <div class="col-sm-12 col-lg-4">
+            <p><b>Balance Entradas: </b><span class="text-right">$ {{ typeof(oneData.balanceIn) === 'undefined' ? '0.00' : oneData.balanceIn }}</span></p>
+          </div>
+          <div class="col-sm-12 col-lg-4">
+            <p><b>Balance Salidas: </b><span class="text-right">$ {{ typeof(oneData.balanceOut) === 'undefined' ? '0.00' : oneData.balanceOut }}</span></p>
+          </div>
+          <div class="col-sm-12 col-lg-4">
+            <p><b>Balance Actual: </b><span class="text-right">$ {{ typeof(oneData.balance) === 'undefined' ? '0.00' : oneData.balance }}</span></p>
+          </div>
+        </section>
+
+        <hr>
+        <section class="row">
+          <div class="col-sm-12 col-lg-4">
+            <h5>Cantidad de usuario por:</h5>
+          </div>
+        </section>
+        <section class="row">
+          <div class="col-sm-12 col-lg-3">
+            <div class="form-group">
+              <label for="maxCustomersEps">EPS</label>
+              <input type="text" name="maxCustomersEps" id="maxCustomersEps" class="form-control form-control-sm" v-model="oneData.maxCustomersEps" :disabled="editTrueData">
+            </div>
+          </div>
+          <div class="col-sm-12 col-lg-3">
+            <div class="form-group">
+              <label for="maxCustomersArl">ARL</label>
+              <input type="text" name="maxCustomersArl" id="maxCustomersArl" class="form-control form-control-sm" v-model="oneData.maxCustomersArl" :disabled="editTrueData">
+            </div>
+          </div>
+          <div class="col-sm-12 col-lg-3">
+            <div class="form-group">
+              <label for="maxCustomersCaja">CAJA</label>
+              <input type="text" name="maxCustomersCaja" id="maxCustomersCaja" class="form-control form-control-sm" v-model="oneData.maxCustomersCaja" :disabled="editTrueData">
+            </div>
+          </div>
+          <div class="col-sm-12 col-lg-3">
+            <div class="form-group">
+              <label for="maxCustomersAfp">AFP</label>
+              <input type="text" name="maxCustomersAfp" id="maxCustomersAfp" class="form-control form-control-sm" v-model="oneData.maxCustomersAfp" :disabled="editTrueData">
+            </div>
+          </div>
+        </section>
+        <br><br>
+
+        <%/* ACCORDION - FECHAS EXTRAS */%>
+        <section class="accordion"  v-show="editTrueData">
+          <div class="accordion-header collapsed" role="button" data-toggle="collapse" data-target="#panel-body-z" aria-expanded="false">
+            <h4>Fechas (Creado, Actualización, quien lo creo)</h4>
+          </div>
+          <div class="accordion-body collapse" id="panel-body-z">
+            <section class="row">
+              <div class="col-sm-12 col-lg-4">
+                <div class="form-group">
+                  <label for="">Creado desde:</label>
+                  <input type="text" class="form-control form-control-sm" :value="oneData.createdAt" disabled>
+                </div>
+              </div>
+              <div class="col-sm-12 col-lg-4">
+                <div class="form-group">
+                  <label for="">Ultima Edicion</label>
+                  <input type="text" class="form-control form-control-sm" :value="oneData.updatedAt" disabled>
+                </div>
+              </div>
+              <div class="col-sm-12 col-lg-4">
+                <div class="form-group">
+                  <label for="">Quien que lo creo:</label>
+                  <input type="text" class="form-control form-control-sm" :value="oneData.userCreated.name + ' ' + oneData.userCreated.lastName" disabled>
+                </div>
+              </div>
+            </div>
+          </section>
+
+
+
+        <h3>Falta la configuración de edición</h3>
       </div>
 
       <%/* FOOTER MODAL */%>
       <div class="modal-footer bg-whitesmoke">
+        <button type="button" class="btn btn-primary btn-sm" v-on:click="editUser(userData.id)" v-show="editTrueData">Editar</button>
         <button type="button" class="btn btn-warning btn-sm" v-on:click="closeModalView('pm-view-and-edit')">{{ btnCerrar }}</button>
+        <button type="button" class="btn btn-primary btn-sm" v-show="!editTrueData" v-on:click="btnUpdateUser(userData.id)">Guardar Cambios</button>
       </div>
     </div>
   </div>

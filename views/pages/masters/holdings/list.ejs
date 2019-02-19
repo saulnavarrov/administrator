@@ -82,6 +82,7 @@
                         <th class="text-center" data-toggle="tooltip" title="" data-original-title="Siglas del nombre de la empresa">Nombre</th>
                         <th class="text-center" data-toggle="tooltip" title="" data-original-title="Numero de identificación tributaria">Nit</th>
                         <th class="text-center" data-toggle="tooltip" title="" data-original-title="Eltimo año de renovación">U Renovación</th>
+                        <th class="text-center" data-toggle="tooltip" title="" data-original-title="Estado de la compañia">Estado</th>
                         <th class="text-center" data-toggle="tooltip" title="" data-original-title="Estado del usuario - Rol del usuario">balance</th>
                         <th class="text-right" data-toggle="tooltip" title="" data-original-title="Acciones" class="text-center" width="130">Action</th>
                       </tr>
@@ -99,6 +100,7 @@
                         <td class="text-center">{{ list.acronym }}</td>
                         <td class="text-center">{{ list.identification }} {{ list.consecutive }}</td>
                         <td class="text-center">{{ list.renewedDate }}</td>
+                        <td class="text-center">{{ list.status }} - {{ list.statusName }}</td>
                         <td class="text-right">{{ list.balance }}</td>
                         <td width="130">
 
@@ -107,7 +109,7 @@
                             Detalles
                             </button>
                             <div class="dropdown-menu" x-placement="left-start" style="position: absolute; transform: translate3d(-202px, 0px, 0px); top: 0px; left: 0px; will-change: transform;">
-                              <a class="dropdown-item" href="#" v-on:click="OneViewCompany(list.id)">Ver Completo</a>
+                              <a class="dropdown-item" href="#" v-on:click="oneViewCompany(list.id)">Ver Completo</a>
                               <a class="dropdown-item" href="#" v-on:click="editOneCompany(list.id)">Editar Empresa</a>
                               <a class="dropdown-item" href="#" v-on:click="deleteCompany(list.id)">Borrar Empresa</a>
                             </div>
