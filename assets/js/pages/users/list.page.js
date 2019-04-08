@@ -900,13 +900,67 @@ parasails.registerPage('list-users', {
      * @author Saúl Navarrov <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    toUnlockUser: async function (id) {
-      swal({
-        title: 'Funcion no terminada',
-        text: `Terminar la funcion para desbloquear usuarios,
-        esta se encargara de hacer lo mismo como forgot, pero la accion
-        la podra hacer el mismo administrador ${id}`
-      });
+    toUnlockUser: async function (id, status) {
+      let csrfToken = window.SAILS_LOCALS._csrf;
+      let urls = '/api/v2/users/update-unblock';
+      let title = `¿Deseas ${status === 'B' ? 'Desbloquear':'Bloquear'} Usuario?`;
+      let text = `Este usuario se encuentra ${status === 'B' ? 'Bloqueado':'Desbloqueado'}, en realidad quieres ${status === 'B' ? 'Desbloquear':'Bloquear'} hasta que cambie su contraseña.`;
+      let btnConfirm = `${status === 'B' ? 'Desbloquear':'Bloquear'}`;
+
+      // Uso normal, cuando este este en estado "B" o "E"
+      if (status === 'B' || status === 'E') {
+        swal({
+          type: 'warning',
+          title: title,
+          text: text,
+          confirmButtonColor: 'red',
+          showCancelButton: true,
+          cancelButtonColor: 'grey',
+          confirmButtonText: btnConfirm
+        }).then(async e => {
+          if (e.value) {
+            console.log(e.value);
+            console.log('envia el nuevo status y te confirma en pantalla con otro swal para decir que paso.');
+
+            await io.socket.request({
+              url: urls,
+              method: 'PATCH',
+              data: {
+                id: id,
+                ed: btnConfirm
+              },
+              headers: {
+                'content-type': 'application/json',
+                'x-csrf-token': csrfToken
+              }
+            }, async (rsData, jwRs) => {
+              // En caso de error
+              if (jwRs.error) {
+                this.jwRsError(jwRs, true);
+              }
+
+              if (jwRs.statusCode === 200) {
+                swal({
+                  type: 'success',
+                  title: 'Usuario Editado',
+                  text: 'Usuario editado o algo asi jajaj'
+                });
+                console.log(rsData);
+                // Reinicial la pantalla
+                this.dataDb();
+              }
+            });
+          }
+        });
+      }
+      // Saco un aviso cuando no se puede usar esta opcion
+      else {
+        swal({
+          type: 'info',
+          title: 'No se puede usar esta función',
+          text: 'Función no permitida debido a que no cumple con los parametros para ser usada',
+        });
+      }
     },
 
 
@@ -947,7 +1001,6 @@ parasails.registerPage('list-users', {
             if (jwRs.error) {
               this.jwRsError(jwRs, true);
             }
-
 
             if (jwRs.statusCode === 200) {
               swal({

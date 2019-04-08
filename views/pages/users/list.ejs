@@ -69,9 +69,9 @@
                             </button>
                             <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
                               <div class="dropdown-title">Seleccionar</div>
-                              <a class="dropdown-item" href="#" v-on:click="selectAll('a')"><i class="fas fa-check-square"> </i> Seleccionar Todo</a>
-                              <a class="dropdown-item" href="#" v-on:click="selectAll('z')"><i class="fas fa-window-close"> </i> Deseleccionar Todo</a>
-                              <a class="dropdown-item" href="#" v-on:click="selectAll('c')"><i class="fas fa-sign-in-alt"> </i> Invertir Seleción</a>
+                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="selectAll('a')"><i class="fas fa-check-square"> </i> Seleccionar Todo</a>
+                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="selectAll('z')"><i class="fas fa-window-close"> </i> Deseleccionar Todo</a>
+                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="selectAll('c')"><i class="fas fa-sign-in-alt"> </i> Invertir Seleción</a>
                             </div>
                           </div>
                         </th>
@@ -102,23 +102,23 @@
                             Detalles
                             </button>
                             <div class="dropdown-menu" x-placement="left-start" style="position: absolute; transform: translate3d(-202px, 0px, 0px); top: 0px; left: 0px; will-change: transform;">
-                              <a class="dropdown-item" href="#" v-on:click="findOneUserView(list.id)">Ver Completo</a>
-                              <a class="dropdown-item" href="#" v-on:click="editUser(list.id)">Editar Usuario</a>
-                              <a class="dropdown-item" href="#" v-on:click="toUnlockUser(list.id)">Desbloquear</a>
+                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="findOneUserView(list.id)">Ver Completo</a>
+                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="editUser(list.id)">Editar Usuario</a>
+                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="toUnlockUser(list.id, list.status)">{{ list.status === 'B' ? 'Desbloquear' : 'Bloquear' }}</a>
                               <% if( me.role === 0 ) { %>
                               <div class="dropdown-divider"></div>
-                              <a class="dropdown-item" href="#" v-on:click="updatedChangeEmail(list.id)" title="Hace la petición para cambiar el E-mail">Cambiar su E-mail</a>
-                              <a class="dropdown-item" href="#" v-on:click="updatedReconfirmEmail(list.id)" title="Reenvia un email para Reconfirmar E-Mail">Reconfirmar E-mail</a>
-                              <a class="dropdown-item" href="#" v-on:click="updatedChangePassword(list.id)" title="Envia un Email para recuperar contraseña">Reiniciar Contraseña</a>
+                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="updatedChangeEmail(list.id)" title="Hace la petición para cambiar el E-mail">Cambiar su E-mail</a>
+                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="updatedReconfirmEmail(list.id)" title="Reenvia un email para Reconfirmar E-Mail">Reconfirmar E-mail</a>
+                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="updatedChangePassword(list.id)" title="Envia un Email para recuperar contraseña">Reiniciar Contraseña</a>
                                 <% if( me.isSuperAdmin ) { %>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" v-on:click="deleteUser(list.id)">Eliminar</a>
+                                <a class="dropdown-item" href="javascript:void(0)" v-on:click="deleteUser(list.id)">Eliminar</a>
                               <% }
                               } %>
                               <div class="dropdown-divider">Nuevos Para organizar</div>
-                              <a class="dropdown-item" href="#" disabled>Bloquear/Desbloquear Cuenta</a>
-                              <a class="dropdown-item" href="#" disabled>Activar/Desactivar Cuenta</a>
-                              <a class="dropdown-item" href="#" disabled>Cambiar Avatar</a>
+                              <a class="dropdown-item" href="javascript:void(0)" disabled>Bloquear/Desbloquear Cuenta</a>
+                              <a class="dropdown-item" href="javascript:void(0)" disabled>Activar/Desactivar Cuenta</a>
+                              <a class="dropdown-item" href="javascript:void(0)" disabled>Cambiar Avatar</a>
                             </div>
                           </div>
                         </td>
