@@ -203,7 +203,7 @@ requests over WebSockets instead of HTTP).`,
 
         // Criterio de busqueda de datos de las fallas de los usuarios
         let criterioFinds = {
-          'users': userRecord.id,
+          'user': userRecord.id,
           // 'success': false,
           'created': {
             '>=': tampsTime
