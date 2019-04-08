@@ -196,7 +196,7 @@ parasails.registerPage('list-users', {
           if (this.searching && (this.listCount === 0)) {
             this.tableData = this.footerTable = false;
             this.alert.title = 'No hay Resultados';
-            this.alert.message = `No se encontraron resultados para la busqueda: ${this.search}`;
+            this.alert.message = `No se encontraron resultados para la busqueda: "${this.searchsText}"`;
             // Animación de entrada
             this.searchAnimated(true, 'bounceIn');
           } else {
