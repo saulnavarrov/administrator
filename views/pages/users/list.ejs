@@ -107,18 +107,15 @@
                               <a class="dropdown-item" href="javascript:void(0)" v-on:click="toUnlockUser(list.id, list.status)">{{ list.status === 'B' ? 'Desbloquear' : 'Bloquear' }}</a>
                               <% if( me.role === 0 ) { %>
                               <div class="dropdown-divider"></div>
-                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="updatedChangeEmail(list.id)" title="Hace la petición para cambiar el E-mail">Cambiar su E-mail</a>
-                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="updatedReconfirmEmail(list.id)" title="Reenvia un email para Reconfirmar E-Mail">Reconfirmar E-mail</a>
-                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="updatedChangePassword(list.id)" title="Envia un Email para recuperar contraseña">Reiniciar Contraseña</a>
+                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="btnUpdatedChangeEmail(list.id)" title="Hace la petición para cambiar el E-mail">Cambiar su E-mail</a>
+                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="btnUpdatedReconfirmEmail(list.id)" title="Reenvia un email para Reconfirmar E-Mail">Reconfirmar E-mail</a>
+                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="btnUpdatedChangePassword(list.id)" title="Envia un Email para recuperar contraseña">Reiniciar Contraseña</a>
+                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="btnUpdatedActiveAccount(list.id)" title="Activa o desactiva la cuenta, para no acceder asi cambie de contraseña" disabled>Activar/Desactivar Cuenta</a>
                                 <% if( me.isSuperAdmin ) { %>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="javascript:void(0)" v-on:click="deleteUser(list.id)">Eliminar</a>
                               <% }
                               } %>
-                              <div class="dropdown-divider">Nuevos Para organizar</div>
-                              <a class="dropdown-item" href="javascript:void(0)" disabled>Bloquear/Desbloquear Cuenta</a>
-                              <a class="dropdown-item" href="javascript:void(0)" disabled>Activar/Desactivar Cuenta</a>
-                              <a class="dropdown-item" href="javascript:void(0)" disabled>Cambiar Avatar</a>
                             </div>
                           </div>
                         </td>
@@ -195,6 +192,8 @@
 
   <%/* PARTIALES DE LA PAGINA */%>
   <%- partial('./pm-view-and-edith-user.ejs') %>
+  <%- partial('./pm-view-change-email.ejs') %>
+  <%- partial('./pm-view-change-passwords.ejs') %>
   <%/* FIN PARTIALES DE LA PAGINA */%>
 
   <%- partial('../../partials/footer.ejs') %>
