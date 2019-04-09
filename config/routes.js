@@ -88,19 +88,20 @@ module.exports.routes = {
   'POST /api/v2/login':                         { action: 'auth/login' },
   'POST /api/v2/logout':                        { action: 'auth/logout' },
 
-  'POST /api/v2/users':                         { action: 'users/list' },
-  'POST /api/v2/users/create':                  { action: 'users/create-users' },
-  'POST /api/v2/users/find-one':                { action: 'users/find-one' },
-  'POST /api/v2/users/search':                  { action: 'users/search' },
-  'PATCH /api/v2/users/update-avatar':          { action: 'users/update-avatar' },
-  'PATCH /api/v2/users/update-data-user':       { action: 'users/update-data-user' },
-  'PATCH /api/v2/users/update-unblock':             { action: 'users/updated-unblock' },
-  'PATCH /api/v2/users/update-active-account':      { action: 'users/updated-active-account' },
-  'PATCH /api/v2/users/update-change-email':        { action: 'users/updated-change-email' },
-  'PATCH /api/v2/users/update-reconfirm-email':     { action: 'users/updated-reconfirm-email' },
-  'PATCH /api/v2/users/forgot-passwords':           { action: 'users/forgot-passwords' },
-  'PATCH /api/v2/users/update-password-and-login':  { action: 'users/update-password-and-login' },
-  'DELETE /api/v2/users/delete-users':              { action: 'users/deletes' },
+  'POST /api/v2/users':                         { action: 'users/list' },             // ok
+  'POST /api/v2/users/create':                  { action: 'users/create-users' },     // ok
+  'POST /api/v2/users/find-one':                { action: 'users/find-one' },         // ok
+  'POST /api/v2/users/search':                  { action: 'users/search' },           // ok
+  'PATCH /api/v2/users/update-avatar':          { action: 'users/update-avatar' },    // ok
+  'PATCH /api/v2/users/update-data-user':       { action: 'users/update-data-user' }, // ok
+  'PATCH /api/v2/users/update-unblock':             { action: 'users/updated-unblock' },            // ok
+  'PATCH /api/v2/users/update-active-account':      { action: 'users/updated-active-account' },     //
+  'PATCH /api/v2/users/update-change-email':        { action: 'users/updated-change-email' },       //
+  'PATCH /api/v2/users/update-reconfirm-email':     { action: 'users/updated-reconfirm-email' },    //
+  'PATCH /api/v2/users/update-change-password':     { action: 'users/updated-change-password' },    //
+  'PATCH /api/v2/users/forgot-passwords':           { action: 'users/forgot-passwords' },           // ok
+  'PATCH /api/v2/users/update-password-and-login':  { action: 'users/update-password-and-login' },  // ok
+  'DELETE /api/v2/users/delete-users':              { action: 'users/deletes' },      // ok
 
 
 
