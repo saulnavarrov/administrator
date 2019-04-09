@@ -7,6 +7,8 @@ parasails.registerPage('list-users', {
     c: 1,
     listData: {}, // Listado de Usuarios
     userData: {}, // Usuarios individuales
+    changeEmail: { newEmail : '', confirmNewEmail : ''}, // Para cambiar el correo electronico
+    changePassword: {}, // Para cambiar la contraseña del usuario
     listCount: 0, // cantidad de resultados en pantalla
     listFullCount: 0, // Total de resultados
     activeModal: false, // Si el modal de Edicion o edicion esta activo
@@ -598,6 +600,8 @@ parasails.registerPage('list-users', {
       $(`#${modal}`).modal('hide');
       this.btnCerrar = 'cerrar';
       this.userData = {}; // Limpia los Datos
+      this.changeEmail = {}; // Limpia los Datos
+      this.changePassword = {}; // Limpia los datos
     },
 
 
@@ -1019,29 +1023,48 @@ parasails.registerPage('list-users', {
 
 
     /**
-     * updatedActiveAccount
-     * @description
+     * updatedChangeEmail
+     * @description Abre el modal para cambiar el correo electronico del usuario seleccionado
      * @param {String} id :: Id del usuario
      * @author SaulNavarrov <sinavarrov@gmail.com>
      * @version 1.0
      */
-    updatedActiveAccount:  async function (id) {
+    btnUpdatedChangeEmail: async function (id) {
+      // Busco el usario sin buscar en la base de datos
+      this.listData.forEach((elx, idx) => {
+        // Comparacion
+        if (elx.id === id) {
+          this.userData = this.listData[idx];
+          this.userData.newEmail = '';
+          this.userData.confirmNewEmail = '';
+        }
+      });
+
+      // Avertencia con el nombre del usuarios
       swal({
         type: 'warning',
-        title: 'Acción Usuario',
-        text: `Esta acción aun no se ha terminado.`
-      })
+        title: `Cambiar Email a ${this.userData.name}`,
+        text: `¿Estas seguro de que vas a cambiar el Correo Electronico? Si al usuario no se le avisa puede complicar el inicio de sesion del usuario o los usuarios.`,
+        confirmButtonColor: 'red',
+        showCancelButton: true,
+        cancelButtonColor: 'grey',
+        confirmButtonText: 'CAMBIAR EMAIL'
+      }).then(async e => {
+        if (e.value) {
+          $(`#pm-view-change-email`).modal('show');
+        }
+      });
     },
 
 
     /**
-     * updatedChangeEmail
-     * @description
+     * updatedActiveAccount
+     * @description Activa o desactiva la cuenta, para no acceder asi cambie de contraseña
      * @param {String} id :: Id del usuario
      * @author SaulNavarrov <sinavarrov@gmail.com>
      * @version 1.0
      */
-    updatedChangeEmail: async function (id) {
+    btnUpdatedActiveAccount:  async function (id) {
       swal({
         type: 'warning',
         title: 'Acción Usuario',
@@ -1057,7 +1080,7 @@ parasails.registerPage('list-users', {
      * @author SaulNavarrov <sinavarrov@gmail.com>
      * @version 1.0
      */
-    updatedReconfirmEmail: async function (id) {
+    btnUpdatedReconfirmEmail: async function (id) {
       swal({
         type: 'warning',
         title: 'Acción Usuario',
@@ -1072,7 +1095,7 @@ parasails.registerPage('list-users', {
      * @author SaulNavarrov <sinavarrov@gmail.com>
      * @version 1.0
      */
-    updatedChangePassword: async function (id) {
+    btnUpdatedChangePassword: async function (id) {
       swal({
         type: 'warning',
         title: 'Acción Usuario',
