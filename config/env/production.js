@@ -122,6 +122,7 @@ module.exports = {
   ***************************************************************************/
   blueprints: {
     shortcuts: false,
+    rest: false,
   },
 
 
