@@ -104,8 +104,13 @@ module.exports = {
     // Get the user with the matching email token.
     var user = await Users.findOne({ emailProofToken: inputs.token });
 
+    // si el token no existe
+    if (!user) {
+      throw 'invalidOrExpiredToken';
+    }
+
     // validando usuario no este desactivado
-    if (user.role < 8 && user.status === 'I') {
+    if (user.role < 8 || user.status === 'I') {
       throw 'userInabled';
     }
 
