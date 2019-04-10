@@ -31,7 +31,7 @@
             <div class="col-12">
               <div class="form-group">
                 <label for="newEmail">Nuevo Correo electronico:</label>
-                <input type="text" name="newEmail" id="newEmail" class="form-control form-control-sm" v-model="changeEmail.newEmail">
+                <input type="email" name="newEmail" id="newEmail" v-bind:class="[changeEmail.error]" class="form-control form-control-sm" v-model="changeEmail.newEmail" >
               </div>
             </div>
           </section>
@@ -39,7 +39,8 @@
             <div class="col-12">
               <div class="form-group">
                 <label for="confirmNewEmail">Confirmar Correo Electonico:</label>
-                <input type="text" name="confirmNewEmail" id="confirmNewEmail" class="form-control form-control-sm" v-model="changeEmail.confirmNewEmail">
+                <input type="email" name="confirmNewEmail" id="confirmNewEmail" v-bind:class="[changeEmail.error]" class="form-control form-control-sm" v-model="changeEmail.confirmNewEmail" >
+                <div class="invalid-feedback">{{ typeof(changeEmail.errorText) === 'undefined' ? 'Error' : changeEmail.errorText }}</div>
               </div>
             </div>
           </section>
@@ -56,43 +57,3 @@
       </div>
     </div>
 </div>
-
-
-<!--
-let csrfToken = window.SAILS_LOCALS._csrf;
-let urls = '/api/v2/users/find-one';
-let modal = $('#pm-view-and-edith-user');
-this.titleModal = 'Datos de: ';
-this.progressBarD(true, 'fadeInRight faster');
-
-// request list users
-await io.socket.request({
-  url: urls,
-  method: 'post',
-  data: {
-    id: id
-  },
-  headers: {
-    'content-type': 'application/json',
-    'x-csrf-token': csrfToken
-  }
-}, (rsData, jwRs) => {
-  // En caso de error
-  if (jwRs.error) {
-    this.jwRsError(jwRs);
-  }
-
-  if (jwRs.statusCode === 200) {
-    // Desactiva el progrees
-    this.progressBarD(false);
-    // carga los datos
-    this.userData = rsData.user;
-    // pone el estado del modal en activo
-    this.activeModal = true;
-
-    // Eject Modal
-    modal.modal('show');
-  }
-
-});
--->
