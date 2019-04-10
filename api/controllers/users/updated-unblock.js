@@ -120,11 +120,9 @@ module.exports = {
     }
 
     if (inputs.ed.length === 0 || inputs.ed === '') {
-      return exits.notFound({
-        model: 'users',
-        count: 0,
+      return exits.badRequest({
         error: true,
-        title: 'Datos incompletos',
+        code: 'Datos incompletos',
         message: `Faltan datos, revise y vuelva a intentarlo`
       });
     }
