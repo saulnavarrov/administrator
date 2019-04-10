@@ -600,7 +600,7 @@ parasails.registerPage('list-users', {
       $(`#${modal}`).modal('hide');
       this.btnCerrar = 'cerrar';
       this.userData = {}; // Limpia los Datos
-      this.changeEmail = {}; // Limpia los Datos
+      this.changeEmail = { newEmail : '', confirmNewEmail : ''}; // Limpia los Datos
       this.changePassword = {}; // Limpia los datos
     },
 
@@ -1030,27 +1030,24 @@ parasails.registerPage('list-users', {
      * @version 1.0
      */
     btnUpdatedChangeEmail: async function (id) {
-      let usx = 0;
       // Busco el usario sin buscar en la base de datos
-      this.listData.forEach((elx, idx) => {
-        console.log(`No coincide ${elx.id}`)
+      for (let idx = 0; idx < this.listData.length; idx++) {
+        let elx = this.listData[idx];
         if (elx.id === id) {
-          usx = idx;
-          console.log(`Coincide ${elx.id}`)
+          this.userData = elx;
+          // Finalizar loop
+          idx = (this.listData.length + 9);
         }
-        console.log(`muestrame ${usx}`)
-      });
+      }
 
       this.changeEmail.id = id;
-      this.changeEmail.name = this.listData[usx].name;
-      this.changeEmail.emailAddress = this.listData[usx].emailAddress;
       this.changeEmail.newEmail = '';
       this.changeEmail.confirmNewEmail = '';
 
       // Avertencia con el nombre del usuarios
       swal({
         type: 'warning',
-        title: `Cambiar Email a ${this.changeEmail.name}`,
+        title: `Cambiar Email a ${this.userData.name}`,
         text: `¿Estas seguro de que vas a cambiar el Correo Electronico? Si al usuario no se le avisa puede complicar el inicio de sesion del usuario o los usuarios.`,
         confirmButtonColor: 'red',
         showCancelButton: true,

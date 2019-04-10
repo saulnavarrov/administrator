@@ -12,7 +12,7 @@
 
         <%/* HEADER MODAL */%>
         <div class="modal-header">
-          <h4 class="modal-title" id="exampleModalLongTitle">Cambiar email al usuario: <b>{{ changeEmail.name }}</b> </h4>
+          <h4 class="modal-title" id="exampleModalLongTitle">Cambiar email al usuario: <b>{{ userData.name }}</b> </h4>
           <button type="button" class="close" aria-label="Close" v-on:click="closeModalView('pm-view-change-email')">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -23,7 +23,7 @@
           <section class="row">
             <div class="col-12">
               <p><b>Correo electronico Actual: </b><br><span
-                  :title="changeEmail.emailAddress">{{ typeof(changeEmail.emailAddress) === 'undefined' ? '' : changeEmail.emailAddress }}</span>
+                  :title="userData.emailAddress">{{ typeof(userData.emailAddress) === 'undefined' ? '' : userData.emailAddress }}</span>
               </p>
             </div>
           </section>
