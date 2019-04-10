@@ -12,7 +12,7 @@
 
         <%/* HEADER MODAL */%>
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Cambiar email al usuario: <b>{{ userData.name }}</b> </h5>
+          <h4 class="modal-title" id="exampleModalLongTitle">Cambiar email al usuario: <b>{{ changeEmail.name }}</b> </h4>
           <button type="button" class="close" aria-label="Close" v-on:click="closeModalView('pm-view-change-email')">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -23,7 +23,7 @@
           <section class="row">
             <div class="col-12">
               <p><b>Correo electronico Actual: </b><br><span
-                  :title="userData.emailAddress">{{ typeof(userData.emailAddress) === 'undefined' ? '' : userData.emailAddress }}</span>
+                  :title="changeEmail.emailAddress">{{ typeof(changeEmail.emailAddress) === 'undefined' ? '' : changeEmail.emailAddress }}</span>
               </p>
             </div>
           </section>
@@ -31,7 +31,7 @@
             <div class="col-12">
               <div class="form-group">
                 <label for="newEmail">Nuevo Correo electronico:</label>
-                <input type="text" name="newEmail" id="newEmail" class="form-control form-control-sm" v-model="userData.newEmail">
+                <input type="text" name="newEmail" id="newEmail" class="form-control form-control-sm" v-model="changeEmail.newEmail">
               </div>
             </div>
           </section>
@@ -39,15 +39,17 @@
             <div class="col-12">
               <div class="form-group">
                 <label for="confirmNewEmail">Confirmar Correo Electonico:</label>
-                <input type="text" name="confirmNewEmail" id="confirmNewEmail" class="form-control form-control-sm" v-model="userData.confirmNewEmail">
+                <input type="text" name="confirmNewEmail" id="confirmNewEmail" class="form-control form-control-sm" v-model="changeEmail.confirmNewEmail">
               </div>
             </div>
           </section>
+          <section>nuevo Email: {{changeEmail.newEmail}}</section>
+          <section>Confirmar Email: {{changeEmail.confirmNewEmail  }}</section>
         </div>
 
         <%/* FOOTER MODAL */%>
         <div class="modal-footer bg-whitesmoke">
-          <button type="button" class="btn btn-primary btn-sm" v-on:click="updatedChangeEmail('userData.id')">Cambiar Email</button>
+          <button type="button" class="btn btn-primary btn-sm" v-on:click="updatedChangeEmail(changeEmail.id)">Cambiar Email</button>
           <button type="button" class="btn btn-secondary btn-sm" v-on:click="closeModalView('pm-view-change-email')">{{ btnCerrar }}</button>
         </div>
 
@@ -55,3 +57,42 @@
     </div>
 </div>
 
+
+<!--
+let csrfToken = window.SAILS_LOCALS._csrf;
+let urls = '/api/v2/users/find-one';
+let modal = $('#pm-view-and-edith-user');
+this.titleModal = 'Datos de: ';
+this.progressBarD(true, 'fadeInRight faster');
+
+// request list users
+await io.socket.request({
+  url: urls,
+  method: 'post',
+  data: {
+    id: id
+  },
+  headers: {
+    'content-type': 'application/json',
+    'x-csrf-token': csrfToken
+  }
+}, (rsData, jwRs) => {
+  // En caso de error
+  if (jwRs.error) {
+    this.jwRsError(jwRs);
+  }
+
+  if (jwRs.statusCode === 200) {
+    // Desactiva el progrees
+    this.progressBarD(false);
+    // carga los datos
+    this.userData = rsData.user;
+    // pone el estado del modal en activo
+    this.activeModal = true;
+
+    // Eject Modal
+    modal.modal('show');
+  }
+
+});
+-->

@@ -1030,20 +1030,27 @@ parasails.registerPage('list-users', {
      * @version 1.0
      */
     btnUpdatedChangeEmail: async function (id) {
+      let usx = 0;
       // Busco el usario sin buscar en la base de datos
       this.listData.forEach((elx, idx) => {
-        // Comparacion
+        console.log(`No coincide ${elx.id}`)
         if (elx.id === id) {
-          this.userData = this.listData[idx];
-          this.userData.newEmail = '';
-          this.userData.confirmNewEmail = '';
+          usx = idx;
+          console.log(`Coincide ${elx.id}`)
         }
+        console.log(`muestrame ${usx}`)
       });
+
+      this.changeEmail.id = id;
+      this.changeEmail.name = this.listData[usx].name;
+      this.changeEmail.emailAddress = this.listData[usx].emailAddress;
+      this.changeEmail.newEmail = '';
+      this.changeEmail.confirmNewEmail = '';
 
       // Avertencia con el nombre del usuarios
       swal({
         type: 'warning',
-        title: `Cambiar Email a ${this.userData.name}`,
+        title: `Cambiar Email a ${this.changeEmail.name}`,
         text: `¿Estas seguro de que vas a cambiar el Correo Electronico? Si al usuario no se le avisa puede complicar el inicio de sesion del usuario o los usuarios.`,
         confirmButtonColor: 'red',
         showCancelButton: true,
@@ -1054,6 +1061,12 @@ parasails.registerPage('list-users', {
           $(`#pm-view-change-email`).modal('show');
         }
       });
+    },
+
+    updatedChangeEmail: async function (id) {
+      console.log('datos de cambio de email');
+      console.log(this.changeEmail);
+      console.log(id);
     },
 
 
