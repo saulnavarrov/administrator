@@ -34,7 +34,7 @@ module.exports.blueprints = {
 
   // Prefix Rest App Models
   // Example: {{urlApp}}/restPrefix/{{Models}}
-  restPrefix: '/api/v2',
+  restPrefix: '/api/v1',
 
   /***************************************************************************
   *                                                                          *
