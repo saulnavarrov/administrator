@@ -52,7 +52,7 @@
             </div>
 
             <%/* PROGRESS LOGIN */%>
-            <div class="card-body" v-if="progressLogin">
+            <div class="card-body" v-show="progressLogin" style="display:none;">
               <h4 class="card-title"><%= typeof(i18n('Login.title')) === 'undefinded' ? 'Login' : i18n('Login.title') %></h4>
 
               <div class="form-group">
