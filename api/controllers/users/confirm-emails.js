@@ -118,6 +118,20 @@ module.exports = {
 
     // If no such user exists, or their token is expired, bail.
     if (!user || user.emailProofTokenExpiresAt <= Date.now()) {
+
+      // Borra el token y la fecha y el email por el cual se debe hacer el cambio
+      if (user.emailStatus === 'changeRequested') {
+        await Users.update({ id: user.id })
+        .set({
+          status: 'E', // Enabled Usuario
+          emailStatus: 'confirmed',
+          emailProofToken: '',
+          emailProofTokenExpiresAt: 0,
+          emailChangeCandidate: '', // Reset dato
+          updatedAt: updatedAt
+        });
+      }
+
       throw 'invalidOrExpiredToken';
     }
 
