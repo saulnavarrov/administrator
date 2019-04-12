@@ -7,7 +7,7 @@ parasails.registerPage('list-users', {
     c: 1,
     listData: {}, // Listado de Usuarios
     userData: {}, // Usuarios individuales
-    changeEmail: { newEmail : '', confirmNewEmail : ''}, // Para cambiar el correo electronico
+    changeEmail: {newEmail :'',confirmNewEmail :'',error:'',errorText:''}, // Para cambiar el correo electronico
     changePassword: {}, // Para cambiar la contraseña del usuario
     listCount: 0, // cantidad de resultados en pantalla
     listFullCount: 0, // Total de resultados
@@ -232,14 +232,25 @@ parasails.registerPage('list-users', {
           message: jwRs.error.message
         };
       } else if (jwRs.statusCode >= 400 && jwRs.statusCode <= 403) {
-        this.alert = {
-          active: true,
-          animated: 'zoomIn',
-          type: 'alert-warning',
-          icon: 'ion-ios-close-outline',
-          title: `Error: ${jwRs.statusCode} - ${jwRs.body.code}`,
-          message: jwRs.body.message
-        };
+        if (display) {
+          swal({
+            type: 'warning',
+            title: `${jwRs.statusCode} - ${jwRs.body.title}`,
+            text: `${jwRs.body.code} - ${jwRs.body.message}`,
+            showCancelButton: false,
+            confirmButtonColor: '#616161',
+            confirmButtonText: 'Aceptar'
+          });
+        } else {
+          this.alert = {
+            active: true,
+            animated: 'zoomIn',
+            type: 'alert-warning',
+            icon: 'ion-ios-close-outline',
+            title: `Error: ${jwRs.statusCode} - ${jwRs.body.code}`,
+            message: jwRs.body.message
+          };
+        }
       } else if (jwRs.statusCode === 404) {
         if(display) {
           swal({
@@ -600,7 +611,7 @@ parasails.registerPage('list-users', {
       $(`#${modal}`).modal('hide');
       this.btnCerrar = 'cerrar';
       this.userData = {}; // Limpia los Datos
-      this.changeEmail = { newEmail : '', confirmNewEmail : ''}; // Limpia los Datos
+      this.changeEmail = {newEmail :'',confirmNewEmail :'',error:'',errorText:''}; // Limpia los Datos
       this.changePassword = {}; // Limpia los datos
     },
 
@@ -923,12 +934,10 @@ parasails.registerPage('list-users', {
           confirmButtonText: btnConfirm
         }).then(async e => {
           if (e.value) {
-            console.log(e.value);
-            console.log('envia el nuevo status y te confirma en pantalla con otro swal para decir que paso.');
-
+            // Request change status
             await io.socket.request({
               url: urls,
-              method: 'PATCH',
+              method: 'patch',
               data: {
                 id: id,
                 ed: btnConfirm
@@ -946,10 +955,9 @@ parasails.registerPage('list-users', {
               if (jwRs.statusCode === 200) {
                 swal({
                   type: 'success',
-                  title: 'Usuario Editado',
-                  text: 'Usuario editado o algo asi jajaj'
+                  title: 'Procedimiento ejecutado correctamente',
+                  text: rsData.text
                 });
-                console.log(rsData);
                 // Reinicial la pantalla
                 this.dataDb();
               }
@@ -1043,6 +1051,8 @@ parasails.registerPage('list-users', {
       this.changeEmail.id = id;
       this.changeEmail.newEmail = '';
       this.changeEmail.confirmNewEmail = '';
+      this.changeEmail.error = '';
+      this.changeEmail.errorText = '';
 
       // Avertencia con el nombre del usuarios
       swal({
@@ -1056,14 +1066,92 @@ parasails.registerPage('list-users', {
       }).then(async e => {
         if (e.value) {
           $(`#pm-view-change-email`).modal('show');
+        }else{
+          this.closeModalView(`pm-view-change-email`);
         }
       });
     },
 
+    /**
+     * updatedChangeEmail
+     * @description envia el cambio a la base de datos para que sean acogidas
+     * @param {string} id identificador de la base de datos del usuario
+     * @author SaulNavarrov <sinavarrov@gmail.com>
+     * @version 1.0
+     */
     updatedChangeEmail: async function (id) {
-      console.log('datos de cambio de email');
-      console.log(this.changeEmail);
-      console.log(id);
+      let csrfToken = window.SAILS_LOCALS._csrf;
+      let urls = '/api/v2/users/update-change-email';
+      let validateEmails = false;
+
+
+      // Regex de email
+      var valEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+      // Validando emails
+      if (!valEmail.test(this.changeEmail.newEmail) || !valEmail.test(this.changeEmail.confirmNewEmail)) {
+        this.changeEmail.error = 'is-invalid';
+        this.changeEmail.errorText = 'Escriba un correo electronico valido';
+      } else {
+        this.changeEmail.error = 'is-valid';
+        this.changeEmail.errorText = '';
+        validateEmails = true;
+      }
+
+      // Verificando que sean iguales los correos
+      if (this.changeEmail.newEmail !== this.changeEmail.confirmNewEmail) {
+        this.changeEmail.error = 'is-invalid';
+        this.changeEmail.errorText = 'Los correos electronicos no coinciden. Verifique e intente de nuevo';
+        validateEmails = false;
+      } else {
+        this.changeEmail.error = 'is-valid';
+        this.changeEmail.errorText = '';
+        validateEmails = true;
+      }
+
+      // send Request
+      if (validateEmails) {
+        this.updateProgress = true;
+        await io.socket.request({
+          url: urls,
+          method: 'patch',
+          data: {
+            id: id,
+            newEmail: this.changeEmail.newEmail,
+            confirmNewEmail: this.changeEmail.confirmNewEmail
+          },
+          headers: {
+            'content-type': 'application/json',
+            'x-csrf-token': csrfToken
+          }
+        }, (rsData, jwRs) => {
+          this.updateProgress = false;
+          // En caso de error
+          if (jwRs.error) {
+            let disp = jwRs.statusCode === 400 ? true : false;
+            // Cierra la ventana para visualizar el error
+            if (jwRs.statusCode >= 401) {
+              this.closeModalView(`pm-view-change-email`);
+            }
+            this.jwRsError(jwRs, disp);
+          }
+
+          // Todo ok
+          if (jwRs.statusCode === 200) {
+            swal({
+              type: 'success',
+              title: `Cambiar Email Exitoso`,
+              text: `El cambio de email ha sucedido de manera correcta, verifique el correo electronico para confirmar el cambio`,
+              showCancelButton: false,
+              confirmButtonText: 'Terminar'
+            }).then(async e => {
+              if (e.value) {
+                this.closeModalView(`pm-view-change-email`);
+              }
+            });
+          }
+        });
+      }
     },
 
 
@@ -1085,7 +1173,7 @@ parasails.registerPage('list-users', {
 
     /**
      * updatedReconfirmEmail
-     * @description
+     * @description reconfirma el correo electronico, crea una nueva fecha y un nuevo link
      * @param {String} id :: Id del usuario
      * @author SaulNavarrov <sinavarrov@gmail.com>
      * @version 1.0
@@ -1100,7 +1188,7 @@ parasails.registerPage('list-users', {
 
     /**
      * updatedChangePassword
-     * @description
+     * @description cambia la contraseña de usuario
      * @param {String} id :: Id del usuario
      * @author SaulNavarrov <sinavarrov@gmail.com>
      * @version 1.0
