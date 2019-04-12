@@ -204,9 +204,3 @@ module.exports = {
     return exits.success();
   }
 };
-
-let e = new Error(`A este archivo le hace falta terminarlo.
-Son funciones necesarias para la administración de usuario
-`);
-e.name = 'Archivo no terminado: =>';
-sails.log.warn(e);
