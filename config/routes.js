@@ -55,6 +55,22 @@ module.exports.routes = {
 
 
 
+
+  /**************************************************************************************************
+   * SIN SOPORE PARA INTERNET EXPLORER EN NINGUNA VERSION
+   *************************************************************************************************/
+  'GET /iex': function (req, res) {
+    return res.send(`
+    <script src="/js/IE.js"></script>
+    <h1>Hola! </h1><hr>
+    <p>Seguro estas intentando abrir esta pagina con <b>Internet Explorer</b> o sus variedades, lo sentimos,
+    <br>Nuestro equipo de desarrollo no da soporte para este Navegador.
+    <br>
+    <br>Por favor usa Chrome, Mozilla Firefox para mayor compatibilidad.
+    <br>Chao :D
+    `);
+  },
+
   /***************************************************************************
   *                                                                          *
   * More custom routes here...                                               *
@@ -85,8 +101,8 @@ module.exports.routes = {
   /**************************************************************************************************
    * USUARIOS Y LOGING
    *************************************************************************************************/
-  'POST /api/v2/login':                         { action: 'auth/login' },
-  'POST /api/v2/logout':                        { action: 'auth/logout' },
+  'POST /api/v2/login':                         { action: 'auth/login' },   // ok
+  'POST /api/v2/logout':                        { action: 'auth/logout' },  // ok
 
   'POST /api/v2/users':                         { action: 'users/list' },             // ok
   'POST /api/v2/users/create':                  { action: 'users/create-users' },     // ok
@@ -96,7 +112,7 @@ module.exports.routes = {
   'PATCH /api/v2/users/update-data-user':       { action: 'users/update-data-user' }, // ok
   'PATCH /api/v2/users/update-unblock':             { action: 'users/updated-unblock' },            // ok
   'PATCH /api/v2/users/update-active-account':      { action: 'users/updated-active-account' },     //
-  'PATCH /api/v2/users/update-change-email':        { action: 'users/updated-change-email' },       //
+  'PATCH /api/v2/users/update-change-email':        { action: 'users/updated-change-email' },       // ok
   'PATCH /api/v2/users/update-reconfirm-email':     { action: 'users/updated-reconfirm-email' },    //
   'PATCH /api/v2/users/update-change-password':     { action: 'users/updated-change-password' },    //
   'PATCH /api/v2/users/forgot-passwords':           { action: 'users/forgot-passwords' },           // ok
