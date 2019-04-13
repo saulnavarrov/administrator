@@ -117,7 +117,7 @@ module.exports.routes = {
   'PATCH /api/v2/users/update-active-account':      { action: 'users/updated-active-account' },     //
   'PATCH /api/v2/users/update-change-email':        { action: 'users/updated-change-email' },       // ok
   'PATCH /api/v2/users/update-reconfirm-email':     { action: 'users/updated-reconfirm-email' },    //
-  'PATCH /api/v2/users/update-change-password':     { action: 'users/updated-change-password' },    //
+  'PATCH /api/v2/users/update-change-password':     { action: 'users/updated-change-password' },    // ok
   'PATCH /api/v2/users/forgot-passwords':           { action: 'users/forgot-passwords' },           // ok
   'PATCH /api/v2/users/update-password-and-login':  { action: 'users/update-password-and-login' },  // ok
   'DELETE /api/v2/users/delete-users':              { action: 'users/deletes' },      // ok

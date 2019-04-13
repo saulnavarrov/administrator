@@ -1084,7 +1084,6 @@ parasails.registerPage('list-users', {
       let urls = '/api/v2/users/update-change-email';
       let validateEmails = false;
 
-
       // Regex de email
       var valEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -1156,6 +1155,81 @@ parasails.registerPage('list-users', {
 
 
     /**
+     * updatedChangePassword
+     * @description cambia la contraseña de usuario
+     * @param {String} id :: Id del usuario
+     * @author SaulNavarrov <sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    btnUpdatedChangePassword: async function (id) {
+      let csrfToken = window.SAILS_LOCALS._csrf;
+      let urls = '/api/v2/users/update-change-password';
+      // Busco el usario sin buscar en la base de datos
+      for (let idx = 0; idx < this.listData.length; idx++) {
+        let elx = this.listData[idx];
+        if (elx.id === id) {
+          this.userData = elx;
+          // Finalizar loop
+          idx = (this.listData.length + 9);
+        }
+      }
+
+
+      // Avertencia con el nombre del usuarios
+      swal({
+        type: 'warning',
+        title: `Bloquear y Cambiar Contraseña de: ${this.userData.name}`,
+        text: `¿Estas seguro de que vas a cambiar el bloqueo y cambio de contraseña?
+        Se enviara un Correo Electronico a ${this.userData.emailAddress} para cambiar
+        su contraseña.`,
+        confirmButtonColor: 'red',
+        showCancelButton: true,
+        cancelButtonColor: 'grey',
+        confirmButtonText: 'CONTINUAR'
+      }).then(async e => {
+        if (e.value) {
+          this.updateProgress = true;
+          await io.socket.request({
+            url: urls,
+            method: 'patch',
+            data: {
+              id: id,
+              newEmail: this.changeEmail.newEmail,
+              confirmNewEmail: this.changeEmail.confirmNewEmail
+            },
+            headers: {
+              'content-type': 'application/json',
+              'x-csrf-token': csrfToken
+            }
+          }, (rsData, jwRs) => {
+            this.updateProgress = false;
+            // En caso de error
+            if (jwRs.error) {
+              let disp = jwRs.statusCode === 400 ? true : false;
+              // Cierra la ventana para visualizar el error
+              if (jwRs.statusCode >= 401) {
+                this.closeModalView(`pm-view-change-email`);
+              }
+              this.jwRsError(jwRs, disp);
+            }
+
+            // Todo ok
+            if (jwRs.statusCode === 200) {
+              swal({
+                type: 'success',
+                title: `Procedimiento Exitoso`,
+                text: `Se ha enviado el correo de cambio de contraseña y se ha bloqueado el usuario de manera exitosa.`,
+                showCancelButton: false,
+                confirmButtonText: 'Terminar'
+              });
+            }
+          });
+        }
+      });
+    },
+
+
+    /**
      * updatedActiveAccount
      * @description Activa o desactiva la cuenta, para no acceder asi cambie de contraseña
      * @param {String} id :: Id del usuario
@@ -1179,6 +1253,8 @@ parasails.registerPage('list-users', {
      * @version 1.0
      */
     btnUpdatedReconfirmEmail: async function (id) {
+      let csrfToken = window.SAILS_LOCALS._csrf;
+      let urls = '/api/v2/users/update-reconfirm-email';
       swal({
         type: 'warning',
         title: 'Acción Usuario',
@@ -1186,19 +1262,5 @@ parasails.registerPage('list-users', {
       })
     },
 
-    /**
-     * updatedChangePassword
-     * @description cambia la contraseña de usuario
-     * @param {String} id :: Id del usuario
-     * @author SaulNavarrov <sinavarrov@gmail.com>
-     * @version 1.0
-     */
-    btnUpdatedChangePassword: async function (id) {
-      swal({
-        type: 'warning',
-        title: 'Acción Usuario',
-        text: `Esta acción aun no se ha terminado.`
-      })
-    },
   }
 });
