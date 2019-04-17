@@ -12,12 +12,18 @@ module.exports = {
 
   friendlyName: 'Updated active account',
 
-  description: '',
+  description: 'Activaran o desactivaran el usurio',
 
-  extendedDescription: ``,
+  extendedDescription: `El administrador podra desactivar o volver a activar el usuario, para que no
+  vuelva a operar o funcionar`,
 
   inputs: {
     id: {
+      type: 'string',
+      defaultsTo: '',
+      description: `buscara el usuario con la id`
+    },
+    status: {
       type: 'string',
       defaultsTo: '',
       description: `buscara el usuario con la id`
@@ -36,6 +42,11 @@ module.exports = {
       statusCode: 401,
       responseType: 'unauthorized',
       description: 'No autorizado para ver los resultados de la pagina'
+    },
+    badRequest: {
+      statusCode: 400,
+      responseType: 'badRequest',
+      description: 'Error comun que sucede'
     }
   },
 
@@ -45,10 +56,11 @@ module.exports = {
      ***************************************************************************************/
     const rq = this.req;
     const _ = require('lodash');
+    const moment = require('moment');
     const userId = rq.session.userId;
     const isSocket = rq.isSocket;
     const updatedAt = moment().toJSON();
-    let count = 0;
+
 
     // Configurando Moment
     moment.locale(sails.config.custom.localeMoment);
@@ -80,10 +92,10 @@ module.exports = {
     let user = await Users.findOne({
       'id': userId
     });
-    let autorize = user.role <= 2 ? true : false; // Autorización de usuarios
+    let autorize = user.role <= 1 ? true : false; // Autorización de usuarios
 
-    // Verifico que usuario tiene pases de seguridad para visualizar los datos del usuario
-    // Solo los administradores y supervisores pueden ver los datos de los usuarios en concreto
+    // Verifico que usuario tiene pases de seguridad para Inactivar el  usuario
+    // Solo los administradores pueden ver los datos de los usuarios en concreto
     // para trabajar de uniempresas
     if (!autorize) {
       return exits.noAuthorize({
@@ -108,20 +120,53 @@ module.exports = {
       });
     }
 
+    if (inputs.status.length === 0) {
+      return exits.badRequest({
+        error: true,
+        code: 'error_data_find',
+        title: 'Faltan datos',
+        message: `Faltan datos para lograr realizar esta funcion`
+      });
+    }
+
+    // No se puede desactivar hacer esto asi mismo
+    if (inputs.id === userId) {
+      return exits.badRequest({
+        error: true,
+        code: 'error_user_i_am',
+        title: 'No te puedes desctivar',
+        message: 'Tu no puedes desactivar tu propia cuenta, tienes que pedir a otro usuario hacerlo'
+      });
+    }
+
 
     /***************************************************************************************
      * BLOQUE DE TRABAJO
      ***************************************************************************************/
+    // id del usuario
+    let idu = inputs.id;
+    let statusU = inputs.status;
+
+    // Buscando usuario
+    let userb = await Users.findOne({
+      id: idu,
+      status: statusU
+    }).select(['id','name','lastName','status']);
+
+    // Conversion de status
+    let statusChange = '';
+    if (userb.status === 'I') {
+      statusChange = 'E';
+    } else if (userb.status !== 'I') {
+      statusChange = 'I';
+    }
 
 
-    return exits.success();
+
+
+    return exits.success({
+      success: 'Ok',
+      statusChange: statusChange
+    });
   }
 };
-
-
-let e = new Error(`A este archivo le hace falta terminarlo.
-Son funciones necesarias para la administración de usuario
-`);
-e.name = 'Archivo no terminado: =>';
-sails.log.warn(e);
-
