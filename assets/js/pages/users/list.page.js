@@ -1225,6 +1225,11 @@ parasails.registerPage('list-users', {
                 text: `Se ha enviado el correo de cambio de contraseña y se ha bloqueado el usuario de manera exitosa.`,
                 showCancelButton: false,
                 confirmButtonText: 'Terminar'
+              }).then(e => {
+                if (e.value) {
+                  // Reinicio los datos
+                  this.closeModalView();
+                }
               });
             }
           });
@@ -1246,11 +1251,81 @@ parasails.registerPage('list-users', {
     btnUpdatedReconfirmEmail: async function (id) {
       let csrfToken = window.SAILS_LOCALS._csrf;
       let urls = '/api/v2/users/update-reconfirm-email';
+      // Busco el usario sin buscar en la base de datos
+      this.searchUserListData(id);
+
+      // Avertencia con el nombre del usuarios
       swal({
         type: 'warning',
-        title: 'Acción Usuario',
-        text: `Esta acción aun no se ha terminado.`
-      })
+        title: `Enviara un email a: ${this.userData.name}`,
+        text: `¿Estas seguro de enviar una reconfirmacion de email a este usuario?
+        Se enviara un Correo Electronico a ${this.userData.emailAddress} reconfirmar su email.
+        Esto solo funcionan con usuarios nuevos`,
+        confirmButtonColor: 'red',
+        showCancelButton: true,
+        cancelButtonColor: 'grey',
+        confirmButtonText: 'ENVIAR EMAIL'
+      }).then(async e => {
+        if (e.value && (this.userData.status === 'N')) {
+          this.updateProgress = true;
+
+          // Envio los datos
+          await io.socket.request({
+            url: urls,
+            method: 'patch',
+            data: {
+              id: id,
+              newEmail: this.changeEmail.newEmail,
+              confirmNewEmail: this.changeEmail.confirmNewEmail
+            },
+            headers: {
+              'content-type': 'application/json',
+              'x-csrf-token': csrfToken
+            }
+          }, (rsData, jwRs) => {
+            this.updateProgress = false;
+            // En caso de error
+            if (jwRs.error) {
+              let disp = jwRs.statusCode === 400 ? true : false;
+              this.jwRsError(jwRs, disp);
+            }
+
+            // Todo ok
+            if (jwRs.statusCode === 200) {
+              swal({
+                type: 'success',
+                title: `Procedimiento Exitoso`,
+                text: `Se ha enviado el correo para reconfirmar el Correo Electronico del usuario: ${this.userData.name}.`,
+                showCancelButton: false,
+                confirmButtonText: 'Terminar'
+              }).then( e => {
+                if (e.value) {
+                  // Reinicio los datos
+                  this.closeModalView();
+                }
+              });
+            }
+          });
+        }
+
+        // Por si el usuario no es nuevo
+        else if (this.userData.status !== 'N') {
+          swal({
+            type: 'info',
+            title: `Esta funcion solo es para usuarios nuevos`
+          });
+          // Reinicio los datos
+          this.closeModalView();
+        }
+
+        // Reinicio los datos si no usa la funcion
+        else {
+          this.closeModalView();
+        }
+      });
+
+
+
     },
 
 
