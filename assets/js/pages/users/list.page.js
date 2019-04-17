@@ -1202,8 +1202,6 @@ parasails.registerPage('list-users', {
             method: 'patch',
             data: {
               id: id,
-              newEmail: this.changeEmail.newEmail,
-              confirmNewEmail: this.changeEmail.confirmNewEmail
             },
             headers: {
               'content-type': 'application/json',
@@ -1275,8 +1273,6 @@ parasails.registerPage('list-users', {
             method: 'patch',
             data: {
               id: id,
-              newEmail: this.changeEmail.newEmail,
-              confirmNewEmail: this.changeEmail.confirmNewEmail
             },
             headers: {
               'content-type': 'application/json',
@@ -1338,6 +1334,27 @@ parasails.registerPage('list-users', {
      * @version 1.0
      */
     btnUpdatedActiveAccount:  async function (id) {
+      let csrfToken = window.SAILS_LOCALS._csrf;
+      let urls = '/api/v2/users/update-active-account';
+      // Busco el usario sin buscar en la base de datos
+      this.searchUserListData(id);
+
+      // Envio los datos
+          await io.socket.request({
+            url: urls,
+            method: 'patch',
+            data: {
+              id: id,
+              status: this.userData.status
+            },
+            headers: {
+              'content-type': 'application/json',
+              'x-csrf-token': csrfToken
+            }
+          }, (rsData, jwRs) => {
+            console.log(rsData);
+            this.closeModalView();
+          });
 
       // Buscamos el nombre del
       swal({
