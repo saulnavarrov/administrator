@@ -608,7 +608,7 @@ parasails.registerPage('list-users', {
     closeModalView: async function (modal) {
       this.activeModal = false;
       this.editTrueData = true;
-      $(`#${modal}`).modal('hide');
+      typeof (modal) === 'undefined' ? '' : $(`#${modal}`).modal('hide');
       this.btnCerrar = 'cerrar';
       this.userData = {}; // Limpia los Datos
       this.changeEmail = {newEmail :'',confirmNewEmail :'',error:'',errorText:''}; // Limpia los Datos
@@ -1031,14 +1031,17 @@ parasails.registerPage('list-users', {
 
 
     /**
-     * updatedChangeEmail
-     * @description Abre el modal para cambiar el correo electronico del usuario seleccionado
-     * @param {String} id :: Id del usuario
+     * searchUserListData
+     * @description buscara el usuario que deseamos mostar el nombre
+     * sin necesidad de entrar en la base de datos, ya que esta en la
+     * lista que descargamos, este no devolvera nada sino que lo guardara
+     * en una variable global del archivo, asi ahorro banda y reutilizo lo
+     * que tengo.
+     * @param {string} id del usuario a buscar
      * @author SaulNavarrov <sinavarrov@gmail.com>
      * @version 1.0
      */
-    btnUpdatedChangeEmail: async function (id) {
-      // Busco el usario sin buscar en la base de datos
+    searchUserListData: async function (id) {
       for (let idx = 0; idx < this.listData.length; idx++) {
         let elx = this.listData[idx];
         if (elx.id === id) {
@@ -1047,6 +1050,19 @@ parasails.registerPage('list-users', {
           idx = (this.listData.length + 9);
         }
       }
+    },
+
+
+    /**
+     * updatedChangeEmail
+     * @description Abre el modal para cambiar el correo electronico del usuario seleccionado
+     * @param {String} id :: Id del usuario
+     * @author SaulNavarrov <sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    btnUpdatedChangeEmail: async function (id) {
+      // Busco el usario sin buscar en la base de datos
+      this.searchUserListData(id);
 
       this.changeEmail.id = id;
       this.changeEmail.newEmail = '';
@@ -1165,15 +1181,7 @@ parasails.registerPage('list-users', {
       let csrfToken = window.SAILS_LOCALS._csrf;
       let urls = '/api/v2/users/update-change-password';
       // Busco el usario sin buscar en la base de datos
-      for (let idx = 0; idx < this.listData.length; idx++) {
-        let elx = this.listData[idx];
-        if (elx.id === id) {
-          this.userData = elx;
-          // Finalizar loop
-          idx = (this.listData.length + 9);
-        }
-      }
-
+      this.searchUserListData(id);
 
       // Avertencia con el nombre del usuarios
       swal({
@@ -1206,10 +1214,6 @@ parasails.registerPage('list-users', {
             // En caso de error
             if (jwRs.error) {
               let disp = jwRs.statusCode === 400 ? true : false;
-              // Cierra la ventana para visualizar el error
-              if (jwRs.statusCode >= 401) {
-                this.closeModalView(`pm-view-change-email`);
-              }
               this.jwRsError(jwRs, disp);
             }
 
@@ -1224,25 +1228,12 @@ parasails.registerPage('list-users', {
               });
             }
           });
+        } else {
+          this.closeModalView();
         }
       });
     },
 
-
-    /**
-     * updatedActiveAccount
-     * @description Activa o desactiva la cuenta, para no acceder asi cambie de contraseña
-     * @param {String} id :: Id del usuario
-     * @author SaulNavarrov <sinavarrov@gmail.com>
-     * @version 1.0
-     */
-    btnUpdatedActiveAccount:  async function (id) {
-      swal({
-        type: 'warning',
-        title: 'Acción Usuario',
-        text: `Esta acción aun no se ha terminado.`
-      })
-    },
 
 
     /**
@@ -1262,5 +1253,23 @@ parasails.registerPage('list-users', {
       })
     },
 
+
+
+    /**
+     * updatedActiveAccount
+     * @description Activa o desactiva la cuenta, para no acceder asi cambie de contraseña
+     * @param {String} id :: Id del usuario
+     * @author SaulNavarrov <sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    btnUpdatedActiveAccount:  async function (id) {
+
+      // Buscamos el nombre del
+      swal({
+        type: 'warning',
+        title: 'Acción Usuario',
+        text: `Esta acción aun no se ha terminado.`
+      })
+    },
   }
 });
