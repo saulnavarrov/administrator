@@ -167,10 +167,3 @@ module.exports = {
     return exits.success();
   }
 };
-
-// se buscara el usuario
-// se validara si es Nuevo el usuario y lo activo en el tiempo desicnado
-// se genera un nuevo token al correo, tiempo, se le envia una nueva contraseña generada de manera aleatoria
-// se guarda todo y se valida.
-// valida todo y se pasa los errores al frontend y el success
-//
