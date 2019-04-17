@@ -130,6 +130,7 @@ module.exports = {
       return exits.badRequest({
         error: true,
         code: 'error_data_incomplete',
+        title: 'Faltan datos',
         message: `Los campos necesarios para realizar esta accion esta incompleta`
       });
     }
@@ -139,6 +140,7 @@ module.exports = {
       return exits.badRequest({
         error: true,
         code: 'error_data_incomplete',
+        title: 'Faltan datos',
         message: `Los campos necesarios para realizar esta accion esta incompleta`
       });
     }
@@ -148,6 +150,7 @@ module.exports = {
       return exits.badRequest({
         error: true,
         code: 'error_data_incomplete',
+        title: 'Faltan datos',
         message: `Los campos necesarios para realizar esta accion esta incompleta`
       });
     }
