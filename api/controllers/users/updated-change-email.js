@@ -66,7 +66,6 @@ module.exports = {
     const isSocket = rq.isSocket;
     const updatedAt = moment().toJSON();
     var valEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    let count = 0;
 
     // Configurando Moment
     moment.locale(sails.config.custom.localeMoment);
