@@ -1,0 +1,41 @@
+<div id="customers-list" v-cloak>
+
+  <%- partial('../../partials/navbar.ejs') %>
+  <%- partial('../../partials/mainSidebar.ejs') %>
+
+  <div class="main-content">
+    <section class="section">
+
+      <h1 class="section-header">
+        <div>Clientes usuarios</div>
+        <div class="section-header-breadcrumb dropdown">
+          <a href="javascript:void(0)" data-toggle="dropdown" class="btn btn-outline-dark">Acciones</a>
+          <ul class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+            <li><a href="javascript:void(0)" class="dropdown-item" v-on:click="btnOpenModalCreateH('open')">Agregar Nueva cliente</a></li>
+          </ul>
+        </div>
+      </h1>
+
+      <section class="section-body">
+        <div class="jumbotron">
+          <h1>TODO: Implement this page.</h1>
+          <p>Todo listo para iniciar este hermoso clientes</p>
+          <br>
+        </div>
+      </section>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">Titulo Card</div>
+            <div class="card-body">aqui todo</div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <%- partial('../../partials/footer.ejs') %>
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>
