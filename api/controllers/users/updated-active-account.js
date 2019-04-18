@@ -162,8 +162,24 @@ module.exports = {
     }
 
 
+    await Users.update({
+      id: idu,
+      status: statusU
+    }).set({
+      status: statusChange
+    });
 
 
+    // Si se desactivara se cieran todos las sessiones
+    if (statusChange === 'I') {
+      await Sessions.destroy({
+        'session': {
+          'contains': `,"userId":"${idu}",`
+        }
+      });
+    }
+
+    // Retorno de datos.
     return exits.success({
       success: 'Ok',
       statusChange: statusChange
