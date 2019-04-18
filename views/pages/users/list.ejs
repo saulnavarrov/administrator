@@ -69,9 +69,9 @@
                             </button>
                             <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
                               <div class="dropdown-title">Seleccionar</div>
-                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="selectAll('a')"><i class="fas fa-check-square"> </i> Seleccionar Todo</a>
-                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="selectAll('z')"><i class="fas fa-window-close"> </i> Deseleccionar Todo</a>
-                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="selectAll('c')"><i class="fas fa-sign-in-alt"> </i> Invertir Seleción</a>
+                              <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="selectAll('a')"><i class="fas fa-check-square"> </i> Seleccionar Todo</a>
+                              <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="selectAll('z')"><i class="fas fa-window-close"> </i> Deseleccionar Todo</a>
+                              <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="selectAll('c')"><i class="fas fa-sign-in-alt"> </i> Invertir Seleción</a>
                             </div>
                           </div>
                         </th>
@@ -97,24 +97,24 @@
                         <td :title="list.roleName">{{ list.status }} - {{ list.role }} - {{ list.roleName.substr(0,7) }}... </td>
                         <td>{{ list.emailStatus }}</td>
                         <td width="130">
-                          <div class="btn-group dropleft float-right">
+                          <div class="btn-group dropleft float-right dropdown">
                             <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Detalles
                             </button>
                             <div class="dropdown-menu" x-placement="left-start" style="position: absolute; transform: translate3d(-202px, 0px, 0px); top: 0px; left: 0px; will-change: transform;">
-                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="findOneUserView(list.id)">Ver Completo</a>
-                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="editUser(list.id)">Editar Usuario</a>
-                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="toUnlockUser(list.id, list.status)">{{ list.status === 'B' ? 'Desbloquear' : 'Bloquear' }}</a>
+                              <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="findOneUserView(list.id)">Ver Completo</a>
+                              <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="editUser(list.id)">Editar Usuario</a>
+                              <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="toUnlockUser(list.id, list.status)">{{ list.status === 'B' ? 'Desbloquear' : 'Bloquear' }}</a>
                               <% if( me.role === 0 ) { %>
                               <div class="dropdown-divider"></div>
-                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="btnUpdatedChangeEmail(list.id)" title="Hace la petición para cambiar el E-mail">Cambiar su E-mail</a>
-                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="btnUpdatedReconfirmEmail(list.id)" title="Reenvia un email para Reconfirmar E-Mail">Reconfirmar E-mail</a>
-                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="btnUpdatedChangePassword(list.id)" title="Envia un Email para recuperar contraseña">Reiniciar Contraseña</a>
+                              <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="btnUpdatedChangeEmail(list.id)" title="Hace la petición para cambiar el E-mail">Cambiar su E-mail</a>
+                              <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="btnUpdatedReconfirmEmail(list.id)" title="Reenvia un email para Reconfirmar E-Mail">Reconfirmar E-mail</a>
+                              <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="btnUpdatedChangePassword(list.id)" title="Envia un Email para recuperar contraseña">Reiniciar Contraseña</a>
                               <div class="dropdown-divider"></div>
-                              <a class="dropdown-item" href="javascript:void(0)" v-on:click="btnUpdatedActiveAccount(list.id)" title="Activa o desactiva la cuenta, para no acceder asi cambie de contraseña" disabled>Activar/Desactivar Cuenta</a>
+                              <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="btnUpdatedActiveAccount(list.id)" title="Activa o desactiva la cuenta, para no acceder asi cambie de contraseña" disabled><i class="fas fa-fire"> </i> {{ list.status === 'E' ? 'Desctivar' : list.status === 'I' ? 'Activar' : 'Desactivar' }} Cuenta</a>
                                 <% if( me.isSuperAdmin ) { %>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="javascript:void(0)" v-on:click="deleteUser(list.id)">Eliminar</a>
+                                <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="deleteUser(list.id)">Eliminar</a>
                               <% }
                               } %>
                             </div>
