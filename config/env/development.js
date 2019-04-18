@@ -208,7 +208,9 @@ module.exports = {
     *                                                                          *
     ***************************************************************************/
     cookie: {
-      // secure: true,
+      // Cuando se usa SSL este pasa a true, sino pondra problema y rechazara todas
+      // las peticiones que se le hagan al backend
+      secure: !loc.https,
       maxAge: 24 * 60 * 60 * 1000,  // 24 hours
     },
 
@@ -306,7 +308,7 @@ module.exports = {
     * (https://sailsjs.com/config/http)                                        *
     *                                                                          *
     ***************************************************************************/
-    trustProxy: false,
+    trustProxy: log.trustProxy
 
   },
 

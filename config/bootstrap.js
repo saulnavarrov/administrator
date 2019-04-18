@@ -28,7 +28,7 @@ module.exports.bootstrap = async function(done) {
   // ```
   if (await Users.count() === 0) {
     await Users.createEach([{
-      emailAddress: 'sinavarrov@gmail.com',
+      emailAddress: 'sinavarrov@example.com',
       name: 'Saul',
       lastName: 'Navarrov',
       isSuperAdmin: true,
