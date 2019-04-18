@@ -7,6 +7,8 @@ parasails.registerPage('list-users', {
     c: 1,
     listData: {}, // Listado de Usuarios
     userData: {}, // Usuarios individuales
+    changeEmail: {newEmail :'',confirmNewEmail :'',error:'',errorText:''}, // Para cambiar el correo electronico
+    changePassword: {}, // Para cambiar la contraseña del usuario
     listCount: 0, // cantidad de resultados en pantalla
     listFullCount: 0, // Total de resultados
     activeModal: false, // Si el modal de Edicion o edicion esta activo
@@ -196,7 +198,7 @@ parasails.registerPage('list-users', {
           if (this.searching && (this.listCount === 0)) {
             this.tableData = this.footerTable = false;
             this.alert.title = 'No hay Resultados';
-            this.alert.message = `No se encontraron resultados para la busqueda: ${this.search}`;
+            this.alert.message = `No se encontraron resultados para la busqueda: "${this.searchsText}"`;
             // Animación de entrada
             this.searchAnimated(true, 'bounceIn');
           } else {
@@ -230,14 +232,25 @@ parasails.registerPage('list-users', {
           message: jwRs.error.message
         };
       } else if (jwRs.statusCode >= 400 && jwRs.statusCode <= 403) {
-        this.alert = {
-          active: true,
-          animated: 'zoomIn',
-          type: 'alert-warning',
-          icon: 'ion-ios-close-outline',
-          title: `Error: ${jwRs.statusCode} - ${jwRs.body.code}`,
-          message: jwRs.body.message
-        };
+        if (display) {
+          swal({
+            type: 'warning',
+            title: `${jwRs.statusCode} - ${jwRs.body.title}`,
+            text: `${jwRs.body.code} - ${jwRs.body.message}`,
+            showCancelButton: false,
+            confirmButtonColor: '#616161',
+            confirmButtonText: 'Aceptar'
+          });
+        } else {
+          this.alert = {
+            active: true,
+            animated: 'zoomIn',
+            type: 'alert-warning',
+            icon: 'ion-ios-close-outline',
+            title: `Error: ${jwRs.statusCode} - ${jwRs.body.code}`,
+            message: jwRs.body.message
+          };
+        }
       } else if (jwRs.statusCode === 404) {
         if(display) {
           swal({
@@ -426,7 +439,6 @@ parasails.registerPage('list-users', {
         for (cont; cont < this.listData.length; cont++) {
           if (x === 'a') {
             verifica = !this.listData[cont].check ? verifica + 1 : verifica;
-            console.log(verifica)
             if (verifica === 0 && cont === (this.listData.length - 1)) {
               selectActive = false;
               iziToast.error({
@@ -595,9 +607,11 @@ parasails.registerPage('list-users', {
     closeModalView: async function (modal) {
       this.activeModal = false;
       this.editTrueData = true;
-      $(`#${modal}`).modal('hide');
+      typeof (modal) === 'undefined' ? '' : $(`#${modal}`).modal('hide');
       this.btnCerrar = 'cerrar';
       this.userData = {}; // Limpia los Datos
+      this.changeEmail = {newEmail :'',confirmNewEmail :'',error:'',errorText:''}; // Limpia los Datos
+      this.changePassword = {}; // Limpia los datos
     },
 
 
@@ -900,13 +914,64 @@ parasails.registerPage('list-users', {
      * @author Saúl Navarrov <Sinavarrov@gmail.com>
      * @version 1.0
      */
-    toUnlockUser: async function (id) {
-      swal({
-        title: 'Funcion no terminada',
-        text: `Terminar la funcion para desbloquear usuarios,
-        esta se encargara de hacer lo mismo como forgot, pero la accion
-        la podra hacer el mismo administrador ${id}`
-      });
+    toUnlockUser: async function (id, status) {
+      let csrfToken = window.SAILS_LOCALS._csrf;
+      let urls = '/api/v2/users/update-unblock';
+      let title = `¿Deseas ${status === 'B' ? 'Desbloquear':'Bloquear'} Usuario?`;
+      let text = `Este usuario se encuentra ${status === 'B' ? 'Bloqueado':'Desbloqueado'}, en realidad quieres ${status === 'B' ? 'Desbloquear':'Bloquear'} hasta que cambie su contraseña.`;
+      let btnConfirm = `${status === 'B' ? 'Desbloquear':'Bloquear'}`;
+
+      // Uso normal, cuando este este en estado "B" o "E"
+      if (status === 'B' || status === 'E') {
+        swal({
+          type: 'warning',
+          title: title,
+          text: text,
+          confirmButtonColor: 'red',
+          showCancelButton: true,
+          cancelButtonColor: 'grey',
+          confirmButtonText: btnConfirm
+        }).then(async e => {
+          if (e.value) {
+            // Request change status
+            await io.socket.request({
+              url: urls,
+              method: 'patch',
+              data: {
+                id: id,
+                ed: btnConfirm
+              },
+              headers: {
+                'content-type': 'application/json',
+                'x-csrf-token': csrfToken
+              }
+            }, async (rsData, jwRs) => {
+              // En caso de error
+              if (jwRs.error) {
+                this.jwRsError(jwRs, true);
+              }
+
+              if (jwRs.statusCode === 200) {
+                swal({
+                  type: 'success',
+                  title: 'Procedimiento ejecutado correctamente',
+                  text: rsData.text
+                });
+                // Reinicial la pantalla
+                this.dataDb();
+              }
+            });
+          }
+        });
+      }
+      // Saco un aviso cuando no se puede usar esta opcion
+      else {
+        swal({
+          type: 'info',
+          title: 'No se puede usar esta función',
+          text: 'Función no permitida debido a que no cumple con los parametros para ser usada',
+        });
+      }
     },
 
 
@@ -948,7 +1013,6 @@ parasails.registerPage('list-users', {
               this.jwRsError(jwRs, true);
             }
 
-
             if (jwRs.statusCode === 200) {
               swal({
                 type: 'success',
@@ -966,65 +1030,373 @@ parasails.registerPage('list-users', {
 
 
     /**
-     * updatedActiveAccount
-     * @description
-     * @param {String} id :: Id del usuario
+     * searchUserListData
+     * @description buscara el usuario que deseamos mostar el nombre
+     * sin necesidad de entrar en la base de datos, ya que esta en la
+     * lista que descargamos, este no devolvera nada sino que lo guardara
+     * en una variable global del archivo, asi ahorro banda y reutilizo lo
+     * que tengo.
+     * @param {string} id del usuario a buscar
      * @author SaulNavarrov <sinavarrov@gmail.com>
      * @version 1.0
      */
-    updatedActiveAccount:  async function (id) {
-      swal({
-        type: 'warning',
-        title: 'Acción Usuario',
-        text: `Esta acción aun no se ha terminado.`
-      })
+    searchUserListData: async function (id) {
+      for (let idx = 0; idx < this.listData.length; idx++) {
+        let elx = this.listData[idx];
+        if (elx.id === id) {
+          this.userData = elx;
+          // Finalizar loop
+          idx = (this.listData.length + 9);
+        }
+      }
     },
 
 
     /**
      * updatedChangeEmail
-     * @description
+     * @description Abre el modal para cambiar el correo electronico del usuario seleccionado
      * @param {String} id :: Id del usuario
+     * @author SaulNavarrov <sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    btnUpdatedChangeEmail: async function (id) {
+      // Busco el usario sin buscar en la base de datos
+      this.searchUserListData(id);
+
+      this.changeEmail.id = id;
+      this.changeEmail.newEmail = '';
+      this.changeEmail.confirmNewEmail = '';
+      this.changeEmail.error = '';
+      this.changeEmail.errorText = '';
+
+      // Avertencia con el nombre del usuarios
+      swal({
+        type: 'warning',
+        title: `Cambiar Email a ${this.userData.name}`,
+        text: `¿Estas seguro de que vas a cambiar el Correo Electronico? Si al usuario no se le avisa puede complicar el inicio de sesion del usuario o los usuarios.`,
+        confirmButtonColor: 'red',
+        showCancelButton: true,
+        cancelButtonColor: 'grey',
+        confirmButtonText: 'CAMBIAR EMAIL'
+      }).then(async e => {
+        if (e.value) {
+          $(`#pm-view-change-email`).modal('show');
+        }else{
+          this.closeModalView(`pm-view-change-email`);
+        }
+      });
+    },
+
+    /**
+     * updatedChangeEmail
+     * @description envia el cambio a la base de datos para que sean acogidas
+     * @param {string} id identificador de la base de datos del usuario
      * @author SaulNavarrov <sinavarrov@gmail.com>
      * @version 1.0
      */
     updatedChangeEmail: async function (id) {
+      let csrfToken = window.SAILS_LOCALS._csrf;
+      let urls = '/api/v2/users/update-change-email';
+      let validateEmails = false;
+
+      // Regex de email
+      var valEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+      // Validando emails
+      if (!valEmail.test(this.changeEmail.newEmail) || !valEmail.test(this.changeEmail.confirmNewEmail)) {
+        this.changeEmail.error = 'is-invalid';
+        this.changeEmail.errorText = 'Escriba un correo electronico valido';
+      } else {
+        this.changeEmail.error = 'is-valid';
+        this.changeEmail.errorText = '';
+        validateEmails = true;
+      }
+
+      // Verificando que sean iguales los correos
+      if (this.changeEmail.newEmail !== this.changeEmail.confirmNewEmail) {
+        this.changeEmail.error = 'is-invalid';
+        this.changeEmail.errorText = 'Los correos electronicos no coinciden. Verifique e intente de nuevo';
+        validateEmails = false;
+      } else {
+        this.changeEmail.error = 'is-valid';
+        this.changeEmail.errorText = '';
+        validateEmails = true;
+      }
+
+      // send Request
+      if (validateEmails) {
+        this.updateProgress = true;
+        await io.socket.request({
+          url: urls,
+          method: 'patch',
+          data: {
+            id: id,
+            newEmail: this.changeEmail.newEmail,
+            confirmNewEmail: this.changeEmail.confirmNewEmail
+          },
+          headers: {
+            'content-type': 'application/json',
+            'x-csrf-token': csrfToken
+          }
+        }, (rsData, jwRs) => {
+          this.updateProgress = false;
+          // En caso de error
+          if (jwRs.error) {
+            let disp = jwRs.statusCode === 400 ? true : false;
+            // Cierra la ventana para visualizar el error
+            if (jwRs.statusCode >= 401) {
+              this.closeModalView(`pm-view-change-email`);
+            }
+            this.jwRsError(jwRs, disp);
+          }
+
+          // Todo ok
+          if (jwRs.statusCode === 200) {
+            swal({
+              type: 'success',
+              title: `Cambiar Email Exitoso`,
+              text: `El cambio de email ha sucedido de manera correcta, verifique el correo electronico para confirmar el cambio`,
+              showCancelButton: false,
+              confirmButtonText: 'Terminar'
+            }).then(async e => {
+              if (e.value) {
+                this.closeModalView(`pm-view-change-email`);
+              }
+            });
+
+            // Reinicial la pantalla
+            this.dataDb();
+          }
+        });
+      }
+    },
+
+
+    /**
+     * updatedChangePassword
+     * @description cambia la contraseña de usuario
+     * @param {String} id :: Id del usuario
+     * @author SaulNavarrov <sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    btnUpdatedChangePassword: async function (id) {
+      let csrfToken = window.SAILS_LOCALS._csrf;
+      let urls = '/api/v2/users/update-change-password';
+      // Busco el usario sin buscar en la base de datos
+      this.searchUserListData(id);
+
+      // Avertencia con el nombre del usuarios
       swal({
         type: 'warning',
-        title: 'Acción Usuario',
-        text: `Esta acción aun no se ha terminado.`
-      })
+        title: `Bloquear y Cambiar Contraseña de: ${this.userData.name}`,
+        text: `¿Estas seguro de que vas a cambiar el bloqueo y cambio de contraseña?
+        Se enviara un Correo Electronico a ${this.userData.emailAddress} para cambiar
+        su contraseña.`,
+        confirmButtonColor: 'red',
+        showCancelButton: true,
+        cancelButtonColor: 'grey',
+        confirmButtonText: 'CONTINUAR'
+      }).then(async e => {
+        if (e.value) {
+          this.updateProgress = true;
+          await io.socket.request({
+            url: urls,
+            method: 'patch',
+            data: {
+              id: id,
+            },
+            headers: {
+              'content-type': 'application/json',
+              'x-csrf-token': csrfToken
+            }
+          }, (rsData, jwRs) => {
+            this.updateProgress = false;
+            // En caso de error
+            if (jwRs.error) {
+              let disp = jwRs.statusCode === 400 ? true : false;
+              this.jwRsError(jwRs, disp);
+            }
+
+            // Todo ok
+            if (jwRs.statusCode === 200) {
+              swal({
+                type: 'success',
+                title: `Procedimiento Exitoso`,
+                text: `Se ha enviado el correo de cambio de contraseña y se ha bloqueado el usuario de manera exitosa.`,
+                showCancelButton: false,
+                confirmButtonText: 'Terminar'
+              }).then(e => {
+                if (e.value) {
+                  // Reinicio los datos
+                  this.closeModalView();
+                }
+              });
+            }
+          });
+        } else {
+          this.closeModalView();
+        }
+      });
     },
+
 
 
     /**
      * updatedReconfirmEmail
-     * @description
+     * @description reconfirma el correo electronico, crea una nueva fecha y un nuevo link
      * @param {String} id :: Id del usuario
      * @author SaulNavarrov <sinavarrov@gmail.com>
      * @version 1.0
      */
-    updatedReconfirmEmail: async function (id) {
+    btnUpdatedReconfirmEmail: async function (id) {
+      let csrfToken = window.SAILS_LOCALS._csrf;
+      let urls = '/api/v2/users/update-reconfirm-email';
+      // Busco el usario sin buscar en la base de datos
+      this.searchUserListData(id);
+
+      // Avertencia con el nombre del usuarios
       swal({
         type: 'warning',
-        title: 'Acción Usuario',
-        text: `Esta acción aun no se ha terminado.`
-      })
+        title: `Enviara un email a: ${this.userData.name}`,
+        text: `¿Estas seguro de enviar una reconfirmacion de email a este usuario?
+        Se enviara un Correo Electronico a ${this.userData.emailAddress} reconfirmar su email.
+        Esto solo funcionan con usuarios nuevos`,
+        confirmButtonColor: 'red',
+        showCancelButton: true,
+        cancelButtonColor: 'grey',
+        confirmButtonText: 'ENVIAR EMAIL'
+      }).then(async e => {
+        if (e.value && (this.userData.status === 'N')) {
+          this.updateProgress = true;
+
+          // Envio los datos
+          await io.socket.request({
+            url: urls,
+            method: 'patch',
+            data: {
+              id: id,
+            },
+            headers: {
+              'content-type': 'application/json',
+              'x-csrf-token': csrfToken
+            }
+          }, (rsData, jwRs) => {
+            this.updateProgress = false;
+            // En caso de error
+            if (jwRs.error) {
+              let disp = jwRs.statusCode === 400 ? true : false;
+              this.jwRsError(jwRs, disp);
+            }
+
+            // Todo ok
+            if (jwRs.statusCode === 200) {
+              swal({
+                type: 'success',
+                title: `Procedimiento Exitoso`,
+                text: `Se ha enviado el correo para reconfirmar el Correo Electronico del usuario: ${this.userData.name}.`,
+                showCancelButton: false,
+                confirmButtonText: 'Terminar'
+              }).then( e => {
+                if (e.value) {
+                  // Reinicio los datos
+                  this.closeModalView();
+                }
+              });
+            }
+          });
+        }
+
+        // Por si el usuario no es nuevo
+        else if (this.userData.status !== 'N') {
+          swal({
+            type: 'info',
+            title: `Esta funcion solo es para usuarios nuevos`
+          });
+          // Reinicio los datos
+          this.closeModalView();
+        }
+
+        // Reinicio los datos si no usa la funcion
+        else {
+          this.closeModalView();
+        }
+      });
+
+
+
     },
 
+
+
     /**
-     * updatedChangePassword
-     * @description
+     * updatedActiveAccount
+     * @description Activa o desactiva la cuenta, para no acceder asi cambie de contraseña
      * @param {String} id :: Id del usuario
      * @author SaulNavarrov <sinavarrov@gmail.com>
      * @version 1.0
      */
-    updatedChangePassword: async function (id) {
+    btnUpdatedActiveAccount:  async function (id) {
+      let csrfToken = window.SAILS_LOCALS._csrf;
+      let urls = '/api/v2/users/update-active-account';
+      // Busco el usario sin buscar en la base de datos
+      this.searchUserListData(id);
+
+      // Avertencia con el nombre del usuarios
       swal({
         type: 'warning',
-        title: 'Acción Usuario',
-        text: `Esta acción aun no se ha terminado.`
-      })
+        title: `Enviara un email a: ${this.userData.name}`,
+        text: `¿Estas seguro de enviar una reconfirmacion de email a este usuario?
+        Se enviara un Correo Electronico a ${this.userData.emailAddress} reconfirmar su email.
+        Esto solo funcionan con usuarios nuevos`,
+        confirmButtonColor: 'red',
+        showCancelButton: true,
+        cancelButtonColor: 'grey',
+        confirmButtonText: 'ENVIAR EMAIL'
+      }).then(async e => {
+        if (e.value) {
+          this.updateProgress = true;
+
+          // Envio los datos
+          await io.socket.request({
+            url: urls,
+            method: 'patch',
+            data: {
+              id: id,
+              status: this.userData.status
+            },
+            headers: {
+              'content-type': 'application/json',
+              'x-csrf-token': csrfToken
+            }
+          }, (rsData, jwRs) => {
+            this.updateProgress = false;
+            // En caso de error
+            if (jwRs.error) {
+              let disp = jwRs.statusCode === 400 ? true : false;
+              this.jwRsError(jwRs, disp);
+            }
+
+            // Todo ok
+            if (jwRs.statusCode === 200) {
+              swal({
+                type: 'success',
+                title: `Procedimiento Exitoso`,
+                text: `Se ha ${rsData.statusChange === 'I' ? 'Desactivado' : rsData.statusChange === 'E' ? 'Activado' : '?'} el usuario: ${this.userData.name}.`,
+                showCancelButton: false,
+                confirmButtonText: 'Ok'
+              }).then(e => {
+                if (e.value) {
+                  // Reinicio los datos
+                  this.closeModalView();
+                }
+              });
+              this.closeModalView();
+              // Reinicial la pantalla
+              this.dataDb();
+            }
+          });
+        }
+      });
     },
   }
 });

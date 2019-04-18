@@ -69,9 +69,9 @@
                             </button>
                             <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
                               <div class="dropdown-title">Seleccionar</div>
-                              <a class="dropdown-item" href="#" v-on:click="selectAll('a')"><i class="fas fa-check-square"> </i> Seleccionar Todo</a>
-                              <a class="dropdown-item" href="#" v-on:click="selectAll('z')"><i class="fas fa-window-close"> </i> Deseleccionar Todo</a>
-                              <a class="dropdown-item" href="#" v-on:click="selectAll('c')"><i class="fas fa-sign-in-alt"> </i> Invertir Seleción</a>
+                              <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="selectAll('a')"><i class="fas fa-check-square"> </i> Seleccionar Todo</a>
+                              <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="selectAll('z')"><i class="fas fa-window-close"> </i> Deseleccionar Todo</a>
+                              <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="selectAll('c')"><i class="fas fa-sign-in-alt"> </i> Invertir Seleción</a>
                             </div>
                           </div>
                         </th>
@@ -97,28 +97,26 @@
                         <td :title="list.roleName">{{ list.status }} - {{ list.role }} - {{ list.roleName.substr(0,7) }}... </td>
                         <td>{{ list.emailStatus }}</td>
                         <td width="130">
-                          <div class="btn-group dropleft float-right">
+                          <div class="btn-group dropleft float-right dropdown">
                             <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Detalles
                             </button>
                             <div class="dropdown-menu" x-placement="left-start" style="position: absolute; transform: translate3d(-202px, 0px, 0px); top: 0px; left: 0px; will-change: transform;">
-                              <a class="dropdown-item" href="#" v-on:click="findOneUserView(list.id)">Ver Completo</a>
-                              <a class="dropdown-item" href="#" v-on:click="editUser(list.id)">Editar Usuario</a>
-                              <a class="dropdown-item" href="#" v-on:click="toUnlockUser(list.id)">Desbloquear</a>
+                              <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="findOneUserView(list.id)">Ver Completo</a>
+                              <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="editUser(list.id)">Editar Usuario</a>
+                              <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="toUnlockUser(list.id, list.status)">{{ list.status === 'B' ? 'Desbloquear' : 'Bloquear' }}</a>
                               <% if( me.role === 0 ) { %>
                               <div class="dropdown-divider"></div>
-                              <a class="dropdown-item" href="#" v-on:click="updatedChangeEmail(list.id)" title="Hace la petición para cambiar el E-mail">Cambiar su E-mail</a>
-                              <a class="dropdown-item" href="#" v-on:click="updatedReconfirmEmail(list.id)" title="Reenvia un email para Reconfirmar E-Mail">Reconfirmar E-mail</a>
-                              <a class="dropdown-item" href="#" v-on:click="updatedChangePassword(list.id)" title="Envia un Email para recuperar contraseña">Reiniciar Contraseña</a>
+                              <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="btnUpdatedChangeEmail(list.id)" title="Hace la petición para cambiar el E-mail">Cambiar su E-mail</a>
+                              <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="btnUpdatedReconfirmEmail(list.id)" title="Reenvia un email para Reconfirmar E-Mail">Reconfirmar E-mail</a>
+                              <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="btnUpdatedChangePassword(list.id)" title="Envia un Email para recuperar contraseña">Reiniciar Contraseña</a>
+                              <div class="dropdown-divider"></div>
+                              <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="btnUpdatedActiveAccount(list.id)" title="Activa o desactiva la cuenta, para no acceder asi cambie de contraseña" disabled><i class="fas fa-fire"> </i> {{ list.status === 'E' ? 'Desctivar' : list.status === 'I' ? 'Activar' : 'Desactivar' }} Cuenta</a>
                                 <% if( me.isSuperAdmin ) { %>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" v-on:click="deleteUser(list.id)">Eliminar</a>
+                                <a class="dropdown-item has-icon" href="javascript:void(0)" v-on:click="deleteUser(list.id)">Eliminar</a>
                               <% }
                               } %>
-                              <div class="dropdown-divider">Nuevos Para organizar</div>
-                              <a class="dropdown-item" href="#" disabled>Bloquear/Desbloquear Cuenta</a>
-                              <a class="dropdown-item" href="#" disabled>Activar/Desactivar Cuenta</a>
-                              <a class="dropdown-item" href="#" disabled>Cambiar Avatar</a>
                             </div>
                           </div>
                         </td>
@@ -195,7 +193,41 @@
 
   <%/* PARTIALES DE LA PAGINA */%>
   <%- partial('./pm-view-and-edith-user.ejs') %>
+  <%- partial('./pm-view-change-email.ejs') %>
+  <%- partial('./pm-view-change-passwords.ejs') %>
   <%/* FIN PARTIALES DE LA PAGINA */%>
+
+  <%/* VENTANAS DE ACTUALIZACIONES */%>
+  <%/* ACTUALIZANDO DATOS */%>
+  <div class="container-fluit m-loading-content" v-show="updateProgress" style="display:none;">
+    <div class="row m-loading-popup">
+      <div class="col-12 text-center">
+        <h1>Actualizando...</h1>
+      </div>
+      <div class="col-12">
+        <div class="progress">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75"
+            aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%/* ACTUALIZANDO AVATAR */%>
+  <div class="container-fluit m-loading-content" v-show="updateAvatar.progress" style="display:none;">
+    <div class="row m-loading-popup">
+      <div class="col-12 text-center">
+        <h1>Actualizando Avatar...</h1>
+      </div>
+      <div class="col-12">
+        <div class="progress">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75"
+            aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%/* FIN DE LAS VENTANAS DE ACTUALIZACIONES */%>
 
   <%- partial('../../partials/footer.ejs') %>
 </div>

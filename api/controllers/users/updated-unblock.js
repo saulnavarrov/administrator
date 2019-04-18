@@ -21,6 +21,11 @@ module.exports = {
       type: 'string',
       defaultsTo: '',
       description: `buscara el usuario con la id`
+    },
+    ed: {
+      type: 'string',
+      enum: ['Desbloquear', 'Bloquear'],
+      description: `Bloqueara o desbloqueara el usuario seleccionado`
     }
   },
 
@@ -36,6 +41,11 @@ module.exports = {
       statusCode: 401,
       responseType: 'unauthorized',
       description: 'No autorizado para ver los resultados de la pagina'
+    },
+    badRequest: {
+      statusCode: 400,
+      responseType: 'badRequest',
+      description: 'Error comun que sucede'
     }
   },
 
@@ -45,6 +55,7 @@ module.exports = {
      ***************************************************************************************/
     const rq = this.req;
     const _ = require('lodash');
+    const moment = require('moment');
     const userId = rq.session.userId;
     const isSocket = rq.isSocket;
     const updatedAt = moment().toJSON();
@@ -98,7 +109,7 @@ module.exports = {
      * BLOQUE DE DATOS OBLIGATORIOS Y REVISION DE DATA.
      ***************************************************************************************/
     // Verificando que esta pidiendo datos de un usuario y no venga vacio
-    if (inputs.id.length === 0) {
+    if (inputs.id.length === 0 || inputs.id === '') {
       return exits.notFound({
         model: 'users',
         count: 0,
@@ -108,17 +119,54 @@ module.exports = {
       });
     }
 
+    if (inputs.ed.length === 0 || inputs.ed === '') {
+      return exits.badRequest({
+        error: true,
+        code: 'Datos incompletos',
+        message: `Faltan datos, revise y vuelva a intentarlo`
+      });
+    }
+
 
     /***************************************************************************************
      * BLOQUE DE TRABAJO
      ***************************************************************************************/
+    // Los 2 estados que manejara este boton
+    let changeStatus = inputs.ed === 'Bloquear' ? 'B' : inputs.ed === 'Desbloquear' ? 'E' : '';
 
-    return exits.success();
+    // Busco el usuario que carga con esa id
+    let userb = await Users.findOne({
+      id: inputs.id
+    }).select(['id', 'status']);
+
+    // Solo se puede usar esta opcion cuando el usuario esta bloqueado o activo
+    if (userb.status === 'B' || userb.status === 'E') {
+      // proceso a bloquear o desbloquear el usuario
+      sails.log(changeStatus);
+      await Users.update({
+        id: userb.id,
+        status: userb.status
+      }).set({
+        status: changeStatus,
+        updatedAt: updatedAt
+      });
+
+      return exits.success({
+        model: 'users',
+        count: 0,
+        success: 'ok',
+        text: `El usuario se le ha ${changeStatus === 'B' ? 'Bloqueado' : changeStatus === 'E' ? 'Desbloqueado' : 'Acción No Realizada'}`
+      });
+    } else {
+      // Cuando el usuario envie una variable del que no corresponde 'B' o 'E' para hacer el cambio de statdo
+      // Este devolvera este error debido a que se requiere esa variable
+      return exits.badRequest({
+        model: 'users',
+        count: 0,
+        error: true,
+        code: 'error_change_status',
+        message: `Accion Incorrecta: para cambiar el status utilize un codigo valido para realizar esta accion.`
+      });
+    }
   }
 };
-
-let e = new Error(`A este archivo le hace falta terminarlo.
-Son funciones necesarias para la administración de usuario
-`);
-e.name = 'Archivo no terminado: =>';
-sails.log.warn(e);

@@ -203,7 +203,7 @@ requests over WebSockets instead of HTTP).`,
 
         // Criterio de busqueda de datos de las fallas de los usuarios
         let criterioFinds = {
-          'users': userRecord.id,
+          'user': userRecord.id,
           // 'success': false,
           'created': {
             '>=': tampsTime
@@ -214,7 +214,7 @@ requests over WebSockets instead of HTTP).`,
         let countFailsSession = await AttemptsLogin.count(criterioFinds);
         let failsSession = await AttemptsLogin.find(criterioFinds).sort('id DESC');
 
-        sails.log(`Conteo de inicio de session ${countFailsSession++} tiempo ${tampsTime}`);
+        // sails.log(`Conteo de inicio de session ${countFailsSession++} tiempo ${tampsTime}`);
         // sails.log(failsSession);
 
 
@@ -312,7 +312,5 @@ async function attemptsLoginFailSee(dat) {
     success: dat.s,
     ip: dat.ip,
     port: dat.port
-    // ip: this.req.headers['x-forwarded-for'],
-    // port: this.req.protocol
   });
 }

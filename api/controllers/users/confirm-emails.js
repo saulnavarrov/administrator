@@ -102,15 +102,36 @@ module.exports = {
     }
 
     // Get the user with the matching email token.
-    var user = await Users.findOne({ emailProofToken: inputs.token });
+    var user = await Users.findOne({
+      emailProofToken: inputs.token
+    });
+
+    // si el token no existe
+    if (!user) {
+      throw 'invalidOrExpiredToken';
+    }
 
     // validando usuario no este desactivado
-    if (user.role < 8 && user.status === 'I') {
+    if (user.role > 8 || user.status === 'I') {
       throw 'userInabled';
     }
 
     // If no such user exists, or their token is expired, bail.
     if (!user || user.emailProofTokenExpiresAt <= Date.now()) {
+
+      // Borra el token y la fecha y el email por el cual se debe hacer el cambio
+      if (user.emailStatus === 'changeRequested') {
+        await Users.update({ id: user.id })
+        .set({
+          status: 'E', // Enabled Usuario
+          emailStatus: 'confirmed',
+          emailProofToken: '',
+          emailProofTokenExpiresAt: 0,
+          emailChangeCandidate: '', // Reset dato
+          updatedAt: updatedAt
+        });
+      }
+
       throw 'invalidOrExpiredToken';
     }
 
@@ -210,7 +231,7 @@ module.exports = {
       if (this.req.wantsJSON) {
         return exits.success();
       } else {
-        throw { redirect: '/acount' };
+        throw { redirect: '/email/confirmed' };
       }
     }
 

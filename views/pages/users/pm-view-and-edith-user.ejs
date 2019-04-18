@@ -19,15 +19,6 @@
       </div>
 
 
-<!--
-
-  <a href="#" data-toggle="tooltip" title="" data-original-title="Tooltip, bro!">Hover me!</a>
-
-<button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="left"
-  data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." data-original-title="" title="">
-  On left
-</button> -->
-
       <%/* BODY MODAL */%>
       <div class="modal-body container-fluit">
 
@@ -284,7 +275,7 @@
       <%/* FOOTER MODAL */%>
       <div class="modal-footer bg-whitesmoke">
         <button type="button" class="btn btn-primary btn-sm" v-on:click="editUser(userData.id)" v-show="editTrueData">Editar</button>
-        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"  v-on:click="closeModalView('pm-user-view')">{{ btnCerrar }}</button>
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"  v-on:click="closeModalView('pm-view-and-edith-user')">{{ btnCerrar }}</button>
         <button type="button" class="btn btn-primary btn-sm" v-show="!editTrueData" v-on:click="btnUpdateUser(userData.id)">Guardar Cambios</button>
       </div>
 
@@ -292,32 +283,3 @@
   </div>
 </div>
 
-<%/* ACTUALIZANDO DATOS */%>
-<div class="container-fluit m-loading-content" v-show="updateProgress" style="display:none;">
-  <div class="row m-loading-popup">
-    <div class="col-12 text-center">
-      <h1>Actualizando...</h1>
-    </div>
-    <div class="col-12">
-      <div class="progress">
-        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75"
-          aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<%/* ACTUALIZANDO AVATAR */%>
-<div class="container-fluit m-loading-content" v-show="updateAvatar.progress" style="display:none;">
-  <div class="row m-loading-popup">
-    <div class="col-12 text-center">
-      <h1>Actualizando Avatar...</h1>
-    </div>
-    <div class="col-12">
-      <div class="progress">
-        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75"
-          aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-      </div>
-    </div>
-  </div>
-</div>

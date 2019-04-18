@@ -1,0 +1,57 @@
+<%
+/**
+ * views/page/users/pm-view-change-email.ejs
+ * Partial Modal
+ * Para ver los datos completos del usuario. y poder editarlo
+ * si queremos en el momento.
+ */%>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="pm-view-change-email" data-backdrop="static" data-keyboard="false" aria-labelledby="pm-view-change-email" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <%/* HEADER MODAL */%>
+        <div class="modal-header">
+          <h4 class="modal-title" id="exampleModalLongTitle">Cambiar email al usuario: <b>{{ userData.name }}</b> </h4>
+          <button type="button" class="close" aria-label="Close" v-on:click="closeModalView('pm-view-change-email')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <%/* BODY MODAL */%>
+        <div class="modal-body container-fluit">
+          <section class="row">
+            <div class="col-12">
+              <p><b>Correo electronico Actual: </b><br><span
+                  :title="userData.emailAddress">{{ typeof(userData.emailAddress) === 'undefined' ? '' : userData.emailAddress }}</span>
+              </p>
+            </div>
+          </section>
+          <section class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label for="newEmail">Nuevo Correo electronico:</label>
+                <input type="email" name="newEmail" id="newEmail" v-bind:class="[changeEmail.error]" class="form-control form-control-sm" v-model="changeEmail.newEmail" >
+              </div>
+            </div>
+          </section>
+          <section class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label for="confirmNewEmail">Confirmar Correo Electonico:</label>
+                <input type="email" name="confirmNewEmail" id="confirmNewEmail" v-bind:class="[changeEmail.error]" class="form-control form-control-sm" v-model="changeEmail.confirmNewEmail" >
+                <div class="invalid-feedback">{{ typeof(changeEmail.errorText) === 'undefined' ? 'Error' : changeEmail.errorText }}</div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <%/* FOOTER MODAL */%>
+        <div class="modal-footer bg-whitesmoke">
+          <button type="button" class="btn btn-primary btn-sm" v-on:click="updatedChangeEmail(changeEmail.id)">Cambiar Email</button>
+          <button type="button" class="btn btn-secondary btn-sm" v-on:click="closeModalView('pm-view-change-email')">{{ btnCerrar }}</button>
+        </div>
+
+      </div>
+    </div>
+</div>

@@ -51,8 +51,8 @@ module.exports = {
     ***************************************************************************/
     default: {
       adapter: loc.db.production.adapter,
-      // url: `mongodb://${loc.db.production.user}:${loc.db.production.pass}@${loc.db.production.url}:${loc.db.production.port}/${loc.db.production.db}`,
-      url: `mongodb://${loc.db.development.url}:${loc.db.development.port}/${loc.db.development.db}`,
+      url: `mongodb://${loc.db.production.user}:${loc.db.production.pass}@${loc.db.production.url}:${loc.db.production.port}/${loc.db.production.db}`,
+      //url: `mongodb://${loc.db.development.url}:${loc.db.development.port}/${loc.db.development.db}`,
 
       //--------------------------------------------------------------------------
       //  /\   To avoid checking it in to version control, you might opt to set
@@ -122,6 +122,7 @@ module.exports = {
   ***************************************************************************/
   blueprints: {
     shortcuts: false,
+    rest: false,
   },
 
 
@@ -187,8 +188,8 @@ module.exports = {
     *                                                                          *
     ***************************************************************************/
     adapter: loc.connect.production.connect,
-    // url: `mongodb://${loc.connect.production.user}:${loc.connect.production.pass}@${loc.connect.production.url}:${loc.connect.production.port}/${loc.connect.production.db}`,
-    url: `mongodb://${loc.connect.development.url}:${loc.connect.development.port}/${loc.connect.development.db}`,
+    url: `mongodb://${loc.connect.production.user}:${loc.connect.production.pass}@${loc.connect.production.url}:${loc.connect.production.port}/${loc.connect.production.db}`,
+    // url: `mongodb://${loc.connect.development.url}:${loc.connect.development.port}/${loc.connect.development.db}`,
 
     //--
     // adapter: '@sailshq/connect-redis',
@@ -228,7 +229,9 @@ module.exports = {
     *                                                                          *
     ***************************************************************************/
     cookie: {
-      secure: loc.https,
+      // Cuando se usa SSL este pasa a true, sino pondra problema y rechazara todas
+      // las peticiones que se le hagan al backend
+      secure: !loc.https,
       maxAge: loc.rememberMeCookieMaxAge,
     },
 
@@ -330,7 +333,7 @@ module.exports = {
     * (https://sailsjs.com/config/http)                                        *
     *                                                                          *
     ***************************************************************************/
-    trustProxy: true,
+    trustProxy: loc.trustProxy
 
   },
 

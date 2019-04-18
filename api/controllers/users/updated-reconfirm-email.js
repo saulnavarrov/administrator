@@ -12,16 +12,17 @@ module.exports = {
 
   friendlyName: 'Updated reconfirm email',
 
-  description: '',
+  description: 'Enviara un correo electronico con un nuevo token para reconfirmar el usuario',
 
-  extendedDescription: ``,
+  extendedDescription: `se generara un nuevo token y se le enviara al correo electronico del usuario la confirmacion del
+  cambio de token para que pueda confirmarlo`,
 
   inputs: {
     id: {
       type: 'string',
       defaultsTo: '',
       description: `buscara el usuario con la id`
-    }
+    },
   },
 
   exits: {
@@ -36,6 +37,11 @@ module.exports = {
       statusCode: 401,
       responseType: 'unauthorized',
       description: 'No autorizado para ver los resultados de la pagina'
+    },
+    badRequest: {
+      statusCode: 400,
+      responseType: 'badRequest',
+      description: 'Error comun que sucede'
     }
   },
 
@@ -45,10 +51,10 @@ module.exports = {
      ***************************************************************************************/
     const rq = this.req;
     const _ = require('lodash');
+    const moment = require('moment');
     const userId = rq.session.userId;
     const isSocket = rq.isSocket;
     const updatedAt = moment().toJSON();
-    let count = 0;
 
     // Configurando Moment
     moment.locale(sails.config.custom.localeMoment);
@@ -112,13 +118,52 @@ module.exports = {
     /***************************************************************************************
      * BLOQUE DE TRABAJO
      ***************************************************************************************/
+    let idu = inputs.id;  // Id del usuario
 
+    // Busco el usuario con el status 'N' (Nuevo)
+    let userb = await Users.findOne({
+      id: idu,
+      status: 'N',
+      emailStatus: 'unconfirmed'
+    }).select(['id', 'status','emailAddress','name','lastName']);
+
+    // Devuelvo si el usuario no existe
+    if (!userb) {
+      return exits.badRequest({
+        error: true,
+        code: 'error_user',
+        title: 'No se encuentra el usuario',
+        message: `Este usuario no se encontro, revise e intente de nuevo, si se vuelve a presentar el error, comuniquese con el administrador`
+      });
+    }
+
+    // Creando token nuevo
+    let proofToken = await sails.helpers.strings.random('url-friendly');
+    // Creando nuevo tiempo de expiracion
+    let proofTokenExpiresAt = Date.now() + sails.config.custom.passwordResetTokenTTL;
+
+    // Hago los cambios al usuario en la DB
+    await Users.update({
+      id: userb.id,
+      status: 'N',
+    }).set({
+      emailProofToken: proofToken,
+      emailProofTokenExpiresAt: proofTokenExpiresAt,
+      updatedAt: updatedAt
+    });
+
+    // Enviando email al usuario
+    await sails.helpers.sendTemplateEmail.with({
+      to: userb.emailAddress,
+      subject: 'Por Favor Confirmar Email Nuevo',
+      template: 'email-verify-account',
+      templateData: {
+        fullName: `${userb.name} ${userb.lastName}`,
+        token: proofToken
+      }
+    });
+
+    // Retorno ok
     return exits.success();
   }
 };
-
-let e = new Error(`A este archivo le hace falta terminarlo.
-Son funciones necesarias para la administración de usuario
-`);
-e.name = 'Archivo no terminado: =>';
-sails.log.warn(e);

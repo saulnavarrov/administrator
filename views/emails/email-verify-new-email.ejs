@@ -8,8 +8,11 @@
   <p>Hola: <%= fullName %></p>
   <p>Recientemente solicitó una actualización de la dirección de correo electrónico de su cuenta. Para verificar su nuevo correo electrónico, haga clic en el siguiente boton de confirmar:</p>
   <br>
-  <a href="<%= url.resolve(sails.config.custom.baseUrl,'/email/confirm')+'?token='+encodeURIComponent(token) %>" style="text-decoration: none;"> <button style=" width: 200px; height: 50px; background-color: #1A237E; border: 0px; border-style: none; margin: 0px auto; display: table; font-size: 1.3em; border-radius: 4px; cursor: pointer; color: #FFF; ">Confirmar</button> </a>
+  <a href="<%= url.resolve(sails.config.custom.baseUrl[0],'/email/confirm')+'?token='+encodeURIComponent(token) %>" style="text-decoration: none;"> <button style=" width: 200px; height: 50px; background-color: #1A237E; border: 0px; border-style: none; margin: 0px auto; display: table; font-size: 1.3em; border-radius: 4px; cursor: pointer; color: #FFF; ">Confirmar</button> </a>
   <br>
   <p>Si no logras ver el boton pica aqui sobre el link:</p>
-  <p>Link <a href="<%= url.resolve(sails.config.custom.baseUrl,'/email/confirm')+'?token='+encodeURIComponent(token) %>"><%= url.resolve(sails.config.custom.baseUrl,'/email/confirm')+'?token='+encodeURIComponent(token) %></a></p>
+  <p>Link <a href="<%= url.resolve(sails.config.custom.baseUrl[0],'/email/confirm')+'?token='+encodeURIComponent(token) %>"><%= url.resolve(sails.config.custom.baseUrl[0],'/email/confirm')+'?token='+encodeURIComponent(token) %></a></p>
+
+  <p>El token de este correo tiene una duracion de 24 horas desde el momento en que se genera.</p>
+  <p>Este correo expirara: <br><span><%= expira %></span></p>
 </div>
