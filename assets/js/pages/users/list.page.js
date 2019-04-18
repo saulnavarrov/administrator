@@ -439,7 +439,6 @@ parasails.registerPage('list-users', {
         for (cont; cont < this.listData.length; cont++) {
           if (x === 'a') {
             verifica = !this.listData[cont].check ? verifica + 1 : verifica;
-            console.log(verifica)
             if (verifica === 0 && cont === (this.listData.length - 1)) {
               selectActive = false;
               iziToast.error({
@@ -1164,6 +1163,9 @@ parasails.registerPage('list-users', {
                 this.closeModalView(`pm-view-change-email`);
               }
             });
+
+            // Reinicial la pantalla
+            this.dataDb();
           }
         });
       }
@@ -1339,7 +1341,22 @@ parasails.registerPage('list-users', {
       // Busco el usario sin buscar en la base de datos
       this.searchUserListData(id);
 
-      // Envio los datos
+      // Avertencia con el nombre del usuarios
+      swal({
+        type: 'warning',
+        title: `Enviara un email a: ${this.userData.name}`,
+        text: `¿Estas seguro de enviar una reconfirmacion de email a este usuario?
+        Se enviara un Correo Electronico a ${this.userData.emailAddress} reconfirmar su email.
+        Esto solo funcionan con usuarios nuevos`,
+        confirmButtonColor: 'red',
+        showCancelButton: true,
+        cancelButtonColor: 'grey',
+        confirmButtonText: 'ENVIAR EMAIL'
+      }).then(async e => {
+        if (e.value) {
+          this.updateProgress = true;
+
+          // Envio los datos
           await io.socket.request({
             url: urls,
             method: 'patch',
@@ -1352,16 +1369,34 @@ parasails.registerPage('list-users', {
               'x-csrf-token': csrfToken
             }
           }, (rsData, jwRs) => {
-            console.log(rsData);
-            this.closeModalView();
-          });
+            this.updateProgress = false;
+            // En caso de error
+            if (jwRs.error) {
+              let disp = jwRs.statusCode === 400 ? true : false;
+              this.jwRsError(jwRs, disp);
+            }
 
-      // Buscamos el nombre del
-      swal({
-        type: 'warning',
-        title: 'Acción Usuario',
-        text: `Esta acción aun no se ha terminado.`
-      })
+            // Todo ok
+            if (jwRs.statusCode === 200) {
+              swal({
+                type: 'success',
+                title: `Procedimiento Exitoso`,
+                text: `Se ha ${rsData.statusChange === 'I' ? 'Desactivado' : rsData.statusChange === 'E' ? 'Activado' : '?'} el usuario: ${this.userData.name}.`,
+                showCancelButton: false,
+                confirmButtonText: 'Ok'
+              }).then(e => {
+                if (e.value) {
+                  // Reinicio los datos
+                  this.closeModalView();
+                }
+              });
+              this.closeModalView();
+              // Reinicial la pantalla
+              this.dataDb();
+            }
+          });
+        }
+      });
     },
   }
 });
