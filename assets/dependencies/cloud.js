@@ -37,9 +37,9 @@
  * ```
  * ---------------------------------------------------------------------------------------------
  */
-(function(factory, exposeUMD){
+(function (factory, exposeUMD) {
   exposeUMD(this, factory);
-})(function (_, io, $, SAILS_LOCALS, location, File, FormData){
+})(function (_, io, $, SAILS_LOCALS, location, File, FileList, FormData) {
 
   //  ██████╗ ██████╗ ██╗██╗   ██╗ █████╗ ████████╗███████╗
   //  ██╔══██╗██╔══██╗██║██║   ██║██╔══██╗╚══██╔══╝██╔════╝
@@ -58,6 +58,34 @@
 
 
   /**
+   * @param  {Ref} that
+   *
+   * @throws {Error} If that is not a File instance, a FileList instance, an
+   *                 array of File instances, a special File wrapper, or an
+   *                 array of special File wrappers.  (Note that, if an array is
+   *                 provided, this function will only return true if the array
+   *                 consists of ≥1 item.)
+   */
+  function _representsOneOrMoreFiles(that) {
+    // FUTURE: add support for Blobs
+    return (
+      _.isObject(that) &&
+      (
+        (File ? that instanceof File : false) ||
+        (FileList ? that instanceof FileList : false) ||
+        (_.isArray(that) && that.length > 0 && _.all(that, function (item) {
+          return File ? _.isObject(item) && item instanceof File : false;
+        })) ||
+        (File ? _.isObject(that) && _.isObject(that.file) && that.file instanceof File : false) ||
+        (_.isArray(that) && that.length > 0 && _.all(that, function (item) {
+          return File ? _.isObject(item) && _.isObject(item.file) && item.file instanceof File : false;
+        }))
+      )
+    );
+  } //ƒ
+
+
+  /**
    * @param  {String} negotiationRule
    *
    * @throws {Error} If rule is invalid or absent
@@ -70,18 +98,16 @@
 
     if (_.isNumber(negotiationRule) && Math.floor(negotiationRule) === negotiationRule) {
       if (negotiationRule > 599 || negotiationRule < 0) {
-        throw new Error('Invalid error negotiation rule: `'+negotiationRule+'`.  If a status code is provided, it must be between zero and 599.');
+        throw new Error('Invalid error negotiation rule: `' + negotiationRule + '`.  If a status code is provided, it must be between zero and 599.');
       }
-    }
-    else if (_.isString(negotiationRule) && negotiationRule) {
+    } else if (_.isString(negotiationRule) && negotiationRule) {
       // Ok, we'll assume it's fine
-    }
-    else {
+    } else {
       var suffix = '';
       if (negotiationRule === undefined || _.isFunction(negotiationRule)) {
         suffix = '  Looking to tolerate or intercept **EVERY** error?  This usually isn\'t a good idea, because, just like some try/catch usage patterns, it could mean swallowing errors unexpectedly, which can make debugging a nightmare.';
       }
-      throw new Error('Invalid error negotiation rule: `'+negotiationRule+'`.  Please pass in a valid intercept rule string.  An intercept rule is either (A) the name of an exit or (B) a whole number representing the status code like `404` or `200`.'+suffix);
+      throw new Error('Invalid error negotiation rule: `' + negotiationRule + '`.  Please pass in a valid intercept rule string.  An intercept rule is either (A) the name of an exit or (B) a whole number representing the status code like `404` or `200`.' + suffix);
     }
 
   }
@@ -205,15 +231,20 @@
   var Cloud = {};
 
 
+  // FUTURE:  Cloud.getUrlFor()
+  // (similar to https://sailsjs.com/documentation/reference/application/sails-get-url-for)
+  // (but would def need to provide a way of providing values for URL pattern variables like `:id`)
+
+
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // FUTURE: finish this when time allows   (would be better to have it work by attaching dedicated
+  // FUTURE: finish this when time allows   (might be better to have it work by attaching dedicated
   // nav methods rather than a generic nav method though)
   // ```
   // // A mapping of names of view actions to URL
   // // > provided to `.setup()`, for use in .navigate()
   // var _navigableUrlsByViewActionName;
-
-
+  //
+  //
   // /**
   //  * Cloud.navigate()
   //  *
@@ -252,28 +283,27 @@
    *         @optional {Dictionary} links
    *         @optional {Dictionary} apiBaseUrl
    */
-  Cloud.setup = function(options) {
+  Cloud.setup = function (options) {
 
     options = options || {};
 
     if (!_.isObject(options.methods) || _.isArray(options.methods) || _.isFunction(options.methods)) {
       throw new Error('Cannot .setup() Cloud SDK: `methods` must be provided as a dictionary of addresses and definitions.');
-    }//•
+    } //•
 
     // Determine the proper API base URL
     if (!options.apiBaseUrl) {
       if (location) {
-        options.apiBaseUrl = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
-      }
-      else {
+        options.apiBaseUrl = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+      } else {
         throw new Error('Cannot .setup() Cloud SDK: Since a location cannot be determined, `apiBaseUrl` must be provided as a string (e.g. "https://example.com").');
       }
-    }//ﬁ
+    } //ﬁ
 
     // Apply the base URL for the benefit of WebSockets (if relevant):
     if (io) {
       io.sails.url = options.apiBaseUrl;
-    }//ﬁ
+    } //ﬁ
 
     // The name of the default protocol.
     var DEFAULT_PROTOCOL_NAME = 'jQuery';
@@ -295,7 +325,7 @@
     }
 
     // Interpret methods
-    var methods = _.reduce(options.methods, function(memo, appLevelSdkEndpointDef, methodName) {
+    var methods = _.reduce(options.methods, function (memo, appLevelSdkEndpointDef, methodName) {
 
       if (methodName === 'setup') {
         console.warn('"setup" is a confusing name for a cloud action (it conflicts with a built-in feature of this SDK itself).  Would "initialize()" work instead?  (Continuing this time...)');
@@ -317,32 +347,29 @@
       var _urlToCheck;
       if (typeof appLevelSdkEndpointDef === 'function') {
         // We can't really check functions, so we just let it through.
-      }
-      else {
+      } else {
         if (appLevelSdkEndpointDef && typeof appLevelSdkEndpointDef === 'object') {
           // Must have `verb` and `url` properties.
           _verbToCheck = appLevelSdkEndpointDef.verb;
           _urlToCheck = appLevelSdkEndpointDef.url;
-        }
-        else if (typeof appLevelSdkEndpointDef === 'string') {
+        } else if (typeof appLevelSdkEndpointDef === 'string') {
           // Must be able to parse `verb` and `url`.
           _verbToCheck = appLevelSdkEndpointDef.replace(/^\s*([^\/\s]+)\s*\/.*$/, '$1');
           _urlToCheck = appLevelSdkEndpointDef.replace(/^\s*[^\/\s]+\s*\/(.*)$/, '/$1');
-        }
-        else {
-          throw new Error('CloudSDK endpoint (`'+methodName+'`) is invalid:  Endpoints should be defined as either (1) a string like "GET /foo", (2) a dictionary containing a `verb` and a `url`, or (3) a function that returns a dictionary like that.');
+        } else {
+          throw new Error('CloudSDK endpoint (`' + methodName + '`) is invalid:  Endpoints should be defined as either (1) a string like "GET /foo", (2) a dictionary containing a `verb` and a `url`, or (3) a function that returns a dictionary like that.');
         }
 
         // --•
 
         // `verb` must be valid.
         if (typeof _verbToCheck !== 'string' || _verbToCheck === '') {
-          throw new Error('CloudSDK endpoint (`'+methodName+'`) is invalid:  An endpoint\'s `verb` should be defined as a non-empty string.');
+          throw new Error('CloudSDK endpoint (`' + methodName + '`) is invalid:  An endpoint\'s `verb` should be defined as a non-empty string.');
         }
 
         // `url` must be valid.
         if (typeof _urlToCheck !== 'string' || _urlToCheck === '') {
-          throw new Error('CloudSDK endpoint (`'+methodName+'`) is invalid:  An endpoint\'s `url` should be defined as a non-empty string.');
+          throw new Error('CloudSDK endpoint (`' + methodName + '`) is invalid:  An endpoint\'s `url` should be defined as a non-empty string.');
         }
       }
 
@@ -404,26 +431,25 @@
 
           // Allow request headers to be configured.
           /////////////////////////////////////////////////////////////////////////////
-          headers: function (_customRequestHeaders){
+          headers: function (_customRequestHeaders) {
             if (!_.isObject(_customRequestHeaders)) {
               throw new Error('Invalid request headers: Must be specified as a dictionary, where each key has a string value.');
             }
-            requestInfo.headers = _.extend(requestInfo.headers||{}, _customRequestHeaders);
+            requestInfo.headers = _.extend(requestInfo.headers || {}, _customRequestHeaders);
 
             return deferred;
           },
 
           // Allow the protocol to be configured on a per-request basis.
           /////////////////////////////////////////////////////////////////////////////
-          protocol: function (_protocolNameOrInstance){
+          protocol: function (_protocolNameOrInstance) {
             if (typeof _protocolNameOrInstance === 'string') {
               switch (_protocolNameOrInstance) {
                 case 'jQuery':
                   requestInfo.protocolName = 'jQuery';
                   if ($ === undefined) {
                     throw new Error('Could not access jQuery: `$` is undefined.');
-                  }
-                  else {
+                  } else {
                     requestInfo.protocolInstance = $;
                   }
                   break;
@@ -432,48 +458,41 @@
                   requestInfo.protocolName = 'io.socket';
                   if (typeof io === 'undefined') {
                     throw new Error('Could not access `io.socket`: `io` is undefined.');
-                  }
-                  else if (typeof io !== 'function') {
+                  } else if (typeof io !== 'function') {
                     throw new Error('Could not access `io.socket`: `io` is invalid:' + io);
-                  }
-                  else if (typeof io.socket === 'undefined') {
+                  } else if (typeof io.socket === 'undefined') {
                     throw new Error('Could not access `io.socket`: `io` does not have a `socket` property.  Make sure `sails.io.js` is being injected in a <script> tag!');
-                  }
-                  else {
+                  } else {
                     requestInfo.protocolInstance = io.socket;
                   }
                   break;
 
                 default:
-                  throw new Error('Unrecognized protocol: `'+_protocolNameOrInstance+'`. Use "jQuery" or "io.socket".');
+                  throw new Error('Unrecognized protocol: `' + _protocolNameOrInstance + '`. Use "jQuery" or "io.socket".');
               }
-            }
-            else if (_.isObject(_protocolNameOrInstance) || _.isFunction(_protocolNameOrInstance)) {
+            } else if (_.isObject(_protocolNameOrInstance) || _.isFunction(_protocolNameOrInstance)) {
               if (_protocolNameOrInstance.name === 'jQuery') {
                 requestInfo.protocolName = 'jQuery';
                 requestInfo.protocolInstance = _protocolNameOrInstance;
-              }
-              else if (_protocolNameOrInstance.constructor.name === 'SailsSocket') {
+              } else if (_protocolNameOrInstance.constructor.name === 'SailsSocket') {
                 requestInfo.protocolName = 'io.socket';
                 requestInfo.protocolInstance = _protocolNameOrInstance;
-              }
-              else if (_protocolNameOrInstance.toString() === '[Package: machinepack-http]' || _protocolNameOrInstance.toString() === '[Package: sails.helpers.http]') {
+              } else if (_protocolNameOrInstance.toString() === '[Package: machinepack-http]' || _protocolNameOrInstance.toString() === '[Package: sails.helpers.http]') {
                 requestInfo.protocolName = 'machinepack-http';
                 requestInfo.protocolInstance = _protocolNameOrInstance;
               }
               // FUTURE: maybe native browser "fetch"?
               // FUTURE: maybe native Node "http"?
               else {
-                throw new Error('Unrecognized instance provided to `.protocol()`: `'+_protocolNameOrInstance+'`');
+                throw new Error('Unrecognized instance provided to `.protocol()`: `' + _protocolNameOrInstance + '`');
               }
-            }
-            else {
-              throw new Error('Unrecognized protocol: `'+_protocolNameOrInstance+'`. Use "jQuery" or "io.socket".');
+            } else {
+              throw new Error('Unrecognized protocol: `' + _protocolNameOrInstance + '`. Use "jQuery" or "io.socket".');
             }
 
             return deferred;
 
-          },//</ implementation of `.protocol()`>
+          }, //</ implementation of `.protocol()`>
 
 
           // Allow intercepting the response before resolution/rejection occurs.
@@ -511,8 +530,7 @@
             var negotiationRule;
             if (_handlerMaybe === undefined && _.isFunction(_negotiationRuleMaybe)) {
               handler = _negotiationRuleMaybe;
-            }
-            else {
+            } else {
               negotiationRule = _negotiationRuleMaybe;
               handler = _handlerMaybe;
             }
@@ -533,10 +551,11 @@
             requestInfo.lifecycleInstructions.push({
               type: 'tolerate',
               rule: negotiationRule,
-              handler: handler?
-                handler
-                :
-                function(){ return; }
+              handler: handler ?
+                handler :
+                function () {
+                  return;
+                }
             });
 
             return deferred;
@@ -558,7 +577,7 @@
           // > (Also check out the commit history of the original `caviar` repo.)
           // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-          then: function (){
+          then: function () {
             // console.log('in implementation of `then()`...');
             var promise = deferred.toPromise();
             // console.log('obj:',promise);
@@ -569,8 +588,10 @@
           // FUTURE: use parley for all this instead, if we can find a way to keep it
           // from being too enormous when browserified
           // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-          toPromise: function (){
-            if (typeof Promise === 'undefined') { throw new Error('Cannot use this approach: `Promise` constructor not available in current environment.'); }
+          toPromise: function () {
+            if (typeof Promise === 'undefined') {
+              throw new Error('Cannot use this approach: `Promise` constructor not available in current environment.');
+            }
 
             if (_promise) {
               // console.log('using catched promise...');
@@ -578,22 +599,22 @@
             }
             // console.log('instantiating new promise!');
 
-            _promise = new Promise(function(resolve, reject){// eslint-disable-line no-undef
+            _promise = new Promise(function (resolve, reject) { // eslint-disable-line no-undef
               try {
-                deferred.exec(function(err, resultMaybe) {
-                  if (err){
+                deferred.exec(function (err, resultMaybe) {
+                  if (err) {
                     // console.log('calling reject..');
                     return reject(err);
                   }
                   // console.log('calling resolve..');
                   return resolve(resultMaybe);
-                });//_∏_
+                }); //_∏_
               } catch (err) {
                 // console.log('EXEC THREW ERROR!',err);
                 // console.log('CALLED REJECT IN NATIVE CATCH BLOCK!');
                 reject(err);
               }
-            });//_∏_
+            }); //_∏_
 
             return _promise;
           },
@@ -601,23 +622,21 @@
 
           // Allow the AJAX request to actually be sent.
           /////////////////////////////////////////////////////////////////////////////
-          exec: function (exitCallbacks){
+          exec: function (exitCallbacks) {
 
             if (exitCallbacks) {
               if (!_.isObject(exitCallbacks) && !_.isFunction(exitCallbacks)) {
                 throw new Error('If specified, the argument passed to `.exec()` must be a dictionary containing a `success` and `error` callback.  Alternatively, you can use a Node.js-style callback.');
-              }
-              else if (_.isObject(exitCallbacks) && exitCallbacks.success && !_.isFunction(exitCallbacks.success)) {
+              } else if (_.isObject(exitCallbacks) && exitCallbacks.success && !_.isFunction(exitCallbacks.success)) {
                 throw new Error('If specified, `success` callback must be a function.');
-              }
-              else if (_.isObject(exitCallbacks) && exitCallbacks.error && !_.isFunction(exitCallbacks.error)) {
+              } else if (_.isObject(exitCallbacks) && exitCallbacks.error && !_.isFunction(exitCallbacks.error)) {
                 throw new Error('If specified, `error` callback must be a function.');
               }
             }
 
             // Just in case, build an error instance beforehand.
             // (This ensures it has a good stack trace.)
-            var errorInstance = new Error('Endpoint (`'+methodName+'`) responded with an error (or the request failed).');
+            var errorInstance = new Error('Endpoint (`' + methodName + '`) responded with an error (or the request failed).');
 
             // Give the error a special `name` property to ease negotiation
             // (vs. other unrelated things like typos in argins)
@@ -629,57 +648,58 @@
             if (_.isObject(SAILS_LOCALS) && typeof SAILS_LOCALS._csrf !== 'undefined') {
               if (_.isUndefined(requestInfo.headers)) {
                 requestInfo.headers = {};
-              }// >-
+              } // >-
               if (!requestInfo.headers['x-csrf-token']) {
                 requestInfo.headers['x-csrf-token'] = SAILS_LOCALS._csrf;
               }
-            }//ﬁ
+            } //ﬁ
 
             // Finally, use the appropriate protocol to actually send the request and
             // send back the response to the code that called this `Cloud.*()` method.
-            (function _makeAjaxCallWithAppropriateProtocol(proceed){
+            (function _makeAjaxCallWithAppropriateProtocol(proceed) {
 
               // First, tease apart text params and file params.
               var textParamsByFieldName = requestInfo.params;
 
               // Check for file uploads.
               //
-              // If `File`+`FormData` constructors are available, check to
-              // see if any of the param values are File instances.  If
-              // they are, then remove them from a shallow clone of the
-              // params dictionary, and set them up separately.
-              // (The files will be attached to the request _after_
-              // the text parameters.)
-              var filesByFieldName = {};
-              if (File && FormData && textParamsByFieldName) {
+              // If `FormData` constructor is available, check to see if any
+              // of the param values are File/FileList instances, or arrays of
+              // File instances, or special File wrappers, or arrays of special
+              // File wrappers. If they are, then remove them from a shallow
+              // clone of the params dictionary, and set them up separately.
+              // (The files will be attached to the request _after_ the text
+              // parameters.)
+              var uploadsByFieldName = {};
+              if (FormData && textParamsByFieldName) {
                 textParamsByFieldName = _.extend({}, textParamsByFieldName);
-                _.each(textParamsByFieldName, function(value, fieldName){
-                  if (_.isObject(value) && value instanceof File) {
-                    filesByFieldName[fieldName] = value;
+                _.each(textParamsByFieldName, function (value, fieldName) {
+                  if (_representsOneOrMoreFiles(value)) {
+                    uploadsByFieldName[fieldName] = value;
                     delete textParamsByFieldName[fieldName];
                   }
-                });//∞
-              }//ﬁ
+                }); //∞
+              } //ﬁ
 
               // Don't allow file uploads for GET requests,
               // or if the FormData constructor is somehow missing.
-              if (_.keys(filesByFieldName).length > 0) {
+              if (_.keys(uploadsByFieldName).length > 0) {
                 if (requestInfo.verb.match(/get/i)) {
                   throw new Error(
-                    'Detected File instance(s) provided for parameter(s):  '+
-                    _.keys(filesByFieldName)+'\n'+
-                    'But this is a nullipotent ('+requestInfo.verb.toUpperCase()+') '+
+                    'Detected File or FileList instance(s) provided for parameter(s):  ' +
+                    _.keys(uploadsByFieldName) + '\n' +
+                    'But this is a nullipotent (' + requestInfo.verb.toUpperCase() + ') ' +
                     'request, which does not support file uploads.'
                   );
-                }//•
+                } //•
                 if (!FormData) {
                   throw new Error(
-                    'Detected File instance(s) provided for parameter(s):  '+
-                    _.keys(filesByFieldName)+'\n'+
+                    'Detected File or FileList instance(s) provided for parameter(s):  ' +
+                    _.keys(uploadsByFieldName) + '\n' +
                     'But the native FormData constructor does not exist!'
                   );
                 }
-              }//ﬁ
+              } //ﬁ
 
               switch (requestInfo.protocolName) {
 
@@ -689,276 +709,369 @@
                 //  ╚════██║   ██╔══██║██   ██║██╔══██║ ██╔██╗ ██║  ██║
                 //  ███████║██╗██║  ██║╚█████╔╝██║  ██║██╔╝ ██╗╚██╗██╔╝
                 //  ╚═▀▀▀══╝╚═╝╚═╝  ╚═╝ ╚════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═╝╚═╝
-                case 'jQuery': return (function _doAjaxWithJQuery(){
+                case 'jQuery':
+                  return (function _doAjaxWithJQuery() {
 
-                  var thisJQuery = requestInfo.protocolInstance;
+                    var thisJQuery = requestInfo.protocolInstance;
 
-                  // Build options for $.ajax().
-                  var ajaxOpts = {
-                    url: requestInfo.url,
-                    method: requestInfo.verb
-                  };
-                  // If GET request, encode params in querystring.
-                  if (requestInfo.verb.match(/get/i)) {
-                    ajaxOpts.data = textParamsByFieldName;
-                  }
-                  // Else if there are files, attach them properly,
-                  // alongside the other stuff in the form.
-                  // > Note that we include text params **FIRST**,
-                  // > in order to support order-aware body parsers
-                  // > that rely on pessimistic upstream awareness
-                  // > optimize uploads and prevent DDoS attacks.
-                  else if (_.keys(filesByFieldName).length > 0){
-                    ajaxOpts.processData = false;
-                    ajaxOpts.contentType = false;
-                    ajaxOpts.data = new FormData();
-                    _.each(textParamsByFieldName, function(value, fieldName){
-                      // Skip `undefined` values to more accurately mirror
-                      // the behavior of JSON.stringify()
-                      if (value === undefined) { return; }
-                      ajaxOpts.data.append(fieldName, value);
-                    });
-                    _.each(filesByFieldName, function(file, fieldName){
-                      // Skip `undefined` values for consistency.
-                      if (file === undefined) { return; }
-                      if (!_.isObject(file) || !_.isObject(file.constructor) || file.constructor.name !== 'File') {
-                        throw new Error('Cannot upload as '+fieldName+' because the provided value is not a File instance.  Instead, got:'+file);
-                      }
-                      ajaxOpts.data.append(fieldName, file, file.name);
-                    });
-                  }
-                  // Otherwise, attach params as a JSON-encoded request body.
-                  else {
-                    ajaxOpts.data = JSON.stringify(textParamsByFieldName);
-                    ajaxOpts.processData = false;
-                    ajaxOpts.contentType = 'application/json; charset=UTF-8';
-                  }
-
-                  if (typeof requestInfo.headers !== 'undefined') {
-                    ajaxOpts.headers = requestInfo.headers;
-                  }
-
-                  // Dealing with jqXHR:
-                  //
-                  // To get status code:
-                  // console.log(jqXHR.statusCode);
-                  //
-                  // To get header(s):
-                  // console.log(jqXHR.getResponseHeader('foo'));
-                  // - or -
-                  // console.log(jqXHR.getAllResponseHeaders());
-                  // ^^^ but this one gives it to you as a string.
-                  // ^^
-                  // WARNING: if using a cross-domain request w/ CORS, this (^^^^^)
-                  // header grabbing may not work properly on some versions of firefox.  More details:
-                  // http://stackoverflow.com/questions/5614735/jqxhr-getallresponseheaders-wont-return-all-headers
-
-                  thisJQuery.ajax(_.extend(ajaxOpts, {
-                    error: function (jqXHR) {
-
-                      return proceed(undefined, {
-                        body: jqXHR.responseJSON === undefined ? jqXHR.responseText : jqXHR.responseJSON,
-                        statusCode: jqXHR.status,
-                        headers: _.reduce(jqXHR.getAllResponseHeaders().split(/\n/), function (memo, pair) {
-                          var splitPair = pair.split(/:/);
-                          var headerName = splitPair[0];
-                          if (headerName === '') { return memo; }
-
-                          // Note that we trim leading AND trailing whitespace.
-                          var headerVal = splitPair.slice(1).join('').replace(/^\s*/, '').replace(/\s*$/, '');
-                          memo[headerName] = headerVal;
-                          // Also add an alias using the all-lowercased version of the header name
-                          // (if it's different)
-                          var allLowercaseHeaderName = headerName.toLowerCase();
-                          if (allLowercaseHeaderName !== headerName) {
-                            memo[allLowercaseHeaderName] = headerVal;
-                          }
-                          return memo;
-                        }, {})
-                      });
-                    },
-                    success: function (unused0, unused1, jqXHR) {
-                      return proceed(undefined, {
-                        body: jqXHR.responseJSON === undefined ? jqXHR.responseText : jqXHR.responseJSON,
-                        statusCode: jqXHR.status,
-                        headers: _.reduce(jqXHR.getAllResponseHeaders().split(/\n/), function (memo, pair) {
-                          var splitPair = pair.split(/:/);
-                          var headerName = splitPair[0];
-                          if (headerName === '') { return memo; }
-
-                          // Note that we trim leading AND trailing whitespace.
-                          var headerVal = splitPair.slice(1).join('').replace(/^\s*/, '').replace(/\s*$/, '');
-                          memo[headerName] = headerVal;
-                          // Also add an alias using the all-lowercased version of the header name
-                          // (if it's different)
-                          var allLowercaseHeaderName = headerName.toLowerCase();
-                          if (allLowercaseHeaderName !== headerName) {
-                            memo[allLowercaseHeaderName] = headerVal;
-                          }
-                          return memo;
-                        }, {})
-                      });
+                    // Build options for $.ajax().
+                    var ajaxOpts = {
+                      url: requestInfo.url,
+                      method: requestInfo.verb
+                    };
+                    // If GET request, encode params in querystring.
+                    if (requestInfo.verb.match(/get/i)) {
+                      ajaxOpts.data = textParamsByFieldName;
                     }
-                  }));//</ thisJQuery.ajax + _.extend() >
-                })();//</self-calling function :: _doAjaxWithJQuery>
+                    // Else if there are files, attach them properly,
+                    // alongside the other stuff in the form -- either
+                    // in the body or as querystring parameters, depending
+                    // on what kind of data they are.
+                    //
+                    // > Note that we include text params **FIRST**,
+                    // > in order to support order-aware body parsers
+                    // > that rely on pessimistic upstream awareness,
+                    // > optimizing uploads and preventing DDoS attacks.
+                    // >
+                    // > Also note that we skip text params and file fields w/
+                    // > `undefined` values for consistency w/ Sails conventions.
+                    //
+                    // > Finally, one last thing to consider:
+                    // > If a value is NOT something that needs special encoding
+                    // > to accurately capture its meaning and data type (e.g. if
+                    // > it is a string), then we simply attach it to the body as
+                    // > form data.  But otherwise, we have to do something fancy
+                    // > to get it to be losslessly encoded for use in backend code.
+                    else if (_.keys(uploadsByFieldName).length > 0) {
+                      ajaxOpts.processData = false;
+                      ajaxOpts.contentType = false;
+                      ajaxOpts.data = new FormData();
+                      _.each(textParamsByFieldName, function (value, fieldName) {
+                        if (value === undefined) {
+                          return;
+                        } //•
+                        if (_.isString(value)) {
+                          ajaxOpts.data.append(fieldName, value);
+                        } else {
+                          // Use the "X-JSON-MPU-Params" header to signal to the
+                          // server that this text param is encoded as stringified
+                          // JSON, even though the request's content type would
+                          // suggest otherwise (because it's multipart/form-data
+                          // in order to handle file uploads).
+                          //
+                          // > This is "the new way" of solving this problem.
+                          // > For more info about "the old way" of "solving" this
+                          // > that didn't really work for everything (i.e. doing
+                          // > a recursive dive over the value and attempting to
+                          // > losslessly encode it in the URL query string), see:
+                          // > https://github.com/mikermcneil/parasails/commit/28732b1ed55eb4697de4bf4c559f0319cf773041
+                          requestInfo.headers = requestInfo.headers || {};
+                          if (requestInfo.headers['X-JSON-MPU-Params']) {
+                            requestInfo.headers['X-JSON-MPU-Params'] += ',' + fieldName;
+                          } else {
+                            requestInfo.headers['X-JSON-MPU-Params'] = fieldName;
+                          }
 
+                          // FUTURE: do a deep-crawl to sanitize prior to stringification (as alluded to below) -- i.e. to strip undefined array items, etc
+                          var stringifiedValue;
+                          try {
+                            stringifiedValue = JSON.stringify(value);
+                          } catch (unusedErr) {
+                            var errMsgPrefix = 'Could not encode value provided for ' + fieldName + ' because the value is (or contains) ';
+                            var errMsgSuffix = '.  In a request that contains one or more file uploads, any additional text parameter values need to be encoded in such a way that they can be losslessly parsed by the Sails framework.\n [?] Unsure?  Reach out at https://sailsjs.com/support';
+                            throw new Error(errMsgPrefix + 'data that cannot be stringified as JSON (usually, this means it contains circular references-- i.e. its properties or array items are actually references to itself, or each other)' + errMsgSuffix);
+                          }
+                          ajaxOpts.data.append(fieldName, stringifiedValue);
+                        }
+                      }); //∞
 
-                //  ██╗ ██████╗    ███████╗ ██████╗  ██████╗██╗  ██╗███████╗████████╗       ██╗██╗
-                //  ██║██╔═══██╗   ██╔════╝██╔═══██╗██╔════╝██║ ██╔╝██╔════╝╚══██╔══╝▄ ██╗▄██╔╝╚██╗
-                //  ██║██║   ██║   ███████╗██║   ██║██║     █████╔╝ █████╗     ██║    ████╗██║  ██║
-                //  ██║██║   ██║   ╚════██║██║   ██║██║     ██╔═██╗ ██╔══╝     ██║   ▀╚██╔▀██║  ██║
-                //  ██║╚██████╔╝██╗███████║╚██████╔╝╚██████╗██║  ██╗███████╗   ██║██╗  ╚═╝ ╚██╗██╔╝
-                //  ╚═╝ ╚═════╝ ╚═╝╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝╚══════╝   ╚═╝╚═╝       ╚═╝╚═╝
-                //
-                case 'io.socket': return (function _doAjaxWithSocket(){
+                      _.each(uploadsByFieldName, function (fileOrFileList, fieldName) {
+                        if (fileOrFileList === undefined) {
+                          return;
+                        }
+                        if (!_representsOneOrMoreFiles(fileOrFileList)) {
+                          throw new Error('Cannot upload as "' + fieldName + '" because the provided value is not a File instance, an array of File instances, a dictionary like `{file: someFileInstance, name: \'filename-override.png\'}`, or an array of such wrapper dictionaries.  Instead, got: ' + fileOrFileList + '\n\nNote that this can sometimes occur due to problems with code minification (e.g. uglify configuration).');
+                        }
+                        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+                        // FUTURE: throw usage error if wrapper (i.e. with `.file`) has a `.name`, override,
+                        // but it isn't a valid string  (i.e. truthy, decent chars, & not too long)
+                        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+                        if (_.isArray(fileOrFileList) || (_.isObject(fileOrFileList) && _.isObject(fileOrFileList.constructor) && fileOrFileList.constructor.name === 'FileList')) {
+                          for (var i = 0; i < fileOrFileList.length; i++) {
+                            if (fileOrFileList[i] instanceof File) {
+                              ajaxOpts.data.append(fieldName, fileOrFileList[i], fileOrFileList[i].name);
+                            } else {
+                              ajaxOpts.data.append(fieldName, fileOrFileList[i].file, fileOrFileList[i].name || fileOrFileList[i].file.name);
+                            }
+                          } //∞
+                        } else {
+                          if (fileOrFileList instanceof File) {
+                            ajaxOpts.data.append(fieldName, fileOrFileList, fileOrFileList.name);
+                          } else {
+                            ajaxOpts.data.append(fieldName, fileOrFileList.file, fileOrFileList.name || fileOrFileList.file.name);
+                          }
+                        }
+                      }); //∞
+                    }
+                    // Otherwise, attach params as a JSON-encoded request body.
+                    else {
+                      // If any of our text params are arrays, then before stringifying,
+                      // make a shallow clone and strip out any `undefined` values
+                      // that exist as items at the top level of the array.  (This
+                      // prevents them from automatically being changed into `null`
+                      // by JSON.stringify().)
+                      // > (This behavior is a breaking change that was introduced
+                      // > in parasails@0.9.0)
+                      // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+                      // > FUTURE: Instead, do a deep crawl and mimic the behavior of RTTC:
+                      // > https://github.com/node-machine/rttc/blob/8a84191dc786e872a6c28b24566539573b2a2c4d/lib/helpers/rebuild-recursive.js#L77-L90
+                      // > ^^That'll take care of several other common edge cases that
+                      // > are handled in a kinda strange way by JSON.stringify(),
+                      // > including `NaN`, etc.
+                      // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+                      var sanitizedTPBFN = _.mapValues(textParamsByFieldName, function (value) {
+                        var sanitizedValue;
+                        if (_.isArray(value)) {
+                          sanitizedValue = _.clone(value);
+                          _.remove(sanitizedValue, function (item) {
+                            return item === undefined;
+                          }); //∞
+                        } else {
+                          sanitizedValue = value;
+                        }
+                        return sanitizedValue;
+                      });
+                      ajaxOpts.data = JSON.stringify(sanitizedTPBFN);
+                      ajaxOpts.processData = false;
+                      ajaxOpts.contentType = 'application/json; charset=UTF-8';
+                    }
 
-                  var socket = requestInfo.protocolInstance;
+                    // Attach headers so they'll be included in our $.ajax() call.
+                    if (requestInfo.headers !== undefined) {
+                      ajaxOpts.headers = requestInfo.headers;
+                    }
 
-                  // If `File` constructor is available, check to be sure
-                  // that none of the parameter values are File instances.
-                  // > Note that if the File constructor is NOT available,
-                  // > then we don't even bother checking (it's not like it
-                  // > would work anyway!)
-                  if (File && requestInfo.params) {
-                    _.each(requestInfo.params, function(value, fieldName){
-                      if (_.isObject(value) && value instanceof File) {
-                        throw new Error('Detected File instance provided for the `'+fieldName+'` parameter -- but file uploads are not currently supported using WebSockets / Socket.io.  Please call this method using a different request protocol (e.g. `protocol: \'jQuery\'`)');
+                    // Dealing with jqXHR:
+                    //
+                    // To get status code:
+                    // console.log(jqXHR.statusCode);
+                    //
+                    // To get header(s):
+                    // console.log(jqXHR.getResponseHeader('foo'));
+                    // - or -
+                    // console.log(jqXHR.getAllResponseHeaders());
+                    // ^^^ but this one gives it to you as a string.
+                    // ^^
+                    // WARNING: if using a cross-domain request w/ CORS, this (^^^^^)
+                    // header grabbing may not work properly on some versions of firefox.  More details:
+                    // http://stackoverflow.com/questions/5614735/jqxhr-getallresponseheaders-wont-return-all-headers
+
+                    thisJQuery.ajax(_.extend(ajaxOpts, {
+                      error: function (jqXHR) {
+
+                        return proceed(undefined, {
+                          body: jqXHR.responseJSON === undefined ? jqXHR.responseText : jqXHR.responseJSON,
+                          statusCode: jqXHR.status,
+                          headers: _.reduce(jqXHR.getAllResponseHeaders().split(/\n/), function (memo, pair) {
+                            var splitPair = pair.split(/:/);
+                            var headerName = splitPair[0];
+                            if (headerName === '') {
+                              return memo;
+                            }
+
+                            // Note that we trim leading AND trailing whitespace.
+                            var headerVal = splitPair.slice(1).join('').replace(/^\s*/, '').replace(/\s*$/, '');
+                            memo[headerName] = headerVal;
+                            // Also add an alias using the all-lowercased version of the header name
+                            // (if it's different)
+                            var allLowercaseHeaderName = headerName.toLowerCase();
+                            if (allLowercaseHeaderName !== headerName) {
+                              memo[allLowercaseHeaderName] = headerVal;
+                            }
+                            return memo;
+                          }, {})
+                        });
+                      },
+                      success: function (unused0, unused1, jqXHR) {
+                        return proceed(undefined, {
+                          body: jqXHR.responseJSON === undefined ? jqXHR.responseText : jqXHR.responseJSON,
+                          statusCode: jqXHR.status,
+                          headers: _.reduce(jqXHR.getAllResponseHeaders().split(/\n/), function (memo, pair) {
+                            var splitPair = pair.split(/:/);
+                            var headerName = splitPair[0];
+                            if (headerName === '') {
+                              return memo;
+                            }
+
+                            // Note that we trim leading AND trailing whitespace.
+                            var headerVal = splitPair.slice(1).join('').replace(/^\s*/, '').replace(/\s*$/, '');
+                            memo[headerName] = headerVal;
+                            // Also add an alias using the all-lowercased version of the header name
+                            // (if it's different)
+                            var allLowercaseHeaderName = headerName.toLowerCase();
+                            if (allLowercaseHeaderName !== headerName) {
+                              memo[allLowercaseHeaderName] = headerVal;
+                            }
+                            return memo;
+                          }, {})
+                        });
                       }
-                    });
-                  }//ﬁ
-
-                  // Determine if the socket has been disconnected, or if it
-                  // has NEVER BEEN connected and is not CURRENTLY TRYING to
-                  // connect.
-                  var disconnectedOrWasNeverConnectedAndUnlikelyToTry =
-                    // =>
-                    // If the socket is connected, cool, no problem.
-                    !socket.isConnected() &&
-                    // =>
-                    // If the socket is at least _attempting_ to connect, we'll go ahead
-                    // and let it try to do it's thing (i.e. queue and replay)
-                    !socket.isConnecting() &&
-                    // =>
-                    // If the socket hasn't even had the _chance_ to begin connecting
-                    // (because the one-tick auto-connect timer hasn't fired yet),
-                    // then we'll give it that chance.
-                    !socket.mightBeAboutToAutoConnect();
+                    })); //</ thisJQuery.ajax + _.extend() >
+                  })(); //</self-calling function :: _doAjaxWithJQuery>
 
 
-                  // If none of the above were true, then emulate a normal
-                  // offline AJAX response from jQuery.
-                  if (disconnectedOrWasNeverConnectedAndUnlikelyToTry) {
-                    return proceed(undefined, {
-                      body: null,
-                      statusCode: 0,
-                      headers: {}
-                    });
-                  }
-                  // Otherwise the socket is either connected, in the process of connecting,
-                  // or in an indeterminate state where it has _never_ connected but _might_
-                  // still connect (see above for details).
+                  //  ██╗ ██████╗    ███████╗ ██████╗  ██████╗██╗  ██╗███████╗████████╗       ██╗██╗
+                  //  ██║██╔═══██╗   ██╔════╝██╔═══██╗██╔════╝██║ ██╔╝██╔════╝╚══██╔══╝▄ ██╗▄██╔╝╚██╗
+                  //  ██║██║   ██║   ███████╗██║   ██║██║     █████╔╝ █████╗     ██║    ████╗██║  ██║
+                  //  ██║██║   ██║   ╚════██║██║   ██║██║     ██╔═██╗ ██╔══╝     ██║   ▀╚██╔▀██║  ██║
+                  //  ██║╚██████╔╝██╗███████║╚██████╔╝╚██████╗██║  ██╗███████╗   ██║██╗  ╚═╝ ╚██╗██╔╝
+                  //  ╚═╝ ╚═════╝ ╚═╝╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝╚══════╝   ╚═╝╚═╝       ╚═╝╚═╝
                   //
-                  // In any of these cases, thanks largely to queuing, it is safe to continue
-                  // onwards, and to send the request!
-                  socket.request({
-                    method: requestInfo.verb,
-                    url: requestInfo.url,
-                    data: requestInfo.params,
-                    headers: requestInfo.headers
-                  }, function (unused, jwres) {
-                    return proceed(undefined, {
-                      body: jwres.body,
-                      statusCode: jwres.statusCode,
-                      headers: jwres.headers
-                    });
-                  });//</ socket.request() >
-                })();//</self-calling function :: _doAjaxWithSocket>
+                case 'io.socket':
+                  return (function _doAjaxWithSocket() {
+
+                    var socket = requestInfo.protocolInstance;
+
+                    // Check to be sure that none of the parameter values are
+                    // attempted file uploads.
+                    if (File && requestInfo.params) {
+                      _.each(requestInfo.params, function (value, fieldName) {
+                        if (_representsOneOrMoreFiles(value)) {
+                          throw new Error('Detected File-like data provided for the "' + fieldName + '" parameter -- but file uploads are not currently supported using WebSockets / Socket.io.  Please call this method using a different request protocol (e.g. `protocol: \'jQuery\'`)');
+                        }
+                      });
+                    } //ﬁ
+
+                    // Determine if the socket has been disconnected, or if it
+                    // has NEVER BEEN connected and is not CURRENTLY TRYING to
+                    // connect.
+                    var disconnectedOrWasNeverConnectedAndUnlikelyToTry =
+                      // =>
+                      // If the socket is connected, cool, no problem.
+                      !socket.isConnected() &&
+                      // =>
+                      // If the socket is at least _attempting_ to connect, we'll go ahead
+                      // and let it try to do it's thing (i.e. queue and replay)
+                      !socket.isConnecting() &&
+                      // =>
+                      // If the socket hasn't even had the _chance_ to begin connecting
+                      // (because the one-tick auto-connect timer hasn't fired yet),
+                      // then we'll give it that chance.
+                      !socket.mightBeAboutToAutoConnect();
 
 
-                //  ███╗   ███╗██████╗       ██╗  ██╗████████╗████████╗██████╗
-                //  ████╗ ████║██╔══██╗      ██║  ██║╚══██╔══╝╚══██╔══╝██╔══██╗
-                //  ██╔████╔██║██████╔╝█████╗███████║   ██║      ██║   ██████╔╝
-                //  ██║╚██╔╝██║██╔═══╝ ╚════╝██╔══██║   ██║      ██║   ██╔═══╝
-                //  ██║ ╚═╝ ██║██║           ██║  ██║   ██║      ██║   ██║
-                //  ╚═╝     ╚═╝╚═╝           ╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚═╝
-                case 'machinepack-http': return (function _doAjaxWithMpHttp(){
-
-                  // If `File` constructor is available, check to be sure
-                  // that none of the parameter values are File instances.
-                  // > Note that if the File constructor is NOT available,
-                  // > then we don't even bother checking (it's not like it
-                  // > would work anyway!)
-                  if (File && requestInfo.params) {
-                    _.each(requestInfo.params, function(value, fieldName){
-                      if (_.isObject(value) && value instanceof File) {
-                        throw new Error('Detected File instance provided for the `'+fieldName+'` parameter -- but file uploads are not currently supported using this "http" pack.  Please call this method using a different request protocol.');
-                      }
-                    });
-                  }//ﬁ
-
-                  var mpHttpOpts = {
-                    url: requestInfo.url,
-                    method: requestInfo.verb
-                  };
-                  // If GET request, encode params in querystring.
-                  if (requestInfo.verb.match(/get/i)) {
-                    mpHttpOpts.qs = textParamsByFieldName;
-                  }
-                  // Otherwise, attach params as the request body.
-                  // (it will be JSON-encoded automatically by default)
-                  else {
-                    mpHttpOpts.body = textParamsByFieldName;
-                  }
-
-                  if (typeof requestInfo.headers !== 'undefined') {
-                    mpHttpOpts.headers = requestInfo.headers;
-                  }
-
-                  requestInfo.protocolInstance.sendHttpRequest.with(mpHttpOpts)
-                  .switch({
-                    error: function (err) {
-                      return proceed(err);
-                    },
-                    requestFailed: function(err) {
+                    // If none of the above were true, then emulate a normal
+                    // offline AJAX response from jQuery.
+                    if (disconnectedOrWasNeverConnectedAndUnlikelyToTry) {
                       return proceed(undefined, {
-                        body: err.message,
+                        body: null,
                         statusCode: 0,
                         headers: {}
                       });
-                    },
-                    non200Response: function(serverResponse) {
-                      return proceed(undefined, serverResponse);
-                    },
-                    success: function (serverResponse){
-
-                      // If there is no response body (i.e. `body` is `""`),
-                      // then we'll interpret that as `null` and return that as
-                      // our response data.
-                      if (serverResponse.body === '') {
-                        serverResponse.body = null;
-                      }
-
-                      // --•
-                      // Otherwise, attempt to parse the response body as JSON.
-                      try {
-                        serverResponse.body = JSON.parse(serverResponse.body);
-                      } catch (err) {//eslint-disable-line no-unused-vars
-                        // If the raw response body string cannot be parsed as JSON,
-                        // then interpret it as a string by leaving the raw body as-is.
-                      }
-
-                      return proceed(undefined, serverResponse);
                     }
-                  });//_∏_
-                })();//</self-calling function :: _doAjaxWithMpHttp>
+                    // Otherwise the socket is either connected, in the process of connecting,
+                    // or in an indeterminate state where it has _never_ connected but _might_
+                    // still connect (see above for details).
+                    //
+                    // In any of these cases, thanks largely to queuing, it is safe to continue
+                    // onwards, and to send the request!
+                    socket.request({
+                      method: requestInfo.verb,
+                      url: requestInfo.url,
+                      data: requestInfo.params,
+                      headers: requestInfo.headers
+                    }, function (unused, jwres) {
+                      return proceed(undefined, {
+                        body: jwres.body,
+                        statusCode: jwres.statusCode,
+                        headers: jwres.headers
+                      });
+                    }); //</ socket.request() >
+                  })(); //</self-calling function :: _doAjaxWithSocket>
+
+
+                  //  ███╗   ███╗██████╗       ██╗  ██╗████████╗████████╗██████╗
+                  //  ████╗ ████║██╔══██╗      ██║  ██║╚══██╔══╝╚══██╔══╝██╔══██╗
+                  //  ██╔████╔██║██████╔╝█████╗███████║   ██║      ██║   ██████╔╝
+                  //  ██║╚██╔╝██║██╔═══╝ ╚════╝██╔══██║   ██║      ██║   ██╔═══╝
+                  //  ██║ ╚═╝ ██║██║           ██║  ██║   ██║      ██║   ██║
+                  //  ╚═╝     ╚═╝╚═╝           ╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚═╝
+                case 'machinepack-http':
+                  return (function _doAjaxWithMpHttp() {
+
+                    // If there are request parameters, check to be sure
+                    // that none of the parameter values are File instances.
+                    if (requestInfo.params) {
+                      _.each(requestInfo.params, function (value, fieldName) {
+                        if (_representsOneOrMoreFiles(value)) {
+                          throw new Error('Detected File-like data provided for the "' + fieldName + '" parameter -- but file uploads are not currently supported in Cloud SDK when using "machinepack-http".  Please call this method using a different request protocol.');
+                        }
+                      }); //∞
+                    } //ﬁ
+
+                    var mpHttpOpts = {
+                      url: requestInfo.url,
+                      method: requestInfo.verb
+                    };
+                    // If GET request, encode params in querystring.
+                    if (requestInfo.verb.match(/get/i)) {
+                      mpHttpOpts.qs = textParamsByFieldName;
+                    }
+                    // Otherwise, attach params as the request body.
+                    // (it will be JSON-encoded automatically by default)
+                    else {
+                      mpHttpOpts.body = textParamsByFieldName;
+                    }
+
+                    if (typeof requestInfo.headers !== 'undefined') {
+                      mpHttpOpts.headers = requestInfo.headers;
+                    }
+
+                    requestInfo.protocolInstance.sendHttpRequest.with(mpHttpOpts)
+                      .switch({
+                        error: function (err) {
+                          return proceed(err);
+                        },
+                        requestFailed: function (err) {
+                          return proceed(undefined, {
+                            body: err.message,
+                            statusCode: 0,
+                            headers: {}
+                          });
+                        },
+                        non200Response: function (serverResponse) {
+                          return proceed(undefined, serverResponse);
+                        },
+                        success: function (serverResponse) {
+
+                          // If there is no response body (i.e. `body` is `""`),
+                          // then we'll interpret that as `null` and return that as
+                          // our response data.
+                          if (serverResponse.body === '') {
+                            serverResponse.body = null;
+                          }
+
+                          // --•
+                          // Otherwise, attempt to parse the response body as JSON.
+                          try {
+                            serverResponse.body = JSON.parse(serverResponse.body);
+                          } catch (err) { //eslint-disable-line no-unused-vars
+                            // If the raw response body string cannot be parsed as JSON,
+                            // then interpret it as a string by leaving the raw body as-is.
+                          }
+
+                          return proceed(undefined, serverResponse);
+                        }
+                      }); //_∏_
+                  })(); //</self-calling function :: _doAjaxWithMpHttp>
 
                 default:
-                  throw new Error('Consistency violation: Unexpected protocol name received (`'+requestInfo.protocolName+'`)-- but it should have already been checked!');
+                  throw new Error('Consistency violation: Unexpected protocol name received (`' + requestInfo.protocolName + '`)-- but it should have already been checked!');
 
-              }//</switch(protocol)>
-            })(function afterwards(err, responseInfo){
+              } //</switch(protocol)>
+            })(function afterwards(err, responseInfo) {
               if (err) {
-                throw new Error('Consistency violation: Unexpected error in CloudSDK. Details: '+err.stack);
+                throw new Error('Consistency violation: Unexpected error in CloudSDK. Details: ' + err.stack);
               }
 
 
@@ -1008,7 +1121,7 @@
 
               if (xExitResponseHeaderValue === '_offline') {
                 console.warn('Unconventional exit detected:  `_offline` is a reserved exit name for use on the front-end, and should not be used willy nilly.  Instead, please come up with a different exit name for this scenario.');
-              }//ﬁ
+              } //ﬁ
 
 
               // If the user's computer is offline or the server is down, etc...
@@ -1032,7 +1145,7 @@
                 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
               }
               // If the server responded with a specific error...
-              else if (xExitResponseHeaderValue){
+              else if (xExitResponseHeaderValue) {
                 responseInfo.exit = xExitResponseHeaderValue;
               }
               // If the server responded with some other misc. error...
@@ -1051,20 +1164,17 @@
 
               // Now before proceeding further, check lifecycleInstructions for a match (if there are any configured).
               // > NOTE: We only ever run one of these handlers for any given response!
-              var matchingLifecycleInstruction = _.find(requestInfo.lifecycleInstructions, function(lifecycleInstruction) {
+              var matchingLifecycleInstruction = _.find(requestInfo.lifecycleInstructions, function (lifecycleInstruction) {
 
                 if (lifecycleInstruction.rule === undefined) {
                   if (responseInfo.exit === 'success' || (responseInfo.statusCode >= 200 && responseInfo.statusCode < 300)) {
                     return false;
-                  }
-                  else {
+                  } else {
                     return true;
                   }
-                }
-                else if (responseInfo.statusCode === lifecycleInstruction.rule) {
+                } else if (responseInfo.statusCode === lifecycleInstruction.rule) {
                   return true;
-                }
-                else if (responseInfo.exit === lifecycleInstruction.rule) {
+                } else if (responseInfo.exit === lifecycleInstruction.rule) {
                   return true;
                 }
                 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1072,15 +1182,15 @@
                 // (see flaverr.taste at https://npmjs.com/package/flaverr)
                 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-              });//∞
+              }); //∞
 
 
               // If there was a match, then run this intercept/toleration's handler function.
-              (function _runInterceptOrTolerationMaybe(proceed){
+              (function _runInterceptOrTolerationMaybe(proceed) {
 
                 if (!matchingLifecycleInstruction) {
                   return proceed();
-                }//•
+                } //•
 
                 var resultFromHandler;
 
@@ -1111,8 +1221,7 @@
                   // });
                   // ```
                   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-                }
-                else {
+                } else {
                   try {
                     // FUTURE: do this addition of properties earlier:
                     errorInstance.exit = responseInfo.exit;
@@ -1121,19 +1230,23 @@
 
                     resultFromHandler = matchingLifecycleInstruction.handler(errorInstance);
                   } catch (err) {
-                    if (err === false) { return proceed(undefined, true); }//« special case (`throw false`)
-                    else { return proceed(err); }
+                    if (err === false) {
+                      return proceed(undefined, true);
+                    } //« special case (`throw false`)
+                    else {
+                      return proceed(err);
+                    }
                   }
 
                   return proceed(undefined, resultFromHandler);
                 }
 
-              })(function(err, resultFromInterceptOrTolerate) {
+              })(function (err, resultFromInterceptOrTolerate) {
 
                 if (err) {
-                  throw new Error('The provided custom intercept/tolerate logic threw an unexpected, uncaught error: '+err.stack);
+                  throw new Error('The provided custom intercept/tolerate logic threw an unexpected, uncaught error: ' + err.stack);
                   // FUTURE: better error handling for this case ^^
-                }//•
+                } //•
 
 
                 if (matchingLifecycleInstruction) {
@@ -1151,7 +1264,7 @@
                 // returned to be our new Error.
                 if (matchingLifecycleInstruction && matchingLifecycleInstruction.type === 'intercept') {
                   if (!_.isError(resultFromInterceptOrTolerate)) {
-                    throw new Error('Unexpected value returned from .intercept() handler.  Expected an Error instance but instead, got: '+resultFromInterceptOrTolerate);
+                    throw new Error('Unexpected value returned from .intercept() handler.  Expected an Error instance but instead, got: ' + resultFromInterceptOrTolerate);
                     // FUTURE: better error handling for this case ^^
                   }
                   errorInstance = resultFromInterceptOrTolerate;
@@ -1167,14 +1280,14 @@
                 // This string is used as a prefix for the various error messages
                 // that can occur this way throughout the code below.
                 var UNHANDLED_ERR_PREFIX_MSG =
-                (
-                  (responseInfo.statusCode===0)?
-                  'Unable to send request... are the client and server both online?'
-                  :'Received unhandled '+responseInfo.statusCode+' error from server.'
-                )+'  '+
-                '(See `responseInfo` property of this error for details).  '+
-                'Note that you can negotiate any error using its `exit` or `responseInfo.statusCode` properties.\n'+
-                '--\n';
+                  (
+                    (responseInfo.statusCode === 0) ?
+                    'Unable to send request... are the client and server both online?' :
+                    'Received unhandled ' + responseInfo.statusCode + ' error from server.'
+                  ) + '  ' +
+                  '(See `responseInfo` property of this error for details).  ' +
+                  'Note that you can negotiate any error using its `exit` or `responseInfo.statusCode` properties.\n' +
+                  '--\n';
 
                 //  ┌─┐┌─┐┌┐┌┌─┐┬─┐┬┌─┐   ┌─┐─┐ ┬┌─┐┌─┐  ┌─┐┌─┐┬  ┬  ┌┐ ┌─┐┌─┐┬┌─  ┌─┐┬ ┬┌┐┌┌─┐┌┬┐┬┌─┐┌┐┌
                 //  │ ┬├┤ │││├┤ ├┬┘││     ├┤ ┌┴┬┘├┤ │    │  ├─┤│  │  ├┴┐├─┤│  ├┴┐  ├┤ │ │││││   │ ││ ││││
@@ -1183,30 +1296,28 @@
                 if (_.isFunction(exitCallbacks)) {
                   if (tolerateAsIfSuccess) {
                     return exitCallbacks(undefined, resultFromInterceptOrTolerate, responseInfo);
-                  }
-                  else if (responseInfo.exit === 'success' || (responseInfo.statusCode >= 200 && responseInfo.statusCode < 300)) {
+                  } else if (responseInfo.exit === 'success' || (responseInfo.statusCode >= 200 && responseInfo.statusCode < 300)) {
                     return exitCallbacks(undefined, responseInfo.body, responseInfo);
-                  }
-                  else {
-                    errorInstance.stack += '\n'+
-                    '\n'+
-                    'Error Summary:\n'+
-                    '(see `.responseInfo` for more details)\n'+
-                    '·-------------·----------------------------------------·\n'+
-                    '|    Protocol | '+(requestInfo.protocolName==='jQuery'?'http(s)://   (jQuery)':requestInfo.protocolName==='io.socket'?'ws(s)://   (io.socket)':requestInfo.protocolName)+'\n'+
-                    '|     Address | '+requestInfo.verb.toUpperCase()+' '+requestInfo.url+'\n'+
-                    '|        Exit | '+responseInfo.exit+'\n'+
-                    '| Status Code | '+responseInfo.statusCode+'\n'+
-                    '·-------------·----------------------------------------·';
+                  } else {
+                    errorInstance.stack += '\n' +
+                      '\n' +
+                      'Error Summary:\n' +
+                      '(see `.responseInfo` for more details)\n' +
+                      '·-------------·----------------------------------------·\n' +
+                      '|    Protocol | ' + (requestInfo.protocolName === 'jQuery' ? 'http(s)://   (jQuery)' : requestInfo.protocolName === 'io.socket' ? 'ws(s)://   (io.socket)' : requestInfo.protocolName) + '\n' +
+                      '|     Address | ' + requestInfo.verb.toUpperCase() + ' ' + requestInfo.url + '\n' +
+                      '|        Exit | ' + responseInfo.exit + '\n' +
+                      '| Status Code | ' + responseInfo.statusCode + '\n' +
+                      '·-------------·----------------------------------------·';
                     if (responseInfo.body !== undefined) {
-                      errorInstance.stack += '\n\nResponse Body:\n'+responseInfo.body;
+                      errorInstance.stack += '\n\nResponse Body:\n' + responseInfo.body;
                     }
                     errorInstance.responseInfo = responseInfo;
                     errorInstance.exit = responseInfo.exit;
                     errorInstance.code = responseInfo.exit;
-                    return exitCallbacks(errorInstance, responseInfo.body!==undefined?responseInfo.body:errorInstance, responseInfo);
+                    return exitCallbacks(errorInstance, responseInfo.body !== undefined ? responseInfo.body : errorInstance, responseInfo);
                   }
-                }//‡
+                } //‡
                 //  ┌─┐┬ ┬┬┌┬┐┌─┐┬ ┬┌┐ ┌─┐┌─┐┬┌─  ┌┬┐┬┌─┐┌┬┐┬┌─┐┌┐┌┌─┐┬─┐┬ ┬
                 //  └─┐││││ │ │  ├─┤├┴┐├─┤│  ├┴┐   ││││   │ ││ ││││├─┤├┬┘└┬┘
                 //  └─┘└┴┘┴ ┴ └─┘┴ ┴└─┘┴ ┴└─┘┴ ┴  ─┴┘┴└─┘ ┴ ┴└─┘┘└┘┴ ┴┴└─ ┴
@@ -1228,18 +1339,18 @@
                     }
                     // Otherwise, pass an error instance as the first arg of the callback.
                     else {
-                      errorInstance.stack += '\n'+
-                      '\n'+
-                      'Error Summary:\n'+
-                      '(see `.responseInfo` for more details)\n'+
-                      '·-------------·----------------------------------------·\n'+
-                      '|    Protocol | '+(requestInfo.protocolName==='jQuery'?'http(s)://   (jQuery)':requestInfo.protocolName==='io.socket'?'ws(s)://   (io.socket)':requestInfo.protocolName)+'\n'+
-                      '|     Address | '+requestInfo.verb.toUpperCase()+' '+requestInfo.url+'\n'+
-                      '|        Exit | '+responseInfo.exit+'\n'+
-                      '| Status Code | '+responseInfo.statusCode+'\n'+
-                      '·-------------·----------------------------------------·';
+                      errorInstance.stack += '\n' +
+                        '\n' +
+                        'Error Summary:\n' +
+                        '(see `.responseInfo` for more details)\n' +
+                        '·-------------·----------------------------------------·\n' +
+                        '|    Protocol | ' + (requestInfo.protocolName === 'jQuery' ? 'http(s)://   (jQuery)' : requestInfo.protocolName === 'io.socket' ? 'ws(s)://   (io.socket)' : requestInfo.protocolName) + '\n' +
+                        '|     Address | ' + requestInfo.verb.toUpperCase() + ' ' + requestInfo.url + '\n' +
+                        '|        Exit | ' + responseInfo.exit + '\n' +
+                        '| Status Code | ' + responseInfo.statusCode + '\n' +
+                        '·-------------·----------------------------------------·';
                       if (responseInfo.body !== undefined) {
-                        errorInstance.stack += '\n\nResponse Body:\n'+responseInfo.body;
+                        errorInstance.stack += '\n\nResponse Body:\n' + responseInfo.body;
                       }
                       errorInstance.responseInfo = responseInfo;
                       errorInstance.exit = responseInfo.exit;
@@ -1252,25 +1363,24 @@
                     if (exitCallbacks['success']) {
                       // Either forward to the "success" callback (if there is one)
                       return exitCallbacks['success'](tolerateAsIfSuccess ? resultFromInterceptOrTolerate : responseInfo.body, responseInfo);
-                    }
-                    else {
+                    } else {
                       // or otherwise do nothing.
                     }
                   }
                   // Otherwise call the error callback.
                   else if (exitCallbacks['error']) {
-                    errorInstance.stack += '\n'+
-                    '\n'+
-                    'Error Summary:\n'+
-                    '(see `.responseInfo` for more details)\n'+
-                    '·-------------·----------------------------------------·\n'+
-                    '|    Protocol | '+(requestInfo.protocolName==='jQuery'?'http(s)://   (jQuery)':requestInfo.protocolName==='io.socket'?'ws(s)://   (io.socket)':requestInfo.protocolName)+'\n'+
-                    '|     Address | '+requestInfo.verb.toUpperCase()+' '+requestInfo.url+'\n'+
-                    '|        Exit | '+responseInfo.exit+'\n'+
-                    '| Status Code | '+responseInfo.statusCode+'\n'+
-                    '·-------------·----------------------------------------·';
+                    errorInstance.stack += '\n' +
+                      '\n' +
+                      'Error Summary:\n' +
+                      '(see `.responseInfo` for more details)\n' +
+                      '·-------------·----------------------------------------·\n' +
+                      '|    Protocol | ' + (requestInfo.protocolName === 'jQuery' ? 'http(s)://   (jQuery)' : requestInfo.protocolName === 'io.socket' ? 'ws(s)://   (io.socket)' : requestInfo.protocolName) + '\n' +
+                      '|     Address | ' + requestInfo.verb.toUpperCase() + ' ' + requestInfo.url + '\n' +
+                      '|        Exit | ' + responseInfo.exit + '\n' +
+                      '| Status Code | ' + responseInfo.statusCode + '\n' +
+                      '·-------------·----------------------------------------·';
                     if (responseInfo.body !== undefined) {
-                      errorInstance.stack += '\n\nResponse Body:\n'+responseInfo.body;
+                      errorInstance.stack += '\n\nResponse Body:\n' + responseInfo.body;
                     }
                     errorInstance.responseInfo = responseInfo;
                     errorInstance.exit = responseInfo.exit;
@@ -1279,24 +1389,24 @@
                   }
                   // Or if there isn't an error callback, just throw.
                   else {
-                    errorInstance.stack += '\n'+
-                    '\n'+
-                    'Error Summary:\n'+
-                    '(see `.responseInfo` for more details)\n'+
-                    '·-------------·----------------------------------------·\n'+
-                    '|    Protocol | '+(requestInfo.protocolName==='jQuery'?'http(s)://   (jQuery)':requestInfo.protocolName==='io.socket'?'ws(s)://   (io.socket)':requestInfo.protocolName)+'\n'+
-                    '|     Address | '+requestInfo.verb.toUpperCase()+' '+requestInfo.url+'\n'+
-                    '|        Exit | '+responseInfo.exit+'\n'+
-                    '| Status Code | '+responseInfo.statusCode+'\n'+
-                    '·-------------·----------------------------------------·';
+                    errorInstance.stack += '\n' +
+                      '\n' +
+                      'Error Summary:\n' +
+                      '(see `.responseInfo` for more details)\n' +
+                      '·-------------·----------------------------------------·\n' +
+                      '|    Protocol | ' + (requestInfo.protocolName === 'jQuery' ? 'http(s)://   (jQuery)' : requestInfo.protocolName === 'io.socket' ? 'ws(s)://   (io.socket)' : requestInfo.protocolName) + '\n' +
+                      '|     Address | ' + requestInfo.verb.toUpperCase() + ' ' + requestInfo.url + '\n' +
+                      '|        Exit | ' + responseInfo.exit + '\n' +
+                      '| Status Code | ' + responseInfo.statusCode + '\n' +
+                      '·-------------·----------------------------------------·';
                     if (responseInfo.body !== undefined) {
-                      errorInstance.stack += '\n\nResponse Body:\n'+responseInfo.body;
+                      errorInstance.stack += '\n\nResponse Body:\n' + responseInfo.body;
                     }
                     errorInstance.stack = UNHANDLED_ERR_PREFIX_MSG + errorInstance.stack;
                     errorInstance.responseInfo = responseInfo;
                     throw errorInstance;
                   }
-                }//‡
+                } //‡
                 //  ┌┐┌┌─┐  ┌─┐┌─┐┬  ┬  ┌┐ ┌─┐┌─┐┬┌─  ┌─┐┌─┐  ┌─┐┌┐┌┬ ┬  ┬┌─┬┌┐┌┌┬┐
                 //  ││││ │  │  ├─┤│  │  ├┴┐├─┤│  ├┴┐  │ │├┤   ├─┤│││└┬┘  ├┴┐││││ ││
                 //  ┘└┘└─┘  └─┘┴ ┴┴─┘┴─┘└─┘┴ ┴└─┘┴ ┴  └─┘└    ┴ ┴┘└┘ ┴   ┴ ┴┴┘└┘─┴┘
@@ -1309,39 +1419,39 @@
                   }
                   // Otherwise, throw.
                   else {
-                    errorInstance.stack += '\n'+
-                    '\n'+
-                    'Error Summary:\n'+
-                    '(see `.responseInfo` for more details)\n'+
-                    '·-------------·----------------------------------------·\n'+
-                    '|    Protocol | '+(requestInfo.protocolName==='jQuery'?'http(s)://   (jQuery)':requestInfo.protocolName==='io.socket'?'ws(s)://   (io.socket)':requestInfo.protocolName)+'\n'+
-                    '|     Address | '+requestInfo.verb.toUpperCase()+' '+requestInfo.url+'\n'+
-                    '|        Exit | '+responseInfo.exit+'\n'+
-                    '| Status Code | '+responseInfo.statusCode+'\n'+
-                    '·-------------·----------------------------------------·';
+                    errorInstance.stack += '\n' +
+                      '\n' +
+                      'Error Summary:\n' +
+                      '(see `.responseInfo` for more details)\n' +
+                      '·-------------·----------------------------------------·\n' +
+                      '|    Protocol | ' + (requestInfo.protocolName === 'jQuery' ? 'http(s)://   (jQuery)' : requestInfo.protocolName === 'io.socket' ? 'ws(s)://   (io.socket)' : requestInfo.protocolName) + '\n' +
+                      '|     Address | ' + requestInfo.verb.toUpperCase() + ' ' + requestInfo.url + '\n' +
+                      '|        Exit | ' + responseInfo.exit + '\n' +
+                      '| Status Code | ' + responseInfo.statusCode + '\n' +
+                      '·-------------·----------------------------------------·';
                     if (responseInfo.body !== undefined) {
-                      errorInstance.stack += '\n\nResponse Body:\n'+responseInfo.body;
+                      errorInstance.stack += '\n\nResponse Body:\n' + responseInfo.body;
                     }
                     errorInstance.stack = UNHANDLED_ERR_PREFIX_MSG + errorInstance.stack;
                     errorInstance.responseInfo = responseInfo;
                     throw errorInstance;
                   }
-                }//‡
+                } //‡
                 else {
                   throw new Error('Invalid usage of Cloud.*() method.  Provide either a dictionary of callbacks, a single callback function, or NOTHING to `.exec()`.');
                 }
 
-              });//_∏_  </cb from † _runInterceptOrTolerationMaybe()>
+              }); //_∏_  </cb from † _runInterceptOrTolerationMaybe()>
 
-            });//_∏_  </cb from † _makeAjaxCallWithAppropriateProtocol()>
+            }); //_∏_  </cb from † _makeAjaxCallWithAppropriateProtocol()>
 
             // --
             // > Note that we don't return anything at all here.
             // > (That's to ensure userland code doesn't attempt any further chaining or `await`ing.)
 
-          },//</definition of `.exec()` >
+          }, //</definition of `.exec()` >
 
-          switch: function (){
+          switch: function () {
             deferred.exec.apply(deferred, arguments);
             // --
             // > Note that we don't return anything at all here.
@@ -1349,11 +1459,11 @@
           },
 
           // FUTURE: use parley for this instead, if available
-          log: function (){
+          log: function () {
 
             console.log('Running with `.log()`...');
 
-            this.exec(function(err, result) {
+            this.exec(function (err, result) {
               if (err) {
                 console.error();
                 console.error('- - - - - - - - - - - - - - - - - - - - - - - -');
@@ -1363,7 +1473,7 @@
                 console.error('- - - - - - - - - - - - - - - - - - - - - - - -');
                 console.error();
                 return;
-              }//-•
+              } //-•
 
               console.log();
               if (_.isUndefined(result)) {
@@ -1372,8 +1482,7 @@
                 console.log();
                 console.log('(There was no result.)');
                 console.log('- - - - - - - - - - - - - - - - - - - - - - - -');
-              }
-              else {
+              } else {
                 console.log('- - - - - - - - - - - - - - - - - - - - - - - -');
                 console.log('Finished successfully.');
                 console.log();
@@ -1384,14 +1493,14 @@
               }
               console.log();
 
-            });//_∏_
+            }); //_∏_
 
             // --
             // > Note that we don't return anything at all here.
             // > (That's to ensure userland code doesn't attempt any further chaining or `await`ing.)
           }
 
-        };// </define deferred object>
+        }; // </define deferred object>
 
 
 
@@ -1436,23 +1545,22 @@
         if (typeof appLevelSdkEndpointDef === 'function') {
           var returnedFromEndpointDefFn = appLevelSdkEndpointDef.apply(this, argins);
           if (typeof returnedFromEndpointDefFn !== 'object') {
-            throw new Error('Consistency violation: Function for CloudSDK endpoint (`'+methodName+'`) returned an invalid result.  The return value of the specified function is not a dictionary!  If a function is supplied for an endpoint definition, it must return a dictionary containing a `verb` and a `url`.  The returned dictionary may also contain dynamic, per-request header & parameter values.');
+            throw new Error('Consistency violation: Function for CloudSDK endpoint (`' + methodName + '`) returned an invalid result.  The return value of the specified function is not a dictionary!  If a function is supplied for an endpoint definition, it must return a dictionary containing a `verb` and a `url`.  The returned dictionary may also contain dynamic, per-request header & parameter values.');
           }
 
           if (!_.isUndefined(returnedFromEndpointDefFn.headers)) {
             deferred = deferred.headers(returnedFromEndpointDefFn.headers);
-          }
-          else if (options.headers) {
+          } else if (options.headers) {
             deferred = deferred.headers(options.headers);
           }
 
           if (!_.isUndefined(returnedFromEndpointDefFn.protocol)) {
             deferred = deferred.protocol(returnedFromEndpointDefFn.protocol);
-          }
-          else if (options.protocol) {
+          } else if (options.protocol) {
             deferred.protocol(options.protocol);
+          } else {
+            deferred.protocol(DEFAULT_PROTOCOL_NAME);
           }
-          else { deferred.protocol(DEFAULT_PROTOCOL_NAME); }
 
           requestInfo.verb = returnedFromEndpointDefFn.verb;
           requestInfo.url = returnedFromEndpointDefFn.url;
@@ -1470,18 +1578,17 @@
         else if (appLevelSdkEndpointDef && typeof appLevelSdkEndpointDef === 'object') {
           if (!_.isUndefined(appLevelSdkEndpointDef.headers)) {
             deferred.headers(appLevelSdkEndpointDef.headers);
-          }
-          else if (options.headers) {
+          } else if (options.headers) {
             deferred = deferred.headers(options.headers);
           }
 
           if (!_.isUndefined(appLevelSdkEndpointDef.protocol)) {
             deferred.protocol(appLevelSdkEndpointDef.protocol);
-          }
-          else if (options.protocol) {
+          } else if (options.protocol) {
             deferred.protocol(options.protocol);
+          } else {
+            deferred.protocol(DEFAULT_PROTOCOL_NAME);
           }
-          else { deferred.protocol(DEFAULT_PROTOCOL_NAME); }
 
           requestInfo.verb = appLevelSdkEndpointDef.verb;
           requestInfo.url = appLevelSdkEndpointDef.url;
@@ -1500,17 +1607,16 @@
           // Set up default protocol.
           if (options.protocol) {
             deferred.protocol(options.protocol);
+          } else {
+            deferred.protocol(DEFAULT_PROTOCOL_NAME);
           }
-          else { deferred.protocol(DEFAULT_PROTOCOL_NAME); }
 
           // And then fold in the other pieces of request info.
           requestInfo.verb = appLevelSdkEndpointDef.replace(/^\s*([^\/\s]+)\s*\/.*$/, '$1');
           requestInfo.url = appLevelSdkEndpointDef.replace(/^\s*[^\/\s]+\s*\/(.*)$/, '/$1');
           requestInfo.params = argins;
-        }
-
-        else {
-          throw new Error('Consistency violation: Something happened to CloudSDK endpoint (`'+methodName+'`).  This was not noticed initially when building up CloudSDK endpoints, but this endpoint is now invalid.  Endpoints should be defined as either (1) a string like "GET /foo", (2) a dictionary containing a `verb` and a `url`, or (3) a function that returns a dictionary like that.');
+        } else {
+          throw new Error('Consistency violation: Something happened to CloudSDK endpoint (`' + methodName + '`).  This was not noticed initially when building up CloudSDK endpoints, but this endpoint is now invalid.  Endpoints should be defined as either (1) a string like "GET /foo", (2) a dictionary containing a `verb` and a `url`, or (3) a function that returns a dictionary like that.');
         }
 
 
@@ -1522,7 +1628,7 @@
         // > Note that we're not actually interested in the return value
         // > from this first `.replace()` here.
         var routeParameters = {};
-        requestInfo.url.replace(/(\:[^\/\:\.\?]+\??)/g, function ($all, $1){
+        requestInfo.url.replace(/(\:[^\/\:\.\?]+\??)/g, function ($all, $1) {
           var routeParamName = $1.replace(/^\:/, '').replace(/\??$/, '');
 
           // Optional:
@@ -1534,11 +1640,11 @@
           // Mandatory:
           else {
             if (!requestInfo.params || requestInfo.params[routeParamName] === undefined) {
-              throw new Error('Missing required param: `'+routeParamName+'`');
+              throw new Error('Missing required param: `' + routeParamName + '`');
             }
             routeParameters[routeParamName] = requestInfo.params[routeParamName];
           }
-        });//∞
+        }); //∞
 
         // Then create a shallow copy of `requestInfo.params` without the route path
         // parameters in it, and reattach that as `requestInfo.params`.
@@ -1547,9 +1653,11 @@
         requestInfo.params = _.omit(requestInfo.params, _.keys(routeParameters));
 
         // Now stick the route parameters into the destination url
-        requestInfo.url = requestInfo.url.replace(/(\:[^\/\:\.\?]+\??)/g, function ($all, $1){
+        requestInfo.url = requestInfo.url.replace(/(\:[^\/\:\.\?]+\??)/g, function ($all, $1) {
           var routeParamName = $1.replace(/^\:/, '').replace(/\??$/, '');
-          if (routeParameters[routeParamName] === undefined) { return ''; }
+          if (routeParameters[routeParamName] === undefined) {
+            return '';
+          }
           return routeParameters[routeParamName];
         });
 
@@ -1561,7 +1669,9 @@
 
         // Ensure verb exists, and then lower-case it.
         /////////////////////////////////////////////////////////////////////////////
-        if (!requestInfo.verb) { throw new Error('CloudSDK endpoint (`'+methodName+'`) is invalid: No HTTP verb specified.  Please specify an HTTP verb (e.g. `GET`, `POST`, etc.)'); }
+        if (!requestInfo.verb) {
+          throw new Error('CloudSDK endpoint (`' + methodName + '`) is invalid: No HTTP verb specified.  Please specify an HTTP verb (e.g. `GET`, `POST`, etc.)');
+        }
         requestInfo.verb = (requestInfo.verb || 'get').toLowerCase();
 
 
@@ -1572,7 +1682,7 @@
         // Return the deferred object.
         return deferred;
 
-      };//ƒ  </ _helpCallCloudMethod >
+      }; //ƒ  </ _helpCallCloudMethod >
 
       // Primary definition of this Cloud.* method()
       memo[methodName] = function () {
@@ -1586,25 +1696,25 @@
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         if (!appLevelSdkEndpointDef.args && arguments.length > 0) {
           throw new Error(
-            'Cannot call this Cloud.*() method with serial usage because Cloud SDK is not aware of the appropriate parameter names!  Please pass in named parameter values using .with({…}) instead--or if you\'re the implementor of the corresponding Sails action, change it on the backend and regenerate the SDK so that this method is configured with an `args` array.\n'+
+            'Cannot call this Cloud.*() method with serial usage because Cloud SDK is not aware of the appropriate parameter names!  Please pass in named parameter values using .with({…}) instead--or if you\'re the implementor of the corresponding Sails action, change it on the backend and regenerate the SDK so that this method is configured with an `args` array.\n' +
             ' [?] If you\'re unsure, visit https://sailsjs.com/support for help.'
           );
         }
 
         // Parse arguments into argins
-        var argins = _.reduce(arguments, function(argins, argin, i){
+        var argins = _.reduce(arguments, function (argins, argin, i) {
 
           if (!(appLevelSdkEndpointDef.args[i])) {
-            throw new Error('Invalid usage with serial arguments: Received unexpected '+(i===0?'first':i===1?'second':i===2?'third':(i+1)+'th')+' argument.');
+            throw new Error('Invalid usage with serial arguments: Received unexpected ' + (i === 0 ? 'first' : i === 1 ? 'second' : i === 2 ? 'third' : (i + 1) + 'th') + ' argument.');
           }
 
           // Reject special notation.
           // > Remember, if we made it to this point, we know it's valid b/c it's already been checked.
           if (appLevelSdkEndpointDef.args[i] === '{*}') {
             if (argin !== undefined && (!_.isObject(argin) || _.isArray(argin) || _.isFunction(argin))) {
-              throw new Error('Invalid usage with serial arguments: If provided, expected '+(i===0?'first':i===1?'second':i===2?'third':(i+1)+'th')+' argument to be a dictionary (plain JavaScript object, like `{}`).  But instead, got: '+argin+'');
+              throw new Error('Invalid usage with serial arguments: If provided, expected ' + (i === 0 ? 'first' : i === 1 ? 'second' : i === 2 ? 'third' : (i + 1) + 'th') + ' argument to be a dictionary (plain JavaScript object, like `{}`).  But instead, got: ' + argin + '');
             } else if (argin !== undefined && _.intersection(_.keys(argins), _.keys(argin)).length > 0) {
-              throw new Error('Invalid usage with serial arguments: If provided, expected '+(i===0?'first':i===1?'second':i===2?'third':(i+1)+'th')+' argument to have keys which DO NOT overlap with other already-configured argins!  But in reality, it contained conflicting keys: '+_.intersection(_.keys(argins), _.keys(argin))+'');
+              throw new Error('Invalid usage with serial arguments: If provided, expected ' + (i === 0 ? 'first' : i === 1 ? 'second' : i === 2 ? 'third' : (i + 1) + 'th') + ' argument to have keys which DO NOT overlap with other already-configured argins!  But in reality, it contained conflicting keys: ' + _.intersection(_.keys(argins), _.keys(argin)) + '');
             }
             _.extend(argins, argin);
           } else {
@@ -1625,19 +1735,19 @@
 
           return argins;
 
-        }, {});//= (∞)
+        }, {}); //= (∞)
 
         return _helpCallCloudMethod(argins);
 
-      };//ƒ
+      }; //ƒ
 
       // Escape hatch that always allows using named parameters.
       memo[methodName].with = function (argins) {
         return _helpCallCloudMethod(argins);
-      };//ƒ
+      }; //ƒ
 
       return memo;
-    }, {});//</ _.reduce() :: each defined endpoint method >
+    }, {}); //</ _.reduce() :: each defined endpoint method >
 
     // Remove the `.setup()` method, now that it's been called.
     delete Cloud.setup;
@@ -1668,33 +1778,41 @@
      *
      * @returns {Function}  (the actual handler function that was bound, for potential use later with `Cloud.off()`)
      */
-    Cloud.on = function(socketEventName, handleSocketMsg) {
-      if (!socketEventName || !_.isString(socketEventName)) { throw new Error('Invalid usage for `Cloud.on()`: Must pass in a valid first argument (a string; the name of the socket event to listen for -- i.e. the variety of incoming WebSocket messages to receive and handle).'); }
-      if (!handleSocketMsg) { throw new Error('Invalid usage for `Cloud.on()`: Must pass in a second argument (the function to run every time this WebSocket event is received).'); }
+    Cloud.on = function (socketEventName, handleSocketMsg) {
+      if (!socketEventName || !_.isString(socketEventName)) {
+        throw new Error('Invalid usage for `Cloud.on()`: Must pass in a valid first argument (a string; the name of the socket event to listen for -- i.e. the variety of incoming WebSocket messages to receive and handle).');
+      }
+      if (!handleSocketMsg) {
+        throw new Error('Invalid usage for `Cloud.on()`: Must pass in a second argument (the function to run every time this WebSocket event is received).');
+      }
 
-      if (!io || !io.socket) { throw new Error('Could not bind a cloud event listener with `Cloud.on()`: WebSocket support is not currently available (`io.socket` is not available).  Make sure `sails.io.js` is being injected in a <script> tag!'); }
+      if (!io || !io.socket) {
+        throw new Error('Could not bind a cloud event listener with `Cloud.on()`: WebSocket support is not currently available (`io.socket` is not available).  Make sure `sails.io.js` is being injected in a <script> tag!');
+      }
 
       var actualHandler;
       if (_.isObject(handleSocketMsg) && !_.isArray(handleSocketMsg) && !_.isFunction(handleSocketMsg)) {
         // Further negotiate based on "verb", if configured to do so.
-        actualHandler = function(msg) {
+        actualHandler = function (msg) {
           var handlerToRun;
           if (_.contains(_.keys(handleSocketMsg), msg.verb)) {
             handlerToRun = handleSocketMsg[msg.verb];
           } else if (handleSocketMsg['*']) {
             handlerToRun = handleSocketMsg['*'];
           } else {
-            throw new Error('Unhandled "'+socketEventName+'" cloud event:  Received an incoming WebSocket message with an unrecognized "verb" property: "'+msg.verb+'".  If this was deliberate, register another key in the call to `Cloud.on(\''+socketEventName+'\', {…, '+msg.verb+': (msg)=>{…} })` to recognize this new sub-category of cloud event and handle it accordingly.  Otherwise, if you\'d like to silently ignore messages with other "verb"s (or no "verb" at all), then pass a function in to Cloud.on(), instead of a dictionary -- or register a "*" key as a catchall, and make its function a no-op.');
+            throw new Error('Unhandled "' + socketEventName + '" cloud event:  Received an incoming WebSocket message with an unrecognized "verb" property: "' + msg.verb + '".  If this was deliberate, register another key in the call to `Cloud.on(\'' + socketEventName + '\', {…, ' + msg.verb + ': (msg)=>{…} })` to recognize this new sub-category of cloud event and handle it accordingly.  Otherwise, if you\'d like to silently ignore messages with other "verb"s (or no "verb" at all), then pass a function in to Cloud.on(), instead of a dictionary -- or register a "*" key as a catchall, and make its function a no-op.');
           }
 
           try {
             handlerToRun(msg);
           } catch (err) {
-            if (!_.isObject(err)) { throw err; }
-            err.message = 'An uncaught error was thrown while handling an incoming WebSocket message (a "'+socketEventName+'" cloud event).  '+ err.message;
+            if (!_.isObject(err)) {
+              throw err;
+            }
+            err.message = 'An uncaught error was thrown while handling an incoming WebSocket message (a "' + socketEventName + '" cloud event).  ' + err.message;
             throw err;
           }
-        };//ƒ
+        }; //ƒ
 
       } else if (_.isFunction(handleSocketMsg)) {
         // Otherwise, just run the handler function.
@@ -1703,10 +1821,10 @@
         throw new Error('Invalid usage for `Cloud.on()`: Second argument must either be a function (the function to run every time this socket event is received) or a dictionary of functions that will be negotiated and routed to based on the incoming message\'s conventional "verb" property (e.g. `{ "bankWireReceived": (msg)=>{…}, "destroyed": (msg)=>{…}, "*": (msg)=>{…} }`.');
       }
 
-      io.socket.on(socketEventName, actualHandler);//œ
+      io.socket.on(socketEventName, actualHandler); //œ
 
       return actualHandler;
-    };//</ .on() >
+    }; //</ .on() >
 
     /**
      * Cloud.off()
@@ -1721,26 +1839,33 @@
      * @param  {String} socketEventName
      * @param  {Function?} specificHandler
      */
-    Cloud.off = function(socketEventName, specificHandler) {
-      if (!socketEventName || !_.isString(socketEventName)) { throw new Error('Invalid usage for `Cloud.off()`: Must pass in a first argument (a string; the name of the socket event to stop listening for -- i.e. the variety of incoming WebSocket messages to reject and ignore).'); }
-      if (specificHandler !== undefined && !_.isFunction(specificHandler)) { throw new Error('Invalid usage for `Cloud.off()`: If a second argument is provided, it should be a function  (the specific handler you want to stop running every time a matching WebSocket message is received).'); }
+    Cloud.off = function (socketEventName, specificHandler) {
+      if (!socketEventName || !_.isString(socketEventName)) {
+        throw new Error('Invalid usage for `Cloud.off()`: Must pass in a first argument (a string; the name of the socket event to stop listening for -- i.e. the variety of incoming WebSocket messages to reject and ignore).');
+      }
+      if (specificHandler !== undefined && !_.isFunction(specificHandler)) {
+        throw new Error('Invalid usage for `Cloud.off()`: If a second argument is provided, it should be a function  (the specific handler you want to stop running every time a matching WebSocket message is received).');
+      }
 
-      if (!io || !io.socket) { throw new Error('Could not stop listening to cloud events with `Cloud.off()`: WebSocket support is not currently available (`io.socket` is not available).  Make sure `sails.io.js` is being injected in a <script> tag!'); }
+      if (!io || !io.socket) {
+        throw new Error('Could not stop listening to cloud events with `Cloud.off()`: WebSocket support is not currently available (`io.socket` is not available).  Make sure `sails.io.js` is being injected in a <script> tag!');
+      }
 
       io.socket.off(socketEventName, specificHandler);
-    };//</ .off() >
+    }; //</ .off() >
 
-  };//ƒ   </ .setup() >
+  }; //ƒ   </ .setup() >
 
   return Cloud;
 
-}, function(global, factory) {
+}, function (global, factory) {
   var _;
   var io;
   var $;
   var SAILS_LOCALS;
   var location;
   var File;
+  var FileList;
   var FormData;
 
   // First, handle optional deps that are gleaned from the global state:
@@ -1749,20 +1874,25 @@
   // > back in ~2015!)
   // =====================================================================
   if (global.location !== undefined) {
-    if (global.location && typeof global.location === 'object' && (global.location.constructor.name === 'Location' || global.location.constructor.toString() === '[object Location]')) {
+    if (global.location && typeof global.location === 'object' && (global.location.constructor.name === 'Location' || global.location.constructor.toString() === '[object Location]' || (_.isObject(global.location) && global.location.href))) {
       location = global.location;
     }
-  }//ﬁ
+  } //ﬁ
   if (global.File !== undefined) {
     if (global.File && typeof global.File === 'function' && global.File.name === 'File') {
       File = global.File;
     }
-  }//ﬁ
+  } //ﬁ
+  if (global.FileList !== undefined) {
+    if (global.FileList && typeof global.FileList === 'function' && global.FileList.name === 'FileList') {
+      FileList = global.FileList;
+    }
+  } //ﬁ
   if (global.FormData !== undefined) {
     if (global.FormData && typeof global.FormData === 'function' && global.FormData.name === 'FormData') {
       FormData = global.FormData;
     }
-  }//ﬁ
+  } //ﬁ
 
   // Then, load the rest of the deps:
   // =====================================================================
@@ -1770,22 +1900,39 @@
   //˙°˚°·.
   //‡CJS  ˚°˚°·˛
   if (typeof exports === 'object' && typeof module !== 'undefined') {
-    var _require = require;// eslint-disable-line no-undef
-    var _module = module;// eslint-disable-line no-undef
+    var _require = require; // eslint-disable-line no-undef
+    var _module = module; // eslint-disable-line no-undef
     // required deps:
     if (typeof _ === 'undefined') {
       try {
         _ = _require('@sailshq/lodash');
-      } catch (e) { if (e.code === 'MODULE_NOT_FOUND') {/* ok */} else { throw e; } }
-    }//ﬁ
+      } catch (e) {
+        if (e.code === 'MODULE_NOT_FOUND') {
+          /* ok */ } else {
+          throw e;
+        }
+      }
+    } //ﬁ
     if (typeof _ === 'undefined') {
       try {
         _ = _require('lodash');
-      } catch (e) { if (e.code === 'MODULE_NOT_FOUND') {/* ok */} else { throw e; } }
-    }//ﬁ
+      } catch (e) {
+        if (e.code === 'MODULE_NOT_FOUND') {
+          /* ok */ } else {
+          throw e;
+        }
+      }
+    } //ﬁ
 
     // optional deps:
-    try { $ = _require('jquery'); } catch (e) { if (e.code === 'MODULE_NOT_FOUND') {/* ok */} else { throw e; } }
+    try {
+      $ = _require('jquery');
+    } catch (e) {
+      if (e.code === 'MODULE_NOT_FOUND') {
+        /* ok */ } else {
+        throw e;
+      }
+    }
     try {
 
       io = _require('socket.io-client');
@@ -1817,52 +1964,52 @@
     SAILS_LOCALS = undefined;
 
     // export:
-    _module.exports = factory(_, io, $, SAILS_LOCALS, location, File, FormData);
+    _module.exports = factory(_, io, $, SAILS_LOCALS, location, File, FileList, FormData);
   }
   //˙°˚°·
   //‡AMD ˚¸
-  else if(typeof define === 'function' && define.amd) {// eslint-disable-line no-undef
+  else if (typeof define === 'function' && define.amd) { // eslint-disable-line no-undef
     throw new Error('Global `define()` function detected, but built-in AMD support in `cloud.js` is not currently recommended.  To resolve this, modify `cloud.js`.');
     // var _define = define;// eslint-disable-line no-undef
-    // _define(['_', 'sails.io.js', '$', 'SAILS_LOCALS', 'location', 'file'], factory);
+    // _define(['_', 'sails.io.js', '$', 'SAILS_LOCALS', 'location', 'file', …, …], factory);
   }
   //˙°˚˙°·
   //‡NUDE ˚°·˛
   else {
     // required deps:
-    if (!global._) { throw new Error('`_` global does not exist on the page yet. (If you\'re using Sails, please check dependency loading order in pipeline.js and make sure the Lodash library is getting brought in before `cloud`.)'); }
+    if (!global._) {
+      throw new Error('`_` global does not exist on the page yet. (If you\'re using Sails, please check dependency loading order in pipeline.js and make sure the Lodash library is getting brought in before `cloud`.)');
+    }
     _ = global._;
     // optional deps:
     if (global.io !== undefined) {
       if (typeof global.io !== 'function') {
         throw new Error('Could not access `io.socket`: The `io` global is invalid at the moment:' + global.io + '\n(If you\'re using Sails, please check dependency loading order in pipeline.js and make sure the sails.io.js library is getting brought in before `cloud`.)');
-      }
-      else if (typeof global.io.socket === 'undefined') {
+      } else if (typeof global.io.socket === 'undefined') {
         throw new Error('Could not access `io.socket`: `io` does not have a `socket` property.  Make sure `sails.io.js` is being injected in a <script> tag!');
-      }
-      else {
+      } else {
         io = global.io;
       }
-    }//ﬁ
+    } //ﬁ
     if (global.$ !== undefined) {
       if (typeof global.$ !== 'function') {
         throw new Error('The `$` global is not valid at the moment:' + global.$ + '\n(If you\'re using Sails, please check dependency loading order in pipeline.js and make sure the jQuery library is getting brought in before `cloud`.)');
-      }
-      else {
+      } else {
         $ = global.$;
       }
-    }//ﬁ
+    } //ﬁ
     if (global.SAILS_LOCALS !== undefined) {
       if (!_.isObject(global.SAILS_LOCALS)) {
         throw new Error('The `SAILS_LOCALS` global is not valid at the moment:' + global.SAILS_LOCALS + '\n(Please check and make sure you are using `<%- exposeLocalsToBrowser() %>` in your server-side view *before* the rest of your scripts.)');
-      }
-      else {
+      } else {
         SAILS_LOCALS = global.SAILS_LOCALS;
       }
-    }//ﬁ
+    } //ﬁ
 
     // export:
-    if (global.Cloud) { throw new Error('Cannot expose global variable: Conflicting global (`cloud`) already exists!'); }
-    global.Cloud = factory(_, io, $, SAILS_LOCALS, location, File, FormData);
+    if (global.Cloud) {
+      throw new Error('Cannot expose global variable: Conflicting global (`cloud`) already exists!');
+    }
+    global.Cloud = factory(_, io, $, SAILS_LOCALS, location, File, FileList, FormData);
   }
-});//…)
+}); //…)
