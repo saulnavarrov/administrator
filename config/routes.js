@@ -61,37 +61,12 @@ module.exports.routes = {
 
 
 
-
-  /**************************************************************************************************
-   * STR - SIN SOPORE PARA INTERNET EXPLORER EN NINGUNA VERSION
-   *************************************************************************************************/
-  'GET /iex': function (req, res) {
-    return res.send(`
-    <script src="/js/IE.js"></script>
-    <h1>Hola! </h1><hr>
-    <p>Seguro estas intentando abrir esta pagina con <b>Internet Explorer</b> o sus variedades, lo sentimos,
-    <br>Nuestro equipo de desarrollo no da soporte para este Navegador.
-    <br>
-    <br>Por favor usa Chrome, Mozilla Firefox para mayor compatibilidad.
-    <br>Chao :D
-    `);
-  },
-  /**************************************************************************************************
-   * END - SIN SOPORE PARA INTERNET EXPLORER EN NINGUNA VERSION
-   *************************************************************************************************/
-
   /***************************************************************************
   *                                                                          *
   * More custom routes here...                                               *
   * (See https://sailsjs.com/config/routes for examples.)                    *
   *                                                                          *
-  * If a request to a URL doesn't match any of the routes in this file, it   *
-  * is matched against "shadow routes" (e.g. blueprint routes).  If it does  *
-  * not match any of those, it is matched against static assets.             *
-  *                                                                          *
   ***************************************************************************/
-
-
   //  ╔═╗╔═╗╦  ╔═╗╔╗╔╔╦╗╔═╗╔═╗╦╔╗╔╔╦╗╔═╗
   //  ╠═╣╠═╝║  ║╣ ║║║ ║║╠═╝║ ║║║║║ ║ ╚═╗
   //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
@@ -147,6 +122,26 @@ module.exports.routes = {
   //  ╔╦╗╦╔═╗╔═╗
   //  ║║║║╚═╗║
   //  ╩ ╩╩╚═╝╚═╝
+
+
+  /**************************************************************************************************
+   * STR - SIN SOPORE PARA INTERNET EXPLORER EN NINGUNA VERSION
+   *************************************************************************************************/
+  'GET /iex': function (req, res) {
+    return res.send(`
+    <script src="/js/IE.js"></script>
+    <h1>Hola!</h1>
+    <hr>
+    <p>Seguro estas intentando abrir esta pagina con <b>Internet Explorer</b> o sus variedades, lo sentimos,
+    <br>Nuestro equipo de desarrollo no da soporte para este Navegador.
+    <br>
+    <br>Por favor usa Chrome, Mozilla Firefox para mayor compatibilidad.
+    <br>Chao :D</p>
+    `);
+  },
+  /**************************************************************************************************
+   * END - SIN SOPORE PARA INTERNET EXPLORER EN NINGUNA VERSION
+   *************************************************************************************************/
 
 
 };
