@@ -10,7 +10,6 @@
  */
 
 parasails.registerPage('holdings-list', {
-  mixins: [miPrimerMix],
   //  ╦╔╗╔╦╔╦╗╦╔═╗╦    ╔═╗╔╦╗╔═╗╔╦╗╔═╗
   //  ║║║║║ ║ ║╠═╣║    ╚═╗ ║ ╠═╣ ║ ║╣
   //  ╩╝╚╝╩ ╩ ╩╩ ╩╩═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝
@@ -523,13 +522,9 @@ parasails.registerPage('holdings-list', {
       const csrfToken = window.SAILS_LOCALS._csrf;
       let urls = '/api/v2/masters/holding/list';
 
-
       this.saludos();
 
-      console.log(this.inicio);
-
-
-      // Activa el ProgressBar de cargando usuarios
+      console.log/ Activa el ProgressBar de cargando usuarios
       !this.progressBar.active ? this.progressBarD(true, 'fadeInRight faster') : '';
 
       // Data enviada a la API
@@ -906,5 +901,3 @@ parasails.registerPage('holdings-list', {
     deleteCompany: async function (id) {
 
     },
-  }
-});
