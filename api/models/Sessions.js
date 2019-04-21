@@ -8,7 +8,7 @@
 module.exports = {
 
   schema: false,
-  tableName: 'Sessions',
+  tableName: 'sessions',
   attributes: {
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
