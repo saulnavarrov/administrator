@@ -8,6 +8,16 @@
 
       <h1 class="section-header">
         <div>Empresas del Holding</div>
+
+        <!-- Boton de acciones generales -->
+        <div class="section-header-breadcrumb dropdown">
+          <a href="javascript:void(0)" data-toggle="dropdown" class="btn btn-outline-dark">Acciones</a>
+          <ul class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+            <li><a href="javascript:void(0)" class="dropdown-item" @click="OpensModals('createHoldings')">Agregar Nueva Empresa</a></li>
+            <li><a href="javascript:void(0)" class="dropdown-item">Des/Activar Empresas</a></li>
+            <li><a href="javascript:void(0)" class="dropdown-item">Eliminar Empresas</a></li>
+          </ul>
+        </div>
       </h1>
 
       <div class="row mt-5">
@@ -15,11 +25,13 @@
           <div class="card card-primary">
             <section class="card-header">
               <h4>Lista:</h4>
+
             </section>
 
 
             <section class="card-body">
-              body
+              <p>body</p>
+
             </section>
 
             <section class="card-footer">
@@ -30,6 +42,15 @@
       </div>
     </section>
   </div>
+
+  <%/* STAR PARTIALES DE LA PAGINA */%>
+    <%- partial('./pm-create') %>
+  <%/*  FIN PARTIALES DE LA PAGINA */%>
+
+  <%/* Progress */%>
+  <progress-data v-bind:act="modalProgress.act" v-bind:h1="modalProgress.h1"></progress-data>
+
+
 
 
   <%- partial('../../../partials/footer.ejs') %>
