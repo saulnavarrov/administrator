@@ -6,7 +6,7 @@
  * y de las cuales brinda servicios.
  */%>
 
-<section class="modal fade modal-primary" tabindex="-1" role="dialog" id="pm-create" data-backdrop="static" data-keyboard="false" aria-labelledby="pm-create" aria-hidden="true">
+ <section class="modal fade modal-primary" tabindex="-1" role="dialog" id="pm-createHoldings" data-backdrop="static" data-keyboard="false" aria-labelledby="pm-createHoldings" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
 
     <%/* CONTENT MODAL */%>
@@ -15,38 +15,48 @@
       <%/* HEADER MODAL */%>
       <div class="modal-header">
         <h4 class="modal-title" id="exampleModalLongTitle">Crear Nueva Empresa Asociada</h4>
-        <button type="button" class="close" v-on:click="btnOpenModalCreateH('close')">
+
+        <!-- BOTON PARA CERRAR EL MODAL -->
+        <button type="button" class="close" @click="CloseModals('createHoldings')">
           <span>&times;</span>
         </button>
       </div>
 
+
+      <!-- FORMULARIO DE CREACION -->
       <div class="modal-body">
         <section class="row">
           <div class="col-sm-12 col-lg-4">
             <div class="form-group">
               <label for="enrollment">N Inscripción</label>
-              <input type="number" v-model="dataCreated.enrollment" id="enrollment" class="form-control form-control-sm"  v-bind:class="[validateData.enrollment.valid]" placeholder="12345678" required>
+              <input type="number" v-model="dataCreated.enrollment" id="enrollment" class="form-control form-control-sm"
+                v-bind:class="[validateData.enrollment.valid]" placeholder="12345678" required>
               <div class="invalid-feedback">{{ validateData.enrollment.mss }}</div>
             </div>
           </div>
           <div class="col-sm-12 col-lg-3">
             <div class="form-group">
               <label for="identification">Identificación (NIT)</label>
-              <input type="number" v-model="dataCreated.identification" id="identification" class="form-control form-control-sm" placeholder="900123456" v-bind:class="[validateData.identification.valid]" required>
+              <input type="number" v-model="dataCreated.identification" id="identification"
+                class="form-control form-control-sm" placeholder="900123456"
+                v-bind:class="[validateData.identification.valid]" required>
               <div class="invalid-feedback">{{ validateData.identification.mss }}</div>
             </div>
           </div>
           <div class="col-sm-12 col-lg-2">
             <div class="form-group">
               <label for="consecutive">Cons</label>
-              <input type="number" v-model="dataCreated.consecutive" id="consecutive" class="form-control form-control-sm" placeholder="0" max="9" min="0" v-bind:class="[validateData.consecutive.valid]" required>
+              <input type="number" v-model="dataCreated.consecutive" id="consecutive"
+                class="form-control form-control-sm" placeholder="0" max="9" min="0"
+                v-bind:class="[validateData.consecutive.valid]" required>
               <div class="invalid-feedback">{{ validateData.consecutive.mss }}</div>
             </div>
           </div>
           <div class="col-sm-12 col-lg-3">
             <div class="from-group">
               <label for="location">Cuidad de Ubicación</label>
-              <input type="text" v-model="dataCreated.location" id="location" class="form-control form-control-sm" placeholder="Medellín" v-bind:class="[validateData.location.valid]" required>
+              <input type="text" v-model="dataCreated.location" id="location" class="form-control form-control-sm"
+                placeholder="Medellín" v-bind:class="[validateData.location.valid]" required>
               <div class="invalid-feedback">{{ validateData.location.mss }}</div>
             </div>
           </div>
@@ -56,14 +66,17 @@
           <div class="col-sm-12 col-lg-9">
             <div class="form-group">
               <label for="reasonName">Nombre o Razón Social (completa)</label>
-              <input type="text" v-model="dataCreated.reasonName" id="reasonName" class="form-control form-control-sm" placeholder="Nombre de la empresa completa" v-bind:class="[validateData.reasonName.valid]" required>
+              <input type="text" v-model="dataCreated.reasonName" id="reasonName" class="form-control form-control-sm"
+                placeholder="Nombre de la empresa completa" v-bind:class="[validateData.reasonName.valid]" required>
               <div class="invalid-feedback">{{ validateData.reasonName.mss }}</div>
             </div>
           </div>
           <div class="col-sm-12 col-lg-3">
             <div class="from-group">
               <label for="status">Estado</label>
-              <select class="form-control form-control-sm" style="font-size: 13px;height: 30px;line-height: 30px;padding: 0px 10px 2px 9px;margin: 0px;" v-model="dataCreated.status" id="status" v-bind:class="[validateData.status.valid]" required>
+              <select class="form-control form-control-sm"
+                style="font-size: 13px;height: 30px;line-height: 30px;padding: 0px 10px 2px 9px;margin: 0px;"
+                v-model="dataCreated.status" id="status" v-bind:class="[validateData.status.valid]" required>
                 <option selected disabled>Seleccionar</option>
                 <option value="A">Activa</option>
                 <option value="I">Inactiva</option>
@@ -76,8 +89,8 @@
         </section>
 
         <section class="row">
-          <div class="col-sm-12 col-lg-6">
-            <div class="from-group">
+          <div class="col-sm-12 col-lg-9">
+            <div class="form-group">
               <label for="acronym">Nombre Acronimo</label>
               <input type="text" v-model="dataCreated.acronym" id="acronym" class="form-control form-control-sm" placeholder="Uniempresas S.A.S" v-bind:class="[validateData.acronym.valid]" required>
               <div class="invalid-feedback">{{ validateData.acronym.mss }}</div>
@@ -85,15 +98,43 @@
           </div>
           <div class="col-sm-12 col-lg-3">
             <div class="from-group">
+              <label for="own">Pertenece A:</label>
+              <select class="form-control form-control-sm"
+                style="font-size: 13px;height: 30px;line-height: 30px;padding: 0px 10px 2px 9px;margin: 0px;" v-model="dataCreated.own" id="own" v-bind:class="[validateData.own.valid]" placeholder="Seleccionar" required>
+                <option selected disabled>Seleccionar</option>
+                <option value="P">Empresa Propia</option>
+                <option value="T">Empresa Tercera</option>
+              </select>
+              <div class="invalid-feedback">{{ validateData.own.mss }}</div>
+            </div>
+          </div>
+        </section>
+
+
+
+        <section class="row">
+          <div class="col-sm-12 col-lg-6">
+            <div class="from-group">
+              <label for="emailAddress">Correo Electronico</label>
+              <input type="text" v-model="dataCreated.emailAddress" id="emailAddress" class="form-control form-control-sm"
+                placeholder="empresa@exampl.com.co" v-bind:class="[validateData.emailAddress.valid]" required>
+              <div class="invalid-feedback">{{ validateData.emailAddress.mss }}</div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-lg-3">
+            <div class="from-group">
               <label for="renewedDate">Ultima Renovación</label>
-              <input type="number" v-model="dataCreated.renewedDate" id="renewedDate" class="form-control form-control-sm" :value="2018" v-bind:class="[validateData.renewedDate.valid]" required>
+              <input type="number" v-model="dataCreated.renewedDate" id="renewedDate"
+                class="form-control form-control-sm" :value="2018" v-bind:class="[validateData.renewedDate.valid]"
+                required>
               <div class="invalid-feedback">{{ validateData.renewedDate.mss }}</div>
             </div>
           </div>
           <div class="col-sm-12 col-lg-3">
             <div class="from-group">
               <label for="createdDate">Fecha de creación</label>
-              <input type="text" v-model="dataCreated.createdDate" id="createdDate" class="form-control form-control-sm" placeholder="2019-02" v-bind:class="[validateData.createdDate.valid]" required>
+              <input type="text" v-model="dataCreated.createdDate" id="createdDate" class="form-control form-control-sm"
+                placeholder="2019-02" v-bind:class="[validateData.createdDate.valid]" required>
               <div class="invalid-feedback">{{ validateData.createdDate.mss }}</div>
             </div>
           </div>
@@ -101,7 +142,7 @@
 
 
         <br>
-        <section class="row" >
+        <section class="row">
           <div class="col-12">
             <h5>Configuración</h5>
             <p>Máximo numero de afiliaciones por:</p>
@@ -111,7 +152,8 @@
           <div class="col-sm-12 col-lg-3">
             <div class="from-group">
               <label for="maxCustomersEps">EPS</label>
-              <input type="number" v-model="dataCreated.maxCustomersEps" id="maxCustomersEps" class="form-control form-control-sm" v-bind:class="[validateData.maxCustomersEps.valid]" required>
+              <input type="number" v-model="dataCreated.maxCustomersEps" id="maxCustomersEps"
+                class="form-control form-control-sm" v-bind:class="[validateData.maxCustomersEps.valid]" required>
               <div class="invalid-feedback">{{ validateData.maxCustomersEps.mss }}</div>
             </div>
           </div>
@@ -119,7 +161,8 @@
           <div class="col-sm-12 col-lg-3">
             <div class="from-group">
               <label for="maxCustomersArl">Arl</label>
-              <input type="number" v-model="dataCreated.maxCustomersArl" id="maxCustomersArl" class="form-control form-control-sm" v-bind:class="[validateData.maxCustomersArl.valid]" required>
+              <input type="number" v-model="dataCreated.maxCustomersArl" id="maxCustomersArl"
+                class="form-control form-control-sm" v-bind:class="[validateData.maxCustomersArl.valid]" required>
               <div class="invalid-feedback">{{ validateData.maxCustomersArl.mss }}</div>
             </div>
           </div>
@@ -127,7 +170,8 @@
           <div class="col-sm-12 col-lg-3">
             <div class="from-group">
               <label for="maxCustomersCaja">Caja</label>
-              <input type="number" v-model="dataCreated.maxCustomersCaja" id="maxCustomersCaja" class="form-control form-control-sm" v-bind:class="[validateData.maxCustomersCaja.valid]" required>
+              <input type="number" v-model="dataCreated.maxCustomersCaja" id="maxCustomersCaja"
+                class="form-control form-control-sm" v-bind:class="[validateData.maxCustomersCaja.valid]" required>
               <div class="invalid-feedback">{{ validateData.maxCustomersCaja.mss }}</div>
             </div>
           </div>
@@ -135,34 +179,20 @@
           <div class="col-sm-12 col-lg-3">
             <div class="from-group">
               <label for="maxCustomersAfp">Afp</label>
-              <input type="number" v-model="dataCreated.maxCustomersAfp" id="maxCustomersAfp" class="form-control form-control-sm" v-bind:class="[validateData.maxCustomersAfp.valid]" required>
+              <input type="number" v-model="dataCreated.maxCustomersAfp" id="maxCustomersAfp"
+                class="form-control form-control-sm" v-bind:class="[validateData.maxCustomersAfp.valid]" required>
               <div class="invalid-feedback">{{ validateData.maxCustomersAfp.mss }}</div>
             </div>
           </div>
         </section>
-
       </div>
 
       <%/* FOOTER MODAL */%>
       <div class="modal-footer bg-whitesmoke">
-        <button type="button" class="btn btn-warning btn-sm" v-on:click="btnOpenModalCreateH('close')">{{ btnCerrar }}</button>
-        <button type="button" class="btn btn-primary btn-sm" v-on:click="btnCreateAssociatedCompany()">Crear Empresa</button>
+        <button type="button" class="btn btn-warning btn-sm" @click="CloseModals('createHoldings')">{{ modal.cerrar }}</button>
+        <button type="button" class="btn btn-primary btn-sm" @click="btnCreateHolding()">Crear Empresa</button>
       </div>
-    </div>
-  </div>
 
-  <%/* CREANDO NUEVA EMPRESA DATOS */%>
-  <div class="container-fluit m-loading-content animated fadeIn faster" v-show="modalCreatedProgress" style="display:none;">
-    <div class="row m-loading-popup">
-      <div class="col-12 text-center">
-        <h1>Creando nueva empresa...</h1>
-      </div>
-      <div class="col-12">
-        <div class="progress">
-          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75"
-            aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-        </div>
-      </div>
     </div>
   </div>
 </section>
