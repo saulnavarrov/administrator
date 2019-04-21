@@ -82,10 +82,20 @@ module.exports = {
     success: {
       statusCode: 200
     },
-    noAuthorize: {
+    unauthorized: {
+      statusCode: 401,
       responseType: 'unauthorized',
-      description: 'No autorizado para acer esta acción'
+      description: 'No autorizado para realizar esta accion'
     },
+    notFound: {
+      responseType: 'notFoundData',
+      description: 'No se puede encontrar para crear'
+    },
+    badRequest: {
+      statusCode: 400,
+      responseType: 'badRequest',
+      description: 'Error que pueda suceder en change-passwords'
+    }
   },
 
   fn: async function (inputs, exits) {
@@ -100,13 +110,12 @@ module.exports = {
     const isSocket = rq.isSocket;
     let dataForm = {};
 
-
     /***************************************************************************************
      * BLOQUE DE SEGURIDAD SOCKET
      ***************************************************************************************/
     // Solo se aceptan solicitudes atravez de socket.io
     if (!isSocket) {
-      return exits.noAuthorize({
+      return exits.unauthorized({
         error: true,
         message: `Solicitud Rechazada.`
       });
@@ -135,7 +144,7 @@ module.exports = {
     // Solo los administradores y supervisores pueden crear nuevos usuarios para trabajar
     //  en uniempresas
     if (!autorize) {
-      return exits.noAuthorize({
+      return exits.unauthorized({
         error: true,
         message: `No tienes permisos para realizar esta acción.
         Comunicate con el Administrador para obtener permisos
@@ -184,7 +193,7 @@ module.exports = {
         status: 409,
         error: true,
         data: 'Faltan datos.',
-        type: 'incomplete_data',
+        code: 'incomplete_data',
         form: {
           reasonName: !ev.reasonName ? 'is-invalid' : '',
           enrollment: !ev.enrollment ? 'is-invalid' : '',
@@ -231,7 +240,7 @@ module.exports = {
       return rs.badRequest({
         status: 409,
         error: true,
-        type: 'existing_data',
+        code: 'existing_data',
         data: {
           enrollment: !_.isUndefined(evalEnrollment) ? 'is-invalid' : '',
           identification: !_.isUndefined(evalIdentification) ? 'is-invalid' : '',
