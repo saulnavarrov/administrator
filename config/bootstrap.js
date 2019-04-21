@@ -36,7 +36,7 @@ module.exports.bootstrap = async function(done) {
       identification: '1028004969',
       emailStatus: 'confirmed',
       status: 'E',
-      password: await sails.helpers.passwords.hashPassword('Abcd1234')
+      password: await sails.helpers.passwords.hashPassword('Abcd12345')
     }, ]);
   }
 
