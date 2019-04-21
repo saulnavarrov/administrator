@@ -8,7 +8,7 @@
 module.exports = {
 
   schema: true,
-  tableName: 'uploadFiles',
+  tableName: 'uUploadFiles',
   attributes: {
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗

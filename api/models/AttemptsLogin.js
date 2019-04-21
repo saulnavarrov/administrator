@@ -9,8 +9,6 @@ module.exports = {
 
   schema: true,
   tableName: 'AttemptsLogin',
-  // autoCreatedAt: false,
-  // autoUpdatedAt: false,
   attributes: {
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗

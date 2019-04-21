@@ -7,6 +7,8 @@
 
 module.exports = {
 
+  schema: true,
+  tableName: 'Arls',
   attributes: {
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗

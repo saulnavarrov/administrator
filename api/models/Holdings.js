@@ -15,6 +15,16 @@ module.exports = {
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
     //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
 
+    own: {
+      type: 'string',
+      isIn: ['P','T'],
+      defaultsTo: 'T',
+      description: `Por si la empresa es propia o de un tercero al cual le manejamos la
+      todas las aseguraciones.
+      P= Propias,
+      T= Terceros o asociados a nuestra empresa`
+    },
+
     reasonName: {
       type: 'string',
       example: 'Union Empresarial Colombiana SAS',
