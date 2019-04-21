@@ -1,6 +1,17 @@
 /**
- * <alerts>
+ * alerts.components.js
+ *
+ * @description :: Todas las funciones de la pagina.
+ *
+ * @src {{proyect}}/assets/js/components/alerts.components.js
+ * @author Saul Navarrov <Sinavarrov@gmail.com>
+ * @created 2019/04/20
+ * @version 1.0
+ *
+ * @usage :: modo de usarlo
+ * <alerts></alerts>
  */
+
 
 
 parasails.registerComponent('alerts', {
