@@ -21,6 +21,16 @@ var globalData = {
     return {
       globalData: 'Datos Globales',
 
+      // // Config Alert Display
+      // alert: {
+      //   active: false,
+      //   icon: 'ion-ios-information-outline',
+      //   title: 'Titulo de la alerta',
+      //   message: 'Mensaje de la alerta content',
+      //   type: 'alert-info',
+      //   animated: '',
+      // },
+
       // Modales
       modal: {
         activeP: false,
