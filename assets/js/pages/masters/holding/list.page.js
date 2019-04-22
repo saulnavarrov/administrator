@@ -78,6 +78,25 @@ parasails.registerPage('holdings-list', {
       console.log(this.globalFunctions);
     }
 
+    this.dataCreated = {
+      reasonName: `Name ${String(Date.now())}`,
+      enrollment: `${String(Date.now()).substring(0,9)}`,
+      identification: Number(String(Date.now()).substring(0,9)),
+      consecutive: 0,
+      status: 'A',
+      renewedDate: 2019,
+      createdDate: '2010-02',
+      acronym: `Name ${String(Date.now()).substring(9)}`,
+      emailAddress: `empresa${String(Date.now()).substring(9)}@example.com`,
+      own: 'P',
+      location: 'Medellín',
+      maxCustomersEps: 200,
+      maxCustomersArl: 200,
+      maxCustomersCaja: 200,
+      maxCustomersAfp: 200,
+    },
+
+    this.OpensModals('createHoldings');
   },
 
   //  ╦╔╗╔╔╦╗╔═╗╦═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
@@ -87,6 +106,85 @@ parasails.registerPage('holdings-list', {
     //…
 
     /**
+     * resetDataMix
+     * @description Reiniciara los valores de los campos de formularios
+     * y de validacion una vez se cierre el modal.
+     * Esta ejecucion viene desde el mixins para todas las funciones.
+     * @author Saúl Navarrov <Sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    resetDataMix: async function (){
+      // Limpia los valores
+      this.resetDataCreated({all:true});
+    },
+
+    /**
+     * resetDataCreated
+     * @description Reiniciara los data del formulario de crecion
+     * de nuevas empresas.
+     * @param {object} reset contenido para reiniciar los campos sean
+     *  form: true => formularios
+     *  valid: true => Validaciones
+     *  all: true => Todo a la vez
+     * @author Saúl Navarrov <Sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    resetDataCreated: async function (reset) {
+      // usage
+      if (!reset) {throw new Error('El argumento (reset) es de uso obligatorio');}
+      if (typeof(reset) !== 'object') {throw new Error('El argumento (reset) solo puede ser de tipo object');}
+
+      // Desglosando variables
+      let all = reset.all;
+      let form = reset.form;
+      let valid = reset.valid;
+
+      // Mandando error sin escoger alguna variable
+      if (_.isUndefined(all) && _.isUndefined(form) && _.isUndefined(valid)) {
+        throw new Error(`El objecto es invalido. por favor utilize all, form or valid al
+        momento de pedir el reinicio de estos datos`);
+      }
+
+      // Reinicinado Formulario
+      if (all || form) {
+        this.dataCreated.reasonName = '';
+        this.dataCreated.enrollment = 0;
+        this.dataCreated.identification = 0;
+        this.dataCreated.consecutive = 0;
+        this.dataCreated.status = 'A';
+        this.dataCreated.renewedDate = 0;
+        this.dataCreated.createdDate = '';
+        this.dataCreated.acronym = '';
+        this.dataCreated.emailAddress= '';
+        this.dataCreated.own = '';
+        this.dataCreated.location = 'Medellín';
+        this.dataCreated.maxCustomersEps = 200;
+        this.dataCreated.maxCustomersArl = 200;
+        this.dataCreated.maxCustomersCaja = 200;
+        this.dataCreated.maxCustomersAfp = 200;
+      }
+
+      // Reiniciando validacion
+      if (all || valid) {
+        this.validateData.reasonName = {valid: '', mss: '* Campo necesario.'};
+        this.validateData.enrollment = {valid: '', mss: '* Campo necesario.'};
+        this.validateData.identification = {valid: '', mss: '* Campo necesario.'};
+        this.validateData.consecutive = {valid: '', mss: '* Obligatorio'};
+        this.validateData.status = {valid: '', mss: '* Campo necesario.'};
+        this.validateData.renewedDate = {valid: '', mss: '* Campo necesario.'};
+        this.validateData.createdDate = {valid: '', mss: '* Campo necesario.'};
+        this.validateData.acronym = {valid: '', mss: '* Campo necesario.'};
+        this.validateData.emailAddress = {valid: '', mss: '* Campo necesario.'};
+        this.validateData.own = {valid: '', mss: '* Campo necesario.'};
+        this.validateData.location = {valid: '', mss: '* Campo necesario.'};
+        this.validateData.maxCustomersEps = {valid: '', mss: '* Campo necesario.'};
+        this.validateData.maxCustomersArl = {valid: '', mss: '* Campo necesario.'};
+        this.validateData.maxCustomersCaja = {valid: '', mss: '* Campo necesario.'};
+        this.validateData.maxCustomersAfp = {valid: '', mss: '* Campo necesario.'};
+      }
+    },
+
+    /**
      * btnCreateHolding
      * @description :: Funcion del boton para crear nueva empresa
      * @author Saúl Navarrov <Sinavarrov@gmail.com>
@@ -94,6 +192,8 @@ parasails.registerPage('holdings-list', {
      */
     btnCreateHolding: async function () {
       let csrfToken = window.SAILS_LOCALS._csrf;
+
+      // Aviso
       swal({
         type: 'warning',
         title: 'Creando una nueva empresa',
@@ -104,8 +204,7 @@ parasails.registerPage('holdings-list', {
         cancelButtonText: 'Cancelar'
       }).then(async e => {
         if (e.value) {
-          this.modalCreatedProgress = true;
-          this.openCloseProgressData('show', 'Creando nueva empresa...');
+          this.openCloseProgressData('show', 'Creando nueva empresa...'); // progress
           this.createAssociatedCompany(csrfToken);
         }
       });
@@ -120,12 +219,6 @@ parasails.registerPage('holdings-list', {
     createAssociatedCompany: async function (token) {
       let urls = '/api/v2/masters/holding/create';
 
-      // setTimeout(() => {
-      //   this.openCloseProgressData('hide', 'clear');
-      // }, 15000);
-
-      console.log('Ejecutando request');
-
       // Request to backEnd
       await io.socket.request({
         url: urls,
@@ -136,10 +229,83 @@ parasails.registerPage('holdings-list', {
           'x-csrf-token': token
         }
       }, async (rsData, jwRs) => {
+        // reset validaciones
+        this.resetDataCreated({valid:true});
         this.openCloseProgressData('hide', 'clear');
 
-        console.log(jwRs);
+        if (jwRs.error) {
+          // Datos incompeltos
+          this.createdIncompleteData(rsData, _.isUndefined(rsData.form));
+          // // Datos repetidos
+          // this.createdDataExisting(rsData, _.isUndefined(rsData.message));
+          // Mensajes de error
+          if (jwRs.statusCode >= 499) {
+            // this.jwRsError(jwRs);
+            console.error(jwRs);
+            this.$find(`[id="pm-createHoldings"]`).modal('hide');
+          }
+        }
+
+        // creado exitosamente
+        if (jwRs.statusCode === 200) {
+          // Datos incompeltos
+          this.createdIncompleteData(false, true);
+          // Datos repetidos
+          this.createdDataExisting(false, true);
+
+          // fucion para ejcutar aqui
+
+          console.log(jwRs);
+        }
       });
-    }
+    },
+
+
+    /**
+     * createdIncompleteData
+     * @description: Para cuando los datos sean incompletos los muestre en pantalla o borra el mensaje
+     * @param {*} dat
+     * @param {*} isIncomplete
+     * @author Saúl Navarro <Sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    createdIncompleteData: async function (dat, isIncomplete) {
+      // mensaje en pantalla
+      if (!isIncomplete) {
+        swal({
+          type: 'info',
+          title: 'Datos incompletos',
+          text: 'Por favor, rellene los campos requeridos en rojo'
+        });
+      }
+
+      // Organizando data
+      this.validateData.reasonName.valid = isIncomplete ? '' : dat.form.reasonName === '' ? '' : dat.form.reasonName;
+      this.validateData.enrollment.valid = isIncomplete ? '' : dat.form.enrollment === '' ? '' : dat.form.enrollment;
+      this.validateData.identification.valid = isIncomplete ? '' : dat.form.identification === '' ? '' : dat.form.identification;
+      this.validateData.consecutive.valid = isIncomplete ? '' : dat.form.consecutive === '' ? '' : dat.form.consecutive;
+      this.validateData.status.valid = isIncomplete ? '' : dat.form.status === '' ? '' : dat.form.status;
+      this.validateData.renewedDate.valid = isIncomplete ? '' : dat.form.renewedDate === '' ? '' : dat.form.renewedDate;
+      this.validateData.createdDate.valid = isIncomplete ? '' : dat.form.createdDate === '' ? '' : dat.form.createdDate;
+      this.validateData.acronym.valid = isIncomplete ? '' : dat.form.acronym === '' ? '' : dat.form.acronym;
+      this.validateData.location.valid = isIncomplete ? '' : dat.form.location === '' ? '' : dat.form.location;
+      this.validateData.maxCustomersEps.valid = isIncomplete ? '' : dat.form.maxCustomersEps === '' ? '' : dat.form.maxCustomersEps;
+      this.validateData.maxCustomersArl.valid = isIncomplete ? '' : dat.form.maxCustomersArl === '' ? '' : dat.form.maxCustomersArl;
+      this.validateData.maxCustomersCaja.valid = isIncomplete ? '' : dat.form.maxCustomersCaja === '' ? '' : dat.form.maxCustomersCaja;
+      this.validateData.maxCustomersAfp.valid = isIncomplete ? '' : dat.form.maxCustomersAfp === '' ? '' : dat.form.maxCustomersAfp;
+    },
+
+
+    /**
+     * createdDataExisting
+     * @description: Para los 3 principales datos si estan repetidos o ya existen
+     * @param {*} js
+     * @param {*} isRepeat
+     * @author Saúl Navarro <Sinavarrov@gmail.com>
+     * @version 1.0
+     */
+    createdDataExisting: async function (js, isRepeat) {
+
+    },
   }
 });
