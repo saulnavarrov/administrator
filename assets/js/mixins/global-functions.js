@@ -89,6 +89,8 @@ var globalFunctions = {
       // Cambiando variables
       this.modal.cerrar = 'Cerrar Ventana';
       this.modal.title = '';
+      // Rest data
+      this.resetDataMix();
     },
 
 
