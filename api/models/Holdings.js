@@ -24,6 +24,11 @@ module.exports = {
       P= Propias,
       T= Terceros o asociados a nuestra empresa`
     },
+    emailAddress: {
+      type: 'string',
+      unique: true,
+      description: 'Correo electronico de la empresa que se esta inscribiendo'
+    },
 
     reasonName: {
       type: 'string',
