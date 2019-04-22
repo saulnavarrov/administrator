@@ -34,7 +34,7 @@ module.exports = {
       min: 0,
       description: `consecutivo del nit`
     },
-    state: {
+    status: {
       type: 'string',
       defaultsTo: 'A',
       isIn: ['A', 'I', 'S', 'C'],
@@ -55,6 +55,15 @@ module.exports = {
     location: {
       type: 'string',
       description: `Ubicación o ciudad donde se registro esta empresa`
+    },
+    emailAddress: {
+      type: 'string',
+      description: `Email principal de la empresa que se esta creando`
+    },
+    own: {
+      type: 'string',
+      isIn: ['P','T',''],
+      description: 'La empresa pertenece a nosotros o es de un tercero'
     },
     maxCustomersEps: {
       type: 'number',
@@ -163,7 +172,7 @@ module.exports = {
       enrollment: _.isUndefined(inputs.enrollment) ? false : inputs.enrollment < 1000 ? false : inputs.enrollment,
       identification: _.isUndefined(inputs.identification) ? false : inputs.identification < 1000 ? false : inputs.identification,
       consecutive: inputs.consecutive,
-      state: _.isUndefined(inputs.status) ? false : inputs.status,
+      status: _.isUndefined(inputs.status) ? false : inputs.status,
       renewedDate: _.isUndefined(inputs.renewedDate) ? false : inputs.renewedDate,
       createdDate: _.isUndefined(inputs.createdDate) ? false : inputs.createdDate,
       location: _.isUndefined(inputs.location) ? false : inputs.location,
@@ -173,110 +182,115 @@ module.exports = {
       maxCustomersAfp: _.isUndefined(inputs.maxCustomersAfp) ? false : inputs.maxCustomersAfp,
     };
 
-    if (
-      !ev.reasonName ||
-      !ev.enrollment ||
-      !ev.identification ||
-      //  ev.consecutive > -1 ||
-      !ev.status ||
-      !ev.renewedDate ||
-      !ev.createdDate ||
-      !ev.acronym ||
-      !ev.location ||
-      !ev.maxCustomersEps ||
-      !ev.maxCustomersArl ||
-      !ev.maxCustomersCaja ||
-      !ev.maxCustomersAfp
-    ) {
-      rs.status(409);
-      return rs.badRequest({
-        status: 409,
-        error: true,
-        data: 'Faltan datos.',
-        code: 'incomplete_data',
-        form: {
-          reasonName: !ev.reasonName ? 'is-invalid' : '',
-          enrollment: !ev.enrollment ? 'is-invalid' : '',
-          identification: !ev.identification ? 'is-invalid' : '',
-          // consecutive: ev.consecutive > -1 ? 'is-invalid' : '',
-          state: !ev.status ? 'is-invalid' : '',
-          renewedDate: !ev.renewedDate ? 'is-invalid' : '',
-          createdDate: !ev.createdDate ? 'is-invalid' : '',
-          acronym: !ev.acronym ? 'is-invalid' : '',
-          location: !ev.location ? 'is-invalid' : '',
-          maxCustomersEps: !ev.maxCustomersEps ? 'is-invalid' : '',
-          maxCustomersArl: !ev.maxCustomersArl ? 'is-invalid' : '',
-          maxCustomersCaja: !ev.maxCustomersCaja ? 'is-invalid' : '',
-          maxCustomersAfp: !ev.maxCustomersAfp ? 'is-invalid' : '',
-        }
-      });
-    }
+    sails.log('Entradas comparacion');
+    sails.log(inputs);
+    sails.log('-_-_----------------------------');
+    sails.log(' Revision de data');
+    sails.log(ev);
+    // if (
+    //   !ev.reasonName ||
+    //   !ev.enrollment ||
+    //   !ev.identification ||
+    //   //  ev.consecutive > -1 ||
+    //   !ev.status ||
+    //   !ev.renewedDate ||
+    //   !ev.createdDate ||
+    //   !ev.acronym ||
+    //   !ev.location ||
+    //   !ev.maxCustomersEps ||
+    //   !ev.maxCustomersArl ||
+    //   !ev.maxCustomersCaja ||
+    //   !ev.maxCustomersAfp
+    // ) {
+    //   rs.status(409);
+    //   return rs.badRequest({
+    //     status: 409,
+    //     error: true,
+    //     data: 'Faltan datos.',
+    //     code: 'incomplete_data',
+    //     form: {
+    //       reasonName: !ev.reasonName ? 'is-invalid' : '',
+    //       enrollment: !ev.enrollment ? 'is-invalid' : '',
+    //       identification: !ev.identification ? 'is-invalid' : '',
+    //       // consecutive: ev.consecutive > -1 ? 'is-invalid' : '',
+    //       state: !ev.status ? 'is-invalid' : '',
+    //       renewedDate: !ev.renewedDate ? 'is-invalid' : '',
+    //       createdDate: !ev.createdDate ? 'is-invalid' : '',
+    //       acronym: !ev.acronym ? 'is-invalid' : '',
+    //       location: !ev.location ? 'is-invalid' : '',
+    //       maxCustomersEps: !ev.maxCustomersEps ? 'is-invalid' : '',
+    //       maxCustomersArl: !ev.maxCustomersArl ? 'is-invalid' : '',
+    //       maxCustomersCaja: !ev.maxCustomersCaja ? 'is-invalid' : '',
+    //       maxCustomersAfp: !ev.maxCustomersAfp ? 'is-invalid' : '',
+    //     }
+    //   });
+    // }
 
 
 
     /***************************************************************************************
      * BLOQUE IDENTIFICACIÓN DE DUPLICIDAD
      ***************************************************************************************/
-    let evalEnrollment = await Holdings.findOne({
-      enrollment: ev.enrollment
-    }).select(['id']);
-    let evalIdentification = await Holdings.findOne({
-      identification: ev.identification
-    }).select(['id']);
-    let evalReasonName = await Holdings.findOne({
-      reasonName: ev.reasonName
-    }).select(['id']);
-    let evalAcronym = await Holdings.findOne({
-      acronym: ev.acronym
-    }).select(['id']);
+    // let evalEnrollment = await Holdings.findOne({
+    //   enrollment: ev.enrollment
+    // }).select(['id']);
+    // let evalIdentification = await Holdings.findOne({
+    //   identification: ev.identification
+    // }).select(['id']);
+    // let evalReasonName = await Holdings.findOne({
+    //   reasonName: ev.reasonName
+    // }).select(['id']);
+    // let evalAcronym = await Holdings.findOne({
+    //   acronym: ev.acronym
+    // }).select(['id']);
 
-    if (
-      !_.isUndefined(evalEnrollment) ||
-      !_.isUndefined(evalIdentification) ||
-      !_.isUndefined(evalReasonName) ||
-      !_.isUndefined(evalAcronym)
-    ) {
-      rs.status(409);
-      return rs.badRequest({
-        status: 409,
-        error: true,
-        code: 'existing_data',
-        data: {
-          enrollment: !_.isUndefined(evalEnrollment) ? 'is-invalid' : '',
-          identification: !_.isUndefined(evalIdentification) ? 'is-invalid' : '',
-          reasonName: !_.isUndefined(evalReasonName) ? 'is-invalid' : '',
-          acronym: !_.isUndefined(evalAcronym) ? 'is-invalid' : '',
-        },
-        message: {
-          enrollment: !_.isUndefined(evalEnrollment) ? 'Ya Existe.' : '',
-          identification: !_.isUndefined(evalIdentification) ? 'Ya Existe.' : '',
-          reasonName: !_.isUndefined(evalReasonName) ? 'Ya Existe.' : '',
-          acronym: !_.isUndefined(evalAcronym) ? 'Ya Existe.' : '',
-        }
-      });
-    }
+    // if (
+    //   !_.isUndefined(evalEnrollment) ||
+    //   !_.isUndefined(evalIdentification) ||
+    //   !_.isUndefined(evalReasonName) ||
+    //   !_.isUndefined(evalAcronym)
+    // ) {
+    //   rs.status(409);
+    //   return rs.badRequest({
+    //     status: 409,
+    //     error: true,
+    //     code: 'existing_data',
+    //     data: {
+    //       enrollment: !_.isUndefined(evalEnrollment) ? 'is-invalid' : '',
+    //       identification: !_.isUndefined(evalIdentification) ? 'is-invalid' : '',
+    //       reasonName: !_.isUndefined(evalReasonName) ? 'is-invalid' : '',
+    //       acronym: !_.isUndefined(evalAcronym) ? 'is-invalid' : '',
+    //     },
+    //     message: {
+    //       enrollment: !_.isUndefined(evalEnrollment) ? 'Ya Existe.' : '',
+    //       identification: !_.isUndefined(evalIdentification) ? 'Ya Existe.' : '',
+    //       reasonName: !_.isUndefined(evalReasonName) ? 'Ya Existe.' : '',
+    //       acronym: !_.isUndefined(evalAcronym) ? 'Ya Existe.' : '',
+    //     }
+    //   });
+    // }
 
 
 
     /***************************************************************************************
      * BLOQUE DE TRABAJO
      ***************************************************************************************/
-    // Organizando Datos
-    dataForm.reasonName = _.startCase(_.toLower(dataForm.reasonName));
-    dataForm.status = _.startCase(_.toLower(dataForm.status));
-    dataForm.renewedDate = _.toNumber(dataForm.renewedDate);
-    dataForm.createdDate = moment(dataForm.createdDate).format();
-    dataForm.acronym = _.startCase(_.toLower(dataForm.acronym));
-    dataForm.location = _.startCase(_.toLower(dataForm.location));
-    dataForm.userCreated = userId;
+    // // Organizando Datos
+    // dataForm.reasonName = _.startCase(_.toLower(dataForm.reasonName));
+    // dataForm.status = _.startCase(_.toLower(dataForm.status));
+    // dataForm.renewedDate = _.toNumber(dataForm.renewedDate);
+    // dataForm.createdDate = moment(dataForm.createdDate).format();
+    // dataForm.acronym = _.startCase(_.toLower(dataForm.acronym));
+    // dataForm.location = _.startCase(_.toLower(dataForm.location));
+    // dataForm.userCreated = userId;
 
-    // Guardando información
-    let saveCompany = await Holdings.create(dataForm).fetch();
+    // // Guardando información
+    // let saveCompany = await Holdings.create(dataForm).fetch();
 
     // Respondiendo si todo sale bien
     return exits.success({
       message: 'Se ha creado correctamente.',
-      one: saveCompany
+      one: 'saveCompany'
     });
   }
 };
