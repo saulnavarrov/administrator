@@ -9,13 +9,18 @@ module.exports = {
   fn: async function(inputs, exits){
 
     var path = require('path');
+    var _ = require('lodash');
+
+    // Le pone espacios al json
+    // Opciones:
+    // > 2 = espacios de identacion de codigo
+    // > false = no identa nada
+    var minify = 2;
 
     var endpointsByMethodName = {};
     var extraEndpointsOnlyForTestsByMethodName = {};
 
     _.each(sails.config.routes, (target)=>{
-
-
 
       // If the route target is an array, then only consider
       // the very last sub-target in the array.
@@ -39,7 +44,8 @@ module.exports = {
       // Just about everything else gets a Cloud SDK method.
 
       // We determine its name using the bare action name.
-      var bareActionName = _.last(target.action.split(/\//));
+      // var bareActionName = _.last(target.action.split(/\//));
+      var bareActionName = _.join(target.action.split(/\//),'-');
       var methodName = _.camelCase(bareActionName);
       var expandedAddress = sails.getRouteFor(target);
 
@@ -104,7 +110,7 @@ module.exports = {
 Cloud.setup({
 
   /* eslint-disable */
-  methods: `+JSON.stringify(endpointsByMethodName)+`
+  methods: `+ JSON.stringify(endpointsByMethodName, null, minify) +`
   /* eslint-enable */
 
 });\n`;
@@ -134,8 +140,6 @@ Cloud.setup({
     sails.log.info('--');
     sails.log.info('Succ essfully rebuilt Cloud SDK for use in the browser.');
     sails.log.info('(and CLOUD_SDK_METHODS.json for use in automated tests)');
-
-    sails.log.info('ejecutado');
 
     return exits.success();
   }
