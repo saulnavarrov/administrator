@@ -119,7 +119,6 @@ module.exports = {
     const isSocket = rq.isSocket;
     let dataForm = {};
 
-    throw ('badRequest');
 
     /***************************************************************************************
      * BLOQUE DE SEGURIDAD SOCKET
