@@ -171,7 +171,7 @@ module.exports = {
       example: '48ads4f6asd4f65asd5f1as5',
       description: `ID del usuario o el cliente que subio este archivo o imagen
       para responsabilizarlo del movimiento`
-    }
+    },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
@@ -181,6 +181,9 @@ module.exports = {
     //  ╔═╗╔═╗╔═╗╔═╗╔═╗╦╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
+    holding: {
+      model: 'holdings'
+    }
 
   },
 

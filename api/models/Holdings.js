@@ -168,6 +168,13 @@ module.exports = {
       via: 'holding',
       description: ``
     },
+
+    // Archivos de esta empresa
+    files: {
+      collection: 'uploadfiles',
+      via: 'holding',
+      description: ``
+    }
   },
 
 
