@@ -21,6 +21,12 @@ var globalData = {
     return {
       globalData: 'Datos Globales',
 
+      limit: 10, // Limite por reques
+      skip: 0, // Omision de datos * limit
+      allSelect: false, // selecionar todos
+      searchsText: '', // Palabras de busquedas
+      searching: false, // Buscando o visualizando todos los datos
+
       // // Config Alert Display
       // alert: {
       //   active: false,
