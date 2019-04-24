@@ -93,8 +93,9 @@ module.exports = {
 
     });//∞
 
-    var jsCode =
-`/**
+
+    var jsCode = `
+/**
  * cloud.setup.js
  *
  * Configuration for this Sails app's generated browser SDK ("Cloud").
@@ -102,20 +103,20 @@ module.exports = {
  * Above all, the purpose of this file is to provide endpoint definitions,
  * each of which corresponds with one particular route+action on the server.
  *
- `+//* > This file was automatically generated. `+new Date()+`
- `* > This file was automatically generated.
- * > (To regenerate, run \`sails run rebuild-cloud-sdk\`)
+ * This file was automatically generated. +new Date()+
+ * > This file was automatically generated.
+ * > (To regenerate, run sails run rebuild-cloud-sdk)
+ *
  */
 
 Cloud.setup({
-
   /* eslint-disable */
-  methods: `+ JSON.stringify(endpointsByMethodName, null, minify) +`
+  methods: ${JSON.stringify(endpointsByMethodName, null, minify)}
   /* eslint-enable */
-
 });\n`;
 
     jsCode = _.template(jsCode)(endpointsByMethodName);
+
 
     // Smash and rewrite the `cloud.setup.js` file in the assets folder to
     // reflect the latest set of available cloud actions exposed by this Sails
