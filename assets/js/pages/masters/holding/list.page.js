@@ -26,7 +26,7 @@ parasails.registerPage('holdingsList', {
     dataCreated: {},
 
     dataRules: {
-      reasonName: {required: true, },
+      reasonName: {required: true, isString: true},
       enrollment: {required: true, },
       identification: {required: true, },
       consecutive: {required: true, },
@@ -252,14 +252,17 @@ parasails.registerPage('holdingsList', {
       // let urls = '/api/v2/masters/holding/create';
 
       let val = await this.validateForms(this.dataCreated, this.dataRules);
+      console.log('eval');
+      console.log(val);
 
-      await Cloud.mastersHoldingCreate.with(this.dataCreated)
-        .protocol('io.socket')
-        .exec(async (eR, rsData, jwRs) => {
-          console.log(eR);
-          console.log(rsData);
-          console.log(jwRs);
-        });
+
+      // await Cloud.mastersHoldingCreate.with(this.dataCreated)
+        // .protocol('io.socket')
+        // .exec(async (eR, rsData, jwRs) => {
+          // console.log(eR);
+          // console.log(rsData);
+          // console.log(jwRs);
+        // });
 
       // let createHol = await Cloud.mastersHoldingCreate.with(this.dataCreated)
       // .protocol('io.socket');
@@ -279,7 +282,10 @@ parasails.registerPage('holdingsList', {
       // }, async (rsData, jwRs) => {
       //   // reset validaciones
       //   this.resetDataCreated({valid:true});
+      setTimeout(() => {
+
         this.openCloseProgressData('hide', 'clear');
+      }, 2500);
 
       //   if (jwRs.error) {
       //     // Datos incompeltos

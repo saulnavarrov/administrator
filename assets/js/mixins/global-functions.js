@@ -133,7 +133,7 @@ var globalFunctions = {
       // Vaiables
       let formData = form;
       let formRules = rules;
-      let formError = {};
+      let formErrors = {};
 
       // Reglas Soportadas
       var SUPPORTED_RULES = [
@@ -142,9 +142,77 @@ var globalFunctions = {
         'isString'
       ];
 
+      for (let fieldName in formRules) {
+        // Guardando Valores del formulario a validar
+        let fieldValue = formData[fieldName];
 
-      console.log(formData);
+        for (let ruleName in formRules[fieldName]) {
+          let ruleRhs = formRules[fieldName][ruleName];
+          let violation;
 
+          // Verificando el valor de la regla
+          // > (require: true) Bueno
+          // > (require: undefined) Malo
+          let isFieldValuePresent = (
+            fieldValue !== undefined &&
+            fieldValue !== '' &&
+            !_.isNull(fieldValue)
+          );
+
+          // Required: true
+          // Se require para continuar
+          if (ruleName === 'required' && ruleRhs === true) {
+            // ® Debe estar definido, no es nulo y no la cadena vacía
+            violation = (
+              !isFieldValuePresent
+            );
+          }
+
+          // Campos Opcionales
+          else if (!isFieldValuePresent) {
+            // No hacer nada.
+            // -------------------------------
+            // Nota:
+            // Para permitir el uso con campos opcionales, todas las reglas excepto
+            // `required: true` solo se verifican cuando el valor del campo
+            // es "present" - es decir, algún valor distinto de `null`,` undefined`,
+            // o `''` (cadena vacía).
+            // -------------------------------
+          }
+
+          // isEmail: true
+          // Validando Email
+          else if (ruleName === 'isEmail' && ruleRhs === true) {
+            // ® Debe ser una dirección de correo electrónico (a menos que sea falsa)
+            violation = (
+              !parasails.util.isValidEmailAddress(fieldValue)
+            );
+          }
+
+          else if (ruleName === 'isIn' && _.isArray(ruleRhs)) {
+            // ® Debe ser un valor dentro del array.
+            violation = (
+              !_.contains(ruleRhs, fieldValue)
+            );
+          }
+
+          // Por si no se reconoce ninguna de las anteriores
+          else {
+            throw new Error('No se puede interpretar client-side la regla de validación de: (`' + ruleName + '`) Porque la configuración provista para ello no es reconocida por validateForms().');
+          }
+
+          // Saliendo del bucle
+          // If a rule violation was detected, then set it as a form error
+          // and break out of the `for` loop to continue on to the next field.
+          // (We only track one form error per field.)
+          if (violation) {
+            formErrors[fieldName] = ruleName;
+            break;
+          } //˚
+        }
+      }
+
+      console.log(formErrors);
       return false;
     }
   }
