@@ -8,7 +8,7 @@
  * @created 2019/02/14
  * @version 1.0
  */
-var d = {};
+
 parasails.registerPage('holdingsList', {
   //  ╔╗ ╔╗╦╔╗ ╔╗╦╔╗ ╦╔═╗
   //  ║╚╦╝║║ ╠═╣ ║║╚╗║╚═╗
@@ -23,23 +23,27 @@ parasails.registerPage('holdingsList', {
     modalCreatedProgress: false,
 
     // Datos para Crear nuevas empresas asociadas
-    dataCreated: {
-      reasonName: '',
-      enrollment: 0,
-      identification: 0,
-      consecutive: 0,
-      status: 'A',
-      renewedDate: 0,
-      createdDate: '',
-      acronym: '',
-      emailAddress: '',
-      own: '',
-      location: 'Medellín',
-      maxCustomersEps: 200,
-      maxCustomersArl: 200,
-      maxCustomersCaja: 200,
-      maxCustomersAfp: 200,
+    dataCreated: {},
+
+    dataRules: {
+      reasonName: {required: true, },
+      enrollment: {required: true, },
+      identification: {required: true, },
+      consecutive: {required: true, },
+      status: {required: true, },
+      renewedDate: {required: true, },
+      createdDate: {required: true, },
+      acronym: {required: true, },
+      emailAddress: {required: true, isEmail: true},
+      own: {required: true, },
+      location: {required: true, },
+      maxCustomersEps: {required: true, },
+      maxCustomersArl: {required: true, },
+      maxCustomersCaja: {required: true, },
+      maxCustomersAfp: {required: true, },
     },
+
+
 
     // formCreat
 
@@ -102,11 +106,9 @@ parasails.registerPage('holdingsList', {
       maxCustomersArl: 200,
       maxCustomersCaja: 200,
       maxCustomersAfp: 200,
-    },
+    };
 
     this.OpensModals('createHoldings');
-
-    d = this.dataCreated;
   },
 
   //  ╦╔╗╔╔╦╗╔═╗╦═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
@@ -249,7 +251,9 @@ parasails.registerPage('holdingsList', {
     createAssociatedCompany: async function (token) {
       // let urls = '/api/v2/masters/holding/create';
 
-      await Cloud.mastersHoldingCreate.with(d)
+      let val = await this.validateForms(this.dataCreated, this.dataRules);
+
+      await Cloud.mastersHoldingCreate.with(this.dataCreated)
         .protocol('io.socket')
         .exec(async (eR, rsData, jwRs) => {
           console.log(eR);

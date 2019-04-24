@@ -120,5 +120,32 @@ var globalFunctions = {
         this.modalProgress.act = false;
       }
     },
+
+
+    validateForms: async function (form, rules) {
+
+      // Uso
+      if (!form) { throw new Error(`El argumento (form) es obligatorio, necesario para que funcione`); }
+      if (typeof form !== 'object') { throw new Error(`El argumento (form), solo se admiten valore de typo 'object'`); }
+      if (!rules) { throw new Error(`El argumento (rules) es obligatorio, necesario para que funcione`); }
+      if (typeof rules !== 'object') { throw new Error(`El argumento (rules), solo se admiten valore de typo 'object'`); }
+
+      // Vaiables
+      let formData = form;
+      let formRules = rules;
+      let formError = {};
+
+      // Reglas Soportadas
+      var SUPPORTED_RULES = [
+        'required', 'isEmail', 'isIn', 'is', 'minLength', 'maxLength',
+        'sameAs', 'isHalfwayDecentPassword', 'isNumber', 'isBoolean',
+        'isString'
+      ];
+
+
+      console.log(formData);
+
+      return false;
+    }
   }
 };
