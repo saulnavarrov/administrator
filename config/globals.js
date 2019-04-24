@@ -19,7 +19,11 @@ module.exports.globals = {
   *                                                                           *
   ****************************************************************************/
 
+  // Lodash mantenido por el equipo de sails
   _: require('@sailshq/lodash'),
+
+  // Moments js
+  moment: require('moment'),
 
   /****************************************************************************
   *                                                                           *
