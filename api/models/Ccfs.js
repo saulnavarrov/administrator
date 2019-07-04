@@ -7,6 +7,8 @@
 
 module.exports = {
 
+  tableName: 'Ccfs',
+  schema: true,
   attributes: {
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗

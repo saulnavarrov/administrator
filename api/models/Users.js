@@ -9,8 +9,8 @@
 
 module.exports = {
 
-  tableName: 'users',
   schema: true,
+  tableName: 'Users',
   attributes: {
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗

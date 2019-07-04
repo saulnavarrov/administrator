@@ -8,6 +8,7 @@
 module.exports = {
 
   schema: false,
+  tableName: 'sessions',
   attributes: {
 
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗

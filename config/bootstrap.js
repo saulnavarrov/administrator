@@ -36,8 +36,19 @@ module.exports.bootstrap = async function(done) {
       identification: '1028004969',
       emailStatus: 'confirmed',
       status: 'E',
-      password: await sails.helpers.passwords.hashPassword('Abcd1234')
-    }, ]);
+      password: await sails.helpers.passwords.hashPassword('Abcd12345')
+    },
+    {
+      emailAddress: 'pruebas2@example.com',
+      name: 'Pruebas',
+      lastName: 'Twoo',
+      isSuperAdmin: false,
+      role: 1,
+      identification: '1028004960',
+      emailStatus: 'confirmed',
+      status: 'E',
+      password: await sails.helpers.passwords.hashPassword('Abcd12345')
+    },  ]);
   }
 
   // Don't forget to trigger `done()` when this bootstrap function's logic is finished.

@@ -20,6 +20,7 @@ module.exports = {
     numAccount: {
       type: 'string',
       required: true,
+      unique: true,
       example: '16884-15-151531',
       description: `Numero de la cuenta de Ahorros o Corrientes`
     },

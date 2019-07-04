@@ -9,8 +9,8 @@
   <p>Para nosotros es un privilegio darte la bienvenida a este equipo de trabajo, para continuar por favor ingresa al enlace que esta en la parte de abajo para confirmar tu email</p>
   <p>Para iniciar Sesión utiliza tu Email como usuario y la contraseña que se genero.</p>
   <br>
-  <p>Email: %Email%<br>
-  Contraseña: %Password%</p>
+  <p>Email: <%= Email %><br>
+  Contraseña: <%= Password %></p>
   <br>
   <a href="<%= url.resolve(sails.config.custom.baseUrl[0],'/email/confirm')+'?token='+encodeURIComponent(token) %>" style="text-decoration: none;"> <button style=" width: 200px; height: 50px; background-color: #1A237E; border: 0px; border-style: none; margin: 0px auto; display: table; font-size: 1.3em; border-radius: 4px; cursor: pointer; color: #FFF; ">Confirmar</button> </a>
   <br>

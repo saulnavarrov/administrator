@@ -308,7 +308,7 @@ module.exports = {
     * (https://sailsjs.com/config/http)                                        *
     *                                                                          *
     ***************************************************************************/
-    trustProxy: loc.trustProxy
+    trustProxy: !loc.trustProxy
 
   },
 
@@ -357,8 +357,8 @@ module.exports = {
   *                                                                         *
   ***************************************************************************/
   custom: {
-    // baseUrl: loc.baseUrl,
-    // internalEmailAddress: loc.internalEmailAddress,
+    baseUrl: l.baseUrl,
+    internalEmailAddress: l.internalEmailAddress,
 
     // mailgunDomain: 'mg.example.com',
     // mailgunSecret: 'key-prod_fake_bd32301385130a0bafe030c',

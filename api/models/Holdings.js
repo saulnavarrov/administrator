@@ -15,6 +15,21 @@ module.exports = {
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
     //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
 
+    own: {
+      type: 'string',
+      isIn: ['P','T'],
+      defaultsTo: 'T',
+      description: `Por si la empresa es propia o de un tercero al cual le manejamos la
+      todas las aseguraciones.
+      P= Propias,
+      T= Terceros o asociados a nuestra empresa`
+    },
+    emailAddress: {
+      type: 'string',
+      unique: true,
+      description: 'Correo electronico de la empresa que se esta inscribiendo'
+    },
+
     reasonName: {
       type: 'string',
       example: 'Union Empresarial Colombiana SAS',
@@ -153,6 +168,13 @@ module.exports = {
       via: 'holding',
       description: ``
     },
+
+    // Archivos de esta empresa
+    files: {
+      collection: 'uploadfiles',
+      via: 'holding',
+      description: ``
+    }
   },
 
 

@@ -30,11 +30,11 @@ module.exports = {
     },
     consecutive: {
       type: 'number',
-      max: 10,
-      min: 0,
+      // max: 99,
+      // min: 0,
       description: `consecutivo del nit`
     },
-    state: {
+    status: {
       type: 'string',
       defaultsTo: 'A',
       isIn: ['A', 'I', 'S', 'C'],
@@ -55,6 +55,15 @@ module.exports = {
     location: {
       type: 'string',
       description: `Ubicación o ciudad donde se registro esta empresa`
+    },
+    emailAddress: {
+      type: 'string',
+      description: `Email principal de la empresa que se esta creando`
+    },
+    own: {
+      type: 'string',
+      isIn: ['P','T',''],
+      description: 'La empresa pertenece a nosotros o es de un tercero'
     },
     maxCustomersEps: {
       type: 'number',
@@ -82,10 +91,20 @@ module.exports = {
     success: {
       statusCode: 200
     },
-    noAuthorize: {
+    unauthorized: {
+      statusCode: 401,
       responseType: 'unauthorized',
-      description: 'No autorizado para acer esta acción'
+      description: 'No autorizado para realizar esta accion'
     },
+    notFound: {
+      responseType: 'notFoundData',
+      description: 'No se puede encontrar para crear'
+    },
+    badRequest: {
+      statusCode: 400,
+      responseType: 'badRequest',
+      description: 'Errores normales de usuario'
+    }
   },
 
   fn: async function (inputs, exits) {
@@ -106,7 +125,7 @@ module.exports = {
      ***************************************************************************************/
     // Solo se aceptan solicitudes atravez de socket.io
     if (!isSocket) {
-      return exits.noAuthorize({
+      return exits.unauthorized({
         error: true,
         message: `Solicitud Rechazada.`
       });
@@ -135,7 +154,7 @@ module.exports = {
     // Solo los administradores y supervisores pueden crear nuevos usuarios para trabajar
     //  en uniempresas
     if (!autorize) {
-      return exits.noAuthorize({
+      return exits.unauthorized({
         error: true,
         message: `No tienes permisos para realizar esta acción.
         Comunicate con el Administrador para obtener permisos
@@ -148,13 +167,14 @@ module.exports = {
     /***************************************************************************************
      * BLOQUE DE DATOS OBLIGATORIOS Y REVISION DE DATA.
      ***************************************************************************************/
+    // Campos necesarios
     let ev = dataForm = {
       reasonName: _.isUndefined(inputs.reasonName) ? false : inputs.reasonName.length < 5 ? false : inputs.reasonName,
       acronym: _.isUndefined(inputs.acronym) ? false : inputs.acronym.length < 4 ? false : inputs.acronym,
       enrollment: _.isUndefined(inputs.enrollment) ? false : inputs.enrollment < 1000 ? false : inputs.enrollment,
       identification: _.isUndefined(inputs.identification) ? false : inputs.identification < 1000 ? false : inputs.identification,
-      consecutive: inputs.consecutive,
-      state: _.isUndefined(inputs.status) ? false : inputs.status,
+      consecutive: (inputs.consecutive >= 0) && (inputs.consecutive <= 9) ? inputs.consecutive : false,
+      status: _.isUndefined(inputs.status) ? false : inputs.status,
       renewedDate: _.isUndefined(inputs.renewedDate) ? false : inputs.renewedDate,
       createdDate: _.isUndefined(inputs.createdDate) ? false : inputs.createdDate,
       location: _.isUndefined(inputs.location) ? false : inputs.location,
@@ -162,13 +182,16 @@ module.exports = {
       maxCustomersArl: _.isUndefined(inputs.maxCustomersArl) ? false : inputs.maxCustomersArl,
       maxCustomersCaja: _.isUndefined(inputs.maxCustomersCaja) ? false : inputs.maxCustomersCaja,
       maxCustomersAfp: _.isUndefined(inputs.maxCustomersAfp) ? false : inputs.maxCustomersAfp,
+      emailAddress: _.isUndefined(inputs.emailAddress) ? false : inputs.emailAddress,
+      own: _.isUndefined(inputs.own) ? false : inputs.own
     };
 
     if (
       !ev.reasonName ||
       !ev.enrollment ||
       !ev.identification ||
-      //  ev.consecutive > -1 ||
+      !(typeof (ev.consecutive) === 'number') ||
+      // !ev.consecutive ||
       !ev.status ||
       !ev.renewedDate ||
       !ev.createdDate ||
@@ -177,19 +200,19 @@ module.exports = {
       !ev.maxCustomersEps ||
       !ev.maxCustomersArl ||
       !ev.maxCustomersCaja ||
-      !ev.maxCustomersAfp
+      !ev.maxCustomersAfp ||
+      !ev.own ||
+      !ev.emailAddress
     ) {
-      rs.status(409);
-      return rs.badRequest({
-        status: 409,
+      return exits.badRequest({
         error: true,
-        data: 'Faltan datos.',
-        type: 'incomplete_data',
+        data: 'Formulario incompleto',
+        code: 'incomplete_data',
         form: {
           reasonName: !ev.reasonName ? 'is-invalid' : '',
           enrollment: !ev.enrollment ? 'is-invalid' : '',
           identification: !ev.identification ? 'is-invalid' : '',
-          // consecutive: ev.consecutive > -1 ? 'is-invalid' : '',
+          consecutive: !ev.consecutive ? 'is-invalid' : '',
           state: !ev.status ? 'is-invalid' : '',
           renewedDate: !ev.renewedDate ? 'is-invalid' : '',
           createdDate: !ev.createdDate ? 'is-invalid' : '',
@@ -199,8 +222,27 @@ module.exports = {
           maxCustomersArl: !ev.maxCustomersArl ? 'is-invalid' : '',
           maxCustomersCaja: !ev.maxCustomersCaja ? 'is-invalid' : '',
           maxCustomersAfp: !ev.maxCustomersAfp ? 'is-invalid' : '',
+          emailAddress: !ev.emailAddress ? 'is-invalid' : '',
+          own: !ev.own ? 'is-invalid' : '',
         }
       });
+    }
+
+    // Validando email que sea correcto y que no sea un correo basura
+    let validEmail = await sails.helpers.utilities.isValidEmailAddress(inputs.emailAddress);
+    if ((typeof (validEmail) === 'object') || (!validEmail)) {
+      let r = {};
+      if ((typeof (validEmail) === 'object')) {
+        r = {
+          error: validEmail.error,
+          data: 'Email no es valido',
+          code: validEmail.email,
+          form: {
+            emailAddress: validEmail ? 'is-invalid' : '',
+          },
+        };
+      }
+      return exits.badRequest(r);
     }
 
 
@@ -220,29 +262,33 @@ module.exports = {
     let evalAcronym = await Holdings.findOne({
       acronym: ev.acronym
     }).select(['id']);
+    let evalemailAddress = await Holdings.findOne({
+      emailAddress: ev.emailAddress
+    }).select(['id']);
 
     if (
       !_.isUndefined(evalEnrollment) ||
       !_.isUndefined(evalIdentification) ||
       !_.isUndefined(evalReasonName) ||
-      !_.isUndefined(evalAcronym)
+      !_.isUndefined(evalAcronym) ||
+      !_.isUndefined(evalemailAddress)
     ) {
-      rs.status(409);
-      return rs.badRequest({
-        status: 409,
+      return exits.badRequest({
         error: true,
-        type: 'existing_data',
+        code: 'existing_data',
         data: {
           enrollment: !_.isUndefined(evalEnrollment) ? 'is-invalid' : '',
           identification: !_.isUndefined(evalIdentification) ? 'is-invalid' : '',
           reasonName: !_.isUndefined(evalReasonName) ? 'is-invalid' : '',
           acronym: !_.isUndefined(evalAcronym) ? 'is-invalid' : '',
+          emailAddress: !_.isUndefined(evalemailAddress) ? 'is-invalid' : '',
         },
         message: {
           enrollment: !_.isUndefined(evalEnrollment) ? 'Ya Existe.' : '',
           identification: !_.isUndefined(evalIdentification) ? 'Ya Existe.' : '',
           reasonName: !_.isUndefined(evalReasonName) ? 'Ya Existe.' : '',
           acronym: !_.isUndefined(evalAcronym) ? 'Ya Existe.' : '',
+          emailAddress: !_.isUndefined(evalemailAddress) ? 'Ya Existe.' : '',
         }
       });
     }
@@ -252,7 +298,7 @@ module.exports = {
     /***************************************************************************************
      * BLOQUE DE TRABAJO
      ***************************************************************************************/
-    // Organizando Datos
+    // // Organizando Datos
     dataForm.reasonName = _.startCase(_.toLower(dataForm.reasonName));
     dataForm.status = _.startCase(_.toLower(dataForm.status));
     dataForm.renewedDate = _.toNumber(dataForm.renewedDate);
@@ -261,7 +307,7 @@ module.exports = {
     dataForm.location = _.startCase(_.toLower(dataForm.location));
     dataForm.userCreated = userId;
 
-    // Guardando información
+    // // Guardando información
     let saveCompany = await Holdings.create(dataForm).fetch();
 
     // Respondiendo si todo sale bien

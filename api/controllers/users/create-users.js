@@ -259,6 +259,8 @@ module.exports = {
         template: 'email-verify-account',
         templateData: {
           fullName: `${dateForm.name} ${dateForm.lastName}`,
+          Email: `${dateForm.emailAddress}`,
+          Password: `${password}`,
           token: createUser.emailProofToken
         }
       });
