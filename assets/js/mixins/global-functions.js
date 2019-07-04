@@ -147,8 +147,11 @@ var globalFunctions = {
         let fieldValue = formData[fieldName];
 
         for (let ruleName in formRules[fieldName]) {
+
+
           let ruleRhs = formRules[fieldName][ruleName];
           let violation;
+          let message;
 
           // Verificando el valor de la regla
           // > (require: true) Bueno
@@ -166,6 +169,8 @@ var globalFunctions = {
             violation = (
               !isFieldValuePresent
             );
+            // ® Mensaje en pantalla
+            message = violation ? '* Este campo es Obligatorio' : '';
           }
 
           // Campos Opcionales
@@ -180,6 +185,55 @@ var globalFunctions = {
             // -------------------------------
           }
 
+          // isNumber: true
+          // Validando que sea numero
+          else if (ruleName === 'isNumber' && ruleRhs === true) {
+            // ® Debe ser un numero
+            violation = (
+              _.isNaN(Number(fieldValue)) ||
+              !_.isNumber(fieldValue)
+            );
+            // ® Mensaje en pantalla
+            message = violation ? `Solo se permiten Numeros` : '';
+          }
+
+          // minLength: (numero a evaluar)
+          // Evaluando que el numero no sea menor a la regla
+          else if (ruleName === 'minLength' && _.isNumber(ruleRhs)) {
+            // ® Debe constar de al menos esta cantidad de caracteres.
+            violation = (
+              !_.isString(fieldValue) ||
+              fieldValue.length < ruleRhs
+            );
+            // ® Mensaje en pantalla
+            message = violation ? `Require un minimo de caracteres` : '';
+          }
+
+
+          // maxLength: (numero a evaluar)
+          // Evaluando que el numero no sea mayor a la regla
+          else if (ruleName === 'maxLength' && _.isNumber(ruleRhs)) {
+            // ® Must consist of no more than this many characters
+            violation = (
+              !_.isString(fieldValue) ||
+              fieldValue.length > ruleRhs
+            );
+            // ® Mensaje en pantalla
+            message = violation ? `Require un maximo de caracteres` : '';
+          }
+
+          // isString: true
+          // Validando Strings
+          else if (ruleName === 'isString' && ruleRhs === true) {
+            // ® Debe ser una cadena string
+            violation = (
+              !_.isNaN(Number(fieldValue)) ||
+              !_.isString(fieldValue)
+            );
+            // ® Mensaje en pantalla
+            message = violation ? 'Solo se permiten carapteres alfanumericos' : '';
+          }
+
           // isEmail: true
           // Validando Email
           else if (ruleName === 'isEmail' && ruleRhs === true) {
@@ -187,13 +241,43 @@ var globalFunctions = {
             violation = (
               !parasails.util.isValidEmailAddress(fieldValue)
             );
+            // ® Mensaje en pantalla
+            message = violation ? 'Este Correo Electrónico no es valido' : '';
           }
 
+          // isIn: true
+          // Validando Array
           else if (ruleName === 'isIn' && _.isArray(ruleRhs)) {
             // ® Debe ser un valor dentro del array.
             violation = (
               !_.contains(ruleRhs, fieldValue)
             );
+            // ® Mensaje en pantalla
+            message = violation ? 'No coincide con las opciones' : '';
+          }
+
+          // is: true
+          // Validando Checkboxes
+          else if (ruleName === 'is') {
+            // ® Debe ser exactamente esto (útil para requerir checkboxes)
+            violation = (
+              ruleRhs !== fieldValue
+            );
+            // ® Mensaje en pantalla
+            message = violation ? 'Campo no seleccionado' : '';
+          }
+
+          // sameAs: 'campo segundario'
+          // Tienen que ser 2 campos iguales
+          else if (ruleName === 'sameAs' && ruleRhs !== '' && _.isString(ruleRhs)) {
+            // ®  Must match the value in another field
+            let otherFieldName = ruleRhs;
+            let otherFieldValue = formData[otherFieldName];
+            violation = (
+              otherFieldValue !== fieldValue
+            );
+            // ® Mensaje en pantalla
+            message = violation ? 'Los campos deben ser iguales' : '';
           }
 
           // Por si no se reconoce ninguna de las anteriores
@@ -206,14 +290,24 @@ var globalFunctions = {
           // and break out of the `for` loop to continue on to the next field.
           // (We only track one form error per field.)
           if (violation) {
-            formErrors[fieldName] = ruleName;
+            // armando
+            formErrors[fieldName] = {
+              rule: ruleName,
+              isValid: 'is-invalid',
+              message: message
+            };
             break;
           } //˚
-        }
-      }
+        } //∞
+      } //∞
 
-      console.log(formErrors);
-      return false;
+      // Ya sea que haya errores o no, actualice la propiedad "formErrors" de la
+      // zona de usuario para que el marcado refleje la nueva realidad (es decir,
+      // los errores de validación en línea se procesen o desaparezcan).
+      this.formErrors = formErrors;
+
+      // Si hubiera errores de forma, avast. (No se intentará la presentación.)
+      return (Object.keys(formErrors).length > 0);
     }
   }
 };

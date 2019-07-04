@@ -44,26 +44,26 @@ parasails.registerPage('holdingsList', {
     },
 
 
-
-    // formCreat
+    // Errores de formularios
+    formErrors: {},
 
     // Validate Create and Edit
     validateData: {
-      reasonName:       { valid: '', mss: '* Campo necesario.'},
-      enrollment:       { valid: '', mss: '* Campo necesario.'},
-      identification:   { valid: '', mss: '* Campo necesario.'},
-      consecutive:      { valid: '', mss: '* Obligatorio'},
-      status:           { valid: '', mss: '* Campo necesario.'},
-      renewedDate:      { valid: '', mss: '* Campo necesario.'},
-      createdDate:      { valid: '', mss: '* Campo necesario.'},
-      acronym:          { valid: '', mss: '* Campo necesario.'},
-      emailAddress:     { valid: '', mss: '* Campo necesario.'},
-      own:              { valid: '', mss: '* Campo necesario.'},
-      location:         { valid: '', mss: '* Campo necesario.'},
-      maxCustomersEps:  { valid: '', mss: '* Campo necesario.'},
-      maxCustomersArl:  { valid: '', mss: '* Campo necesario.'},
-      maxCustomersCaja: { valid: '', mss: '* Campo necesario.'},
-      maxCustomersAfp:  { valid: '', mss: '* Campo necesario.'},
+      reasonName: {},
+      enrollment: {},
+      identification: {},
+      consecutive: {},
+      status: {},
+      renewedDate: {},
+      createdDate: {},
+      acronym: {},
+      emailAddress: {},
+      own: {},
+      location: {},
+      maxCustomersEps: {},
+      maxCustomersArl: {},
+      maxCustomersCaja: {},
+      maxCustomersAfp: {},
     }
   },
 
@@ -169,7 +169,7 @@ parasails.registerPage('holdingsList', {
         this.dataCreated.acronym = '';
         this.dataCreated.emailAddress= '';
         this.dataCreated.own = '';
-        this.dataCreated.location = 'Medellín';
+        this.dataCreated.location = '';
         this.dataCreated.maxCustomersEps = 200;
         this.dataCreated.maxCustomersArl = 200;
         this.dataCreated.maxCustomersCaja = 200;
@@ -178,21 +178,21 @@ parasails.registerPage('holdingsList', {
 
       // Reiniciando validacion
       if (all || valid) {
-        this.validateData.reasonName = {valid: '', mss: '* Campo necesario.'};
-        this.validateData.enrollment = {valid: '', mss: '* Campo necesario.'};
-        this.validateData.identification = {valid: '', mss: '* Campo necesario.'};
-        this.validateData.consecutive = {valid: '', mss: '* Obligatorio'};
-        this.validateData.status = {valid: '', mss: '* Campo necesario.'};
-        this.validateData.renewedDate = {valid: '', mss: '* Campo necesario.'};
-        this.validateData.createdDate = {valid: '', mss: '* Campo necesario.'};
-        this.validateData.acronym = {valid: '', mss: '* Campo necesario.'};
-        this.validateData.emailAddress = {valid: '', mss: '* Campo necesario.'};
-        this.validateData.own = {valid: '', mss: '* Campo necesario.'};
-        this.validateData.location = {valid: '', mss: '* Campo necesario.'};
-        this.validateData.maxCustomersEps = {valid: '', mss: '* Campo necesario.'};
-        this.validateData.maxCustomersArl = {valid: '', mss: '* Campo necesario.'};
-        this.validateData.maxCustomersCaja = {valid: '', mss: '* Campo necesario.'};
-        this.validateData.maxCustomersAfp = {valid: '', mss: '* Campo necesario.'};
+        this.validateData.reasonName = {};
+        this.validateData.enrollment = {};
+        this.validateData.identification = {};
+        this.validateData.consecutive = {};
+        this.validateData.status = {};
+        this.validateData.renewedDate = {};
+        this.validateData.createdDate = {};
+        this.validateData.acronym = {};
+        this.validateData.emailAddress = {};
+        this.validateData.own = {};
+        this.validateData.location = {};
+        this.validateData.maxCustomersEps = {};
+        this.validateData.maxCustomersArl = {};
+        this.validateData.maxCustomersCaja = {};
+        this.validateData.maxCustomersAfp = {};
       }
     },
 
