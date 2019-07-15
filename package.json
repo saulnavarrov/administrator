@@ -34,9 +34,9 @@
   },
   "scripts": {
     "cloud": "reset && sails run rebuild-cloud-sdk",
-    "dev": "reset && sails run rebuild-cloud-sdk && NODE_ENV=development nodemon app.js --port=1337",
-    "dev2": "reset && sails run rebuild-cloud-sdk && NODE_ENV=production nodemon app.js --port=1337",
-    "start": "reset && sails run rebuild-cloud-sdk && NODE_ENV=production nodemon app.js --port=80",
+    "dev": "reset && sails run rebuild-cloud-sdk && NODE_ENV=development nodemon app.js --port=20501",
+    "dev2": "reset && sails run rebuild-cloud-sdk && NODE_ENV=production nodemon app.js --port=20501",
+    "start": "reset && sails run rebuild-cloud-sdk && NODE_ENV=production nodemon app.js --port=20511",
     "test": "reset && sails run rebuild-cloud-sdk && npm run lint && npm run custom-tests && echo 'Done.'",
     "lint": "reset && eslint . --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look good.'",
     "custom-tests": "echo \"(No other custom tests yet.)\" && echo"
