@@ -19,11 +19,11 @@ module.exports.policies = {
 
   '*': true,
 
-  'auth/*':         ['dbgNavigations'],
-  // 'customers/*':    ['dbgNavigations'],
-  // 'files/*':        ['dbgNavigations'],
-  // 'masters/*':      ['dbgNavigations'],
-  'users/*':        ['dbgNavigations'],
-  'view-pages/*':   ['dbgNavigations']
+  'auth/*':         ['RegNavigations'],
+  // 'customers/*':    ['RegNavigations'],
+  // 'files/*':        ['RegNavigations'],
+  // 'masters/*':      ['RegNavigations'],
+  'users/*':        ['RegNavigations'],
+  'view-pages/*':   ['RegNavigations']
 
 };

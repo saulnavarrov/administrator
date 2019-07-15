@@ -56,7 +56,7 @@ module.exports.models = {
   *                                                                          *
   ***************************************************************************/
 
-  migrate: 'alter',
+  migrate: 'safe',
 
 
   /***************************************************************************
@@ -72,16 +72,8 @@ module.exports.models = {
   ***************************************************************************/
 
   attributes: {
-    createdAt: {
-      type: 'string',
-      autoCreatedAt: true,
-      columnType: 'datetime',
-    },
-    updatedAt: {
-      type: 'string',
-      autoCreatedAt: true,
-      columnType: 'datetime',
-    },
+    createdAt: { type: 'string', autoCreatedAt: true, columnType: 'datetime' },
+    updatedAt: { type: 'string', autoCreatedAt: true, columnType: 'datetime' },
     id: loc.db.production.type,
     //--------------------------------------------------------------------------
     //  /\   Using MongoDB?

@@ -30,7 +30,7 @@ module.exports = {
     ***************************************************************************/
     default: {
       adapter: loc.db.development.adapter,
-      url: `mongodb://${loc.db.development.url}:${loc.db.development.port}/${loc.db.development.db}`,
+      url: `mongodb://${loc.db.development.user}:${loc.db.development.pass}@${loc.db.development.url}:${loc.db.development.port}/${loc.db.development.db}`,
 
       //--------------------------------------------------------------------------
       //  /\   To avoid checking it in to version control, you might opt to set
@@ -168,7 +168,7 @@ module.exports = {
     *                                                                          *
     ***************************************************************************/
     adapter: loc.connect.development.connect,
-    url: `mongodb://${loc.connect.development.url}:${loc.connect.development.port}/${loc.connect.development.db}`,
+    url: `mongodb://${loc.connect.development.user}:${loc.connect.development.pass}@${loc.connect.development.url}:${loc.connect.development.port}/${loc.connect.development.db}`,
 
     //--
     // adapter: '@sailshq/connect-redis',
@@ -308,7 +308,7 @@ module.exports = {
     * (https://sailsjs.com/config/http)                                        *
     *                                                                          *
     ***************************************************************************/
-    trustProxy: !loc.trustProxy
+    trustProxy: loc.trustProxy
 
   },
 
@@ -323,7 +323,7 @@ module.exports = {
   * this, just try deploying without setting it and see if it works.)       *
   *                                                                         *
   ***************************************************************************/
-  port: 1337,
+  // port: 1337,
 
 
 
@@ -357,8 +357,8 @@ module.exports = {
   *                                                                         *
   ***************************************************************************/
   custom: {
-    // baseUrl: l.baseUrl,
-    // internalEmailAddress: l.internalEmailAddress,
+    baseUrl: loc.baseUrl,
+    internalEmailAddress: loc.internalEmailAddress,
 
     // mailgunDomain: 'mg.example.com',
     // mailgunSecret: 'key-prod_fake_bd32301385130a0bafe030c',

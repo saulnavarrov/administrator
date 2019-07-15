@@ -88,7 +88,7 @@ async function registerNavegations(opt) {
  * @author SaúlNavarrov <Sinavarrov@gmail.com>
  */
 async function saveDataLogsNavigations(dat) {
-  await DbgNavigations.create(dat).fetch();
+  await RegNavigations.create(dat).fetch();
 }
 
 // MODULE

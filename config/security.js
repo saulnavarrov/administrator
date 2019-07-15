@@ -33,7 +33,7 @@ module.exports.security = {
 
   cors: {
     allRoutes: true,
-    // allowOrigins: loc.baseUrl,
+    allowOrigins: loc.baseUrl,
     allowCredentials: false,
   },
 
